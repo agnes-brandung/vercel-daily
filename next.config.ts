@@ -1,7 +1,56 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    /**
+     * Cold starts that previously took 10–15 minutes now complete in seconds. All Vercel internal apps already use this feature with notable productivity improvements.
+       Just to try it out here, rather for large projects and monorepos 
+     */
+    turbopackFileSystemCacheForDev: true,
+  },
+  output: 'standalone', // for vercel deployment
+  reactStrictMode: true,
+  /**
+   * Purpose: Disables the X-Powered-By: Next.js HTTP header in responses.
+   * Why use it?
+   * Security best practice: Hiding server technology reduces information leakage, making it slightly harder for attackers to target known vulnerabilities.
+   * Minimal impact on performance or functionality.
+   */
+  poweredByHeader: false,
+  /**
+   * Purpose: Configures logging for server-side data fetches (e.g., fetch calls in getServerSideProps, API routes, or server components).
+   * Why use it?
+   * When fullUrl: true, Next.js will log the full URL of outgoing requests in the server console. This is useful for debugging, especially if you need to inspect API calls or external requests.
+   * Without this, only the path (not the full URL) is logged.
+   */
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
+  /**
+   * Nothing is cached by default. 
+   * Instead, you explicitly mark what should be cached using cacheComponents config here and
+   * the "use cache" directive, at component, function and file level
+   * 
+   * For example:
+   * "use cache";
+   * cacheLife('hours'); // Built-in profile: cache for hours
+   * Also for seonds, minutes, days, weeks..
+   * 
+   * "use cache";
+   * cacheLife({ 
+   *   stale: 60,        // Serve stale for 60s
+   *   revalidate: 300,  // Revalidate after 5min
+   *   expire: 3600      // Expire after 1hr
+   * });
+   * 
+   * You can also use the cacheTag directive to cache based on a tag:
+   * "use cache";
+   * cacheTag('my-tag');
+   * 
+   */
+  cacheComponents: true,
 };
 
 export default nextConfig;
