@@ -19,16 +19,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn(fontPrimary.variable, fontSecondary.variable, 'h-full antialiased')}
+      className={cn(fontPrimary.variable, fontSecondary.variable, 'h-full antialiased', "font-sans")}
       suppressHydrationWarning
     >
-      <body className="flex min-h-dvh flex-col p-base">
+      <body className="flex min-h-dvh flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Navigation />
-          <main className="bg-body text-typography flex flex-1 flex-col">
-            {children}
-          </main>
-          <Footer />
+          <div className="flex min-h-dvh flex-col p-base">
+            <Navigation />
+            <main className="bg-body text-typography flex flex-1 flex-col">
+              {children}
+            </main>
+            <Footer />
+          </div>
         </ThemeProvider>
       </body>
     </html>

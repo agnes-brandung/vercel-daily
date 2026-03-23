@@ -4,7 +4,7 @@ import { cva } from 'class-variance-authority';
 
 import { cn } from '@/utils/cn';
 
-export const headlineStyles = cva('hyphens-auto', {
+export const headlineStyles = (color?: HeadlineColor) => cva('hyphens-auto', {
   variants: {
     color: {
       blue: 'text-blue',
@@ -16,14 +16,14 @@ export const headlineStyles = cva('hyphens-auto', {
       lightGray: 'text-light-gray',
     },
     styleAs: {
-      h1: 'font-primary text-4xl font-bold uppercase md:text-[3.5rem]',
+      h1: `font-primary text-4xl font-bold uppercase md:text-[3.5rem] ${color ? `text-${color}` : 'text-blue'}`,
       h2: 'font-primary text-2xl uppercase font-bold md:text-[2.5rem]',
       h3: 'font-primary text-2xl font-medium uppercase md:text-[2rem]',
       h4: 'font-primary text-xl font-medium md:text-[1.75rem]',
       h5: 'font-primary text-xl font-normal',
       h6: 'font-primary text-lg font-normal',
       p: 'font-primary text-base font-normal',
-      brand: 'font-secondary text-4xl font-bold uppercase md:text-[3.5rem]',
+      brand: `font-secondary text-4xl font-bold uppercase md:text-[3.5rem] ${color ? `text-${color}` : 'text-blue'}`,
     },
   },
 });
@@ -62,7 +62,7 @@ export function Headline({ id, styleAs, children, className, color, type }: Head
   const Tag = headlineTagByIntent[domIntent];
 
   return (
-    <Tag id={id} className={cn(headlineStyles({ styleAs: visualIntent, color }), className)}>
+    <Tag id={id} className={cn(headlineStyles(color)({ styleAs: visualIntent }), className)}>
       {children}
     </Tag>
   );

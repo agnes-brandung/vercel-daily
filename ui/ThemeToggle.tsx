@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from '@/utils/cn';
-import { useHasMounted } from '@/utils/useHasMounted';
+import { useHasMounted } from '@/hooks/useHasMounted';
 import { useTheme } from "next-themes";
 import { SunIcon } from './icons/sun';
 import { MoonIcon } from './icons/moon';
