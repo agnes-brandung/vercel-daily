@@ -1,10 +1,13 @@
-import type { ElementType, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
+import { forwardRef } from 'react';
+
+import Link from 'next/link';
 
 import { cva } from 'class-variance-authority';
 
 import { cn } from '@/utils/cn';
 
-export const headlineStyles = (color?: HeadlineColor) => cva('hyphens-auto', {
+export const headlineStyles = (color?: HeadlineColor, size?: 'xs' | 'sm' | 'base' | 'lg') => cva('hyphens-auto', {
   variants: {
     color: {
       blue: 'text-blue',
@@ -23,7 +26,7 @@ export const headlineStyles = (color?: HeadlineColor) => cva('hyphens-auto', {
       h5: 'font-primary text-xl font-normal',
       h6: 'font-primary text-lg font-normal',
       p: 'font-primary text-base font-normal',
-      brand: `font-secondary text-4xl font-bold uppercase md:text-[3.5rem] ${color ? `text-${color}` : 'text-blue'}`,
+      brand: `font-secondary ${size ? `text-${size}` : 'text-4xl'} font-bold uppercase ${size ? `md:text-${size}` : 'md:text-[3.5rem]'} ${color ? `text-${color}` : 'text-blue'}`,
     },
   },
 });
@@ -49,6 +52,7 @@ export type HeadlineProps = {
   children: ReactNode;
   className?: string;
   color?: HeadlineColor;
+  size?: 'xs' | 'sm' | 'base' | 'lg';
   /**
    * DOM tag override. Typography comes from `styleAs`, or from `type` if `styleAs` is omitted.
    * Does not by itself switch font when `styleAs` is set (e.g. `styleAs="h1" type="brand"` → still Inter/h1 styles, `span` tag).
@@ -56,13 +60,13 @@ export type HeadlineProps = {
   type?: HeadlineIntent;
 };
 
-export function Headline({ id, styleAs, children, className, color, type }: HeadlineProps) {
+export function Headline({ id, styleAs, children, className, color, type, size }: HeadlineProps) {
   const visualIntent = styleAs ?? type ?? 'h1';
   const domIntent = type ?? styleAs ?? 'h1';
   const Tag = headlineTagByIntent[domIntent];
 
   return (
-    <Tag id={id} className={cn(headlineStyles(color)({ styleAs: visualIntent }), className)}>
+    <Tag id={id} className={cn(headlineStyles(color, size)({ styleAs: visualIntent }), className)}>
       {children}
     </Tag>
   );
@@ -104,7 +108,7 @@ type CopyProps = {
   disabled?: boolean;
 };
 
-export default function Copy({
+export function Copy({
   children,
   size = 'base',
   weight = 'normal',
@@ -114,3 +118,52 @@ export default function Copy({
 }: CopyProps): React.ReactNode {
   return <p className={cn(copyStyles({ size, weight, color, disabled }), className)}>{children}</p>;
 }
+
+/** Tertiary-style text link; hover / focus / active use `--text-link-hover` (lighter blue in light theme). */
+export const textLinkStyles = cva(
+  'block rounded-md border-none bg-[var(--button-tertiary)] px-1 py-2 text-lg text-[var(--button-tertiary-text)] transition-[color,text-decoration-color,background-color] hover:bg-[var(--button-tertiary-hover)] hover:text-[var(--text-link-hover)] focus-visible:bg-[var(--button-tertiary-hover)] focus-visible:text-[var(--text-link-hover)] focus-visible:outline-none active:bg-[var(--button-tertiary-hover)] active:text-[var(--text-link-hover)]',
+  {
+    variants: {
+      underline: {
+        true: 'underline decoration-from-font underline-offset-4 decoration-[var(--button-tertiary-text)] hover:decoration-[var(--text-link-hover)] focus-visible:decoration-[var(--text-link-hover)] active:decoration-[var(--text-link-hover)]',
+        false: 'no-underline decoration-none hover:decoration-none focus-visible:decoration-none active:decoration-none',
+      },
+      current: {
+        true: 'text-[var(--text-link-hover)]',
+        false: '',
+      },
+    },
+    compoundVariants: [
+      {
+        underline: true,
+        current: true,
+        class: 'decoration-[var(--text-link-hover)]',
+      },
+    ],
+    defaultVariants: {
+      underline: true,
+      current: false,
+    },
+  },
+);
+
+export type TextLinkProps = Omit<ComponentPropsWithoutRef<typeof Link>, 'className'> & {
+  className?: string;
+  /** When true, uses `--text-link-hover` (same as hover) and sets `aria-current="page"`. */
+  current?: boolean;
+  underline?: boolean;
+};
+
+export const TextLink = forwardRef<HTMLAnchorElement, TextLinkProps>(function TextLink(
+  { className, current = false, underline = true, ...props },
+  ref,
+) {
+  return (
+    <Link
+      ref={ref}
+      className={cn(textLinkStyles({ current, underline }), className)}
+      aria-current={current ? 'page' : undefined}
+      {...props}
+    />
+  );
+});

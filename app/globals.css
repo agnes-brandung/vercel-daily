@@ -7,12 +7,9 @@
   --white: #ffffff;
   --off-white: #f5f5f5;
   --gray: #263238;
-  --base-dark-gray: #1a2329;
-  --base-blue: #1a237e;
-  --base-gray: #757575;
   --base-red: #ef9a9a;
   --base-green: #81c784;
-  --base-yellow:rgb(247, 192, 13);
+  --base-yellow: rgb(247, 192, 13);
 
   --text-blue: #1a237e;
   --text-gray: #263238;
@@ -22,6 +19,16 @@
 
   --body: var(--white);
   --typography: var(--gray);
+
+  /* TextLink hover (lighter than --text-blue for contrast on light backgrounds) */
+  --text-link-hover: #1e88e5;
+  /* IconButton: default gray bg/border + white icon; hover/focus/active = white bg, gray border, gray icon */
+  --icon-button-bg: var(--gray);
+  --icon-button-border: var(--gray);
+  --icon-button-fg: var(--white);
+  --icon-button-hover-bg: var(--white);
+  --icon-button-hover-border: var(--gray);
+  --icon-button-hover-fg: var(--gray);
 
   --base-pad-x: 16px;
   --base-pad-y: 24px;
@@ -73,22 +80,47 @@
   }
 }
 
-html.dark {
-  --body: var(--gray);
-  --typography: var(--white);
-  --base-red: #ffcdd2;
-  --base-green: #c8e6c9;
-  --base-yellow: #fff9c4;
-  --text-blue: #90caf9;
-  --text-gray: #cfd8dc;
-  --text-dark-gray: #1a2329;
-  --text-light-gray: #b0bec5;
-  --text-off-white: #eceff1;
+/* Pre-hydration / no .dark yet: system dark, but respect forced light (.light on html). */
+@media (prefers-color-scheme: dark) {
+  html:not(.light):not(.dark) {
+    --body: var(--gray);
+    --typography: var(--white);
+    --base-red: #ffcdd2;
+    --base-green: #c8e6c9;
+    --base-yellow: #fff9c4;
+    --text-blue: #90caf9;
+    --text-gray: #cfd8dc;
+    --text-light-gray: #b0bec5;
+    --text-off-white: #eceff1;
+
+    --button-primary-text: var(--white);
+    --button-secondary: var(--base-yellow);
+    --button-secondary-text: var(--gray);
+    --button-secondary-border: var(--base-yellow);
+    --button-secondary-hover: var(--gray);
+    --button-secondary-hover-text: var(--color-yellow);
+    --button-secondary-hover-border: var(--color-yellow);
+    --button-tertiary: transparent;
+    --button-tertiary-text: var(--text-off-white);
+    --button-tertiary-hover: transparent;
+    --button-tertiary-hover-text: var(--text-blue);
+
+    --text-link-hover: #64b5f6;
+    /* IconButton: inverse of light — light surface + dark icon; hover = dark fill + white icon */
+    --icon-button-bg: var(--white);
+    --icon-button-border: var(--text-light-gray);
+    --icon-button-fg: var(--gray);
+    --icon-button-hover-bg: var(--gray);
+    --icon-button-hover-border: var(--text-light-gray);
+    --icon-button-hover-fg: var(--white);
+  }
 }
 
 @theme inline {
   --font-primary: var(--font-primary);
   --font-secondary: var(--font-secondary);
+  --font-sans: var(--font-primary);
+  --font-heading: var(--font-primary);
   --color-white: var(--white);
   --color-gray: var(--text-gray);
   --color-dark-gray: var(--text-dark-gray);
@@ -100,8 +132,6 @@ html.dark {
   --color-off-white: var(--text-off-white);
   --color-body: var(--body);
   --color-typography: var(--typography);
-  --font-heading: var(--font-sans);
-  --font-sans: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -141,7 +171,6 @@ html.dark {
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* Button Theme Variables */
   --button-primary: var(--color-blue);
   --button-primary-text: var(--color-white);
   --button-primary-border: var(--color-blue);
@@ -161,46 +190,29 @@ html.dark {
   --button-tertiary-hover-text: var(--color-blue);
   --button-tertiary-hover-border: none;
 
-  --shadow-button: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+  --z-navigation: 10;
+  --z-dropdown: 20;
+  --z-drawer-backdrop: 50;
+  --z-drawer: 51;
 }
 
 @utility p-base {
-  padding-inline: var(--base-pad-x);
-  padding-block: var(--base-pad-y);
-}
-
-@utility px-base {
+  padding-block: 0;
   padding-inline: var(--base-pad-x);
 }
 
-@utility py-base {
-  padding-block: var(--base-pad-y);
+/* Dark shadow on light UI; white shadow in dark (via `dark` + system pre-hydration). */
+@utility shadow-nav {
+  box-shadow: 0 10px 28px -10px rgb(0 0 0 / 0.12);
+
+  @variant dark {
+    box-shadow: 0 10px 28px -10px rgb(255 255 255 / 0.12);
+  }
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --body: var(--gray);
-    --typography: var(--white);
-    --base-red: #ffcdd2;
-    --base-green: #c8e6c9;
-    --base-yellow: #fff9c4;
-    --text-blue: #90caf9;
-    --text-gray: #cfd8dc;
-    --text-light-gray: #b0bec5;
-    --text-off-white: #eceff1;
-
-    /* Same as .dark: buttons stay legible when semantic grays flip to light */
-    --button-primary-text: var(--white);
-    --button-secondary: var(--base-yellow);
-    --button-secondary-text: var(--gray);
-    --button-secondary-border: var(--base-yellow);
-    --button-secondary-hover: var(--gray);
-    --button-secondary-hover-text: var(--color-yellow);
-    --button-secondary-hover-border: var(--color-yellow);
-    --button-tertiary: transparent;
-    --button-tertiary-text: var(--text-off-white);
-    --button-tertiary-hover: transparent;
-    --button-tertiary-hover-text: var(--text-blue);
+  html:not(.light):not(.dark) .shadow-nav {
+    box-shadow: 0 10px 28px -10px rgb(255 255 255 / 0.12);
   }
 }
 
@@ -212,6 +224,16 @@ body {
 }
 
 .dark {
+  --body: var(--gray);
+  --typography: var(--white);
+  --base-red: #ffcdd2;
+  --base-green: #c8e6c9;
+  --base-yellow: #fff9c4;
+  --text-blue: #90caf9;
+  --text-gray: #cfd8dc;
+  --text-light-gray: #b0bec5;
+  --text-off-white: #eceff1;
+
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -244,7 +266,6 @@ body {
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 
-  /* Readable fills/text on dark surfaces (next-themes .dark on html) */
   --button-primary: var(--color-blue);
   --button-primary-text: var(--gray);
   --button-primary-border: var(--color-blue);
@@ -263,16 +284,18 @@ body {
   --button-tertiary-hover: transparent;
   --button-tertiary-hover-text: var(--text-blue);
   --button-tertiary-hover-border: none;
+
+  --text-link-hover: #64b5f6;
+  --icon-button-bg: var(--white);
+  --icon-button-border: var(--text-light-gray);
+  --icon-button-fg: var(--gray);
+  --icon-button-hover-bg: var(--gray);
+  --icon-button-hover-border: var(--text-light-gray);
+  --icon-button-hover-fg: var(--white);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
   }
 }

@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from '@/utils/cn';
 import { useHasMounted } from '@/hooks/useHasMounted';
 import { useTheme } from "next-themes";
+import { IconButton } from '@/ui/IconButton';
 import { SunIcon } from './icons/sun';
 import { MoonIcon } from './icons/moon';
 
@@ -10,7 +10,8 @@ export default function ThemeToggle() {
   const { theme, resolvedTheme, setTheme } = useTheme();
   const mounted = useHasMounted();
 
-  // Only compute theme after mount
+  // If the theme is system, use the resolved theme
+  // Only compute effective theme after mount
   const effectiveTheme =
     mounted && theme === "system" && resolvedTheme
       ? resolvedTheme
@@ -27,24 +28,22 @@ export default function ThemeToggle() {
     setTheme(nextTheme);
   };
 
+  // Until mounted is true, the toggle no longer renders those dark:-driven SVGs—only a fixed-size placeholder span—then renders both icons after mount. Server and first client render now agree on that subtree; disabled={!mounted} still avoids acting before hydration.
   return (
-    <button
-      type="button"
+    <IconButton
       title={label}
       aria-label={label}
       aria-pressed={effectiveTheme === "dark"}
-      disabled={!mounted}
       onClick={toggleTheme}
-      className={cn(
-        "shrink-0 flex items-center justify-center p-3 rounded-full border border-solid transition-colors",
-        "border-black/8 dark:border-white/14",
-        mounted
-          ? "cursor-pointer hover:border-transparent hover:bg-black/4 dark:hover:bg-[#1a1a1a]"
-          : "cursor-default pointer-events-none",
-      )}
     >
-      <SunIcon />
-      <MoonIcon />
-    </button>
+      {mounted ? (
+        <>
+          <SunIcon />
+          <MoonIcon />
+        </>
+      ) : (
+        <span className="inline-block size-6 shrink-0" aria-hidden />
+      )}
+    </IconButton>
   );
 }

@@ -1,7 +1,7 @@
 import Button from '@/ui/Button';
 import { NavMenuCloseIcon } from '@/ui/icons/nav-menu-close';
 import { NavMenuOpenIcon } from '@/ui/icons/nav-menu-open';
-import Copy, { Headline } from '@/ui/Typography';
+import { Copy, Headline } from '@/ui/Typography';
 
 export default function TestPage() {
   return (

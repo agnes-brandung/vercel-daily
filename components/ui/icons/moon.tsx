@@ -4,7 +4,7 @@ export function MoonIcon() {
       viewBox="0 0 16 16"
       width="24"
       height="24"
-      className="hidden w-6 h-6 dark:block"
+      className="block w-6 h-6 dark:hidden"
       >
       <path
         fill="currentColor"

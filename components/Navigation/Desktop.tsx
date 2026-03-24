@@ -1,33 +1,26 @@
-import Link from "next/link";
-import { GlobeIcon } from "@/ui/icons/globe";
-import { Headline } from "@/ui/Typography";
+import { TextLink } from "@/ui/Typography";
+import { BrandLink, HomeIconLink } from './NavigationLinks';
+import { navStickyContainerStyles } from './index';
+import { cn } from '@/lib/utils';
+
+const navContainerStyles = "py-6 hidden lg:block";
 
 /**
  * Navigation in ul list since best practice for accessibility and screen readers (clear structure)
  */
 export default function NavigationDesktop() {
   return (
-    <nav className="hidden lg:block sticky top-0 z-10 h-20 w-full bg-body text-typography">
-      <div className="mx-auto flex h-full items-center justify-between">
-        <ul className="m-0 flex w-full list-none items-center justify-between p-0">
+    <nav className={cn(navStickyContainerStyles, navContainerStyles)}>
+      <div className="mx-auto flex h-full max-w-full items-center justify-between">
+        <ul className="flex w-full list-none items-center justify-between">
           <li>
-            <Link
-              href="/"
-              className="flex shrink-0 items-center"
-              aria-label="Home"
-            >
-              <GlobeIcon />
-            </Link>
+            <HomeIconLink />
           </li>
           <li>
-            <Link href="/">
-              <Headline styleAs="brand">
-                The Daily Delivery
-              </Headline>
-            </Link>
+            <BrandLink />
           </li>
           <li>
-            <Link href="/search">Search</Link>
+            <TextLink href="/search">Search</TextLink>
           </li>
         </ul>
       </div>

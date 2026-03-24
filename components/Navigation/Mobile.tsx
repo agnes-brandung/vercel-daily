@@ -1,5 +1,4 @@
 'use client'
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, type ReactNode } from 'react'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
@@ -15,8 +14,11 @@ import {
 } from '@/components/ui/drawer'
 import { NavMenuOpenIcon } from '@/ui/icons/nav-menu-open'
 import { NavMenuCloseIcon } from '@/ui/icons/nav-menu-close'
-import { cn } from '@/utils/cn'
-import Button from '@/ui/Button'
+import { IconButton } from '@/ui/IconButton'
+import { TextLink } from '@/ui/Typography'
+import { BrandLink, HomeIconLink } from './NavigationLinks'
+import { cn } from '@/lib/utils'
+import { navStickyContainerStyles } from '.'
 
 interface MobileNavLinkProps {
   href: string
@@ -31,9 +33,9 @@ function MobileNavLink({ href, children, isActive }: MobileNavLinkProps) {
   return (
     <li>
       <DrawerClose asChild>
-        <Link href={href} className={cn('block py-2 text-lg', isActive ? 'text-blue' : '')}>
+        <TextLink href={href} current={isActive}>
           {children}
-        </Link>
+        </TextLink>
       </DrawerClose>
     </li>
   )
@@ -54,23 +56,25 @@ export default function NavigationMobile() {
   }
 
   return (
-    <div className="bg-body text-typography lg:hidden">
+    <nav className={cn(navStickyContainerStyles, "block py-4 lg:hidden")}>
       <Drawer open={open} onOpenChange={setOpen} direction="left">
-        <DrawerTrigger asChild>
-          <Button
-            variant="iconOnly"
-            label={
+        <div className="flex items-center justify-between">
+          <HomeIconLink />
+          <BrandLink size="base" />
+          <DrawerTrigger asChild>
+            <IconButton
+              aria-expanded={open}
+              aria-controls="mobile-navigation"
+              aria-haspopup="true"
+              aria-label="Open menu"
+            >
               <NavMenuOpenIcon />
-            }
-            aria-expanded={open}
-            aria-controls="mobile-navigation"
-            aria-haspopup="true"
-            className="flex h-8 w-8 items-center justify-center"
-          />
-        </DrawerTrigger>
+            </IconButton>
+          </DrawerTrigger>
+        </div>
     
         <DrawerContent
-          className="fixed left-0 top-0 h-full w-[80%] max-w-sm rounded-none border-r bg-white shadow-lg"
+          className="fixed top-0 left-0 h-full max-w-sm w-[80%] rounded-none border-border border-r bg-body text-typography shadow-lg"
           style={{ transform: open ? 'translateX(0)' : 'translateX(-100%)' }}
         >
           <VisuallyHidden>
@@ -87,24 +91,22 @@ export default function NavigationMobile() {
               <MobileNavLink href="/search" isActive={pathname === '/search'}>
                 Search
               </MobileNavLink>
-              <MobileNavLink href="/about" isActive={pathname === '/about'}>
-                About
-              </MobileNavLink>
             </ul>
           </nav>
-          <DrawerFooter>
-          <DrawerClose asChild>
-              <Button
-                variant="iconOnly"
-                label={<NavMenuCloseIcon />}
+          <DrawerFooter className="w-full items-center">
+            <DrawerClose asChild>
+              <IconButton
                 aria-expanded={open}
                 aria-controls="mobile-navigation"
                 aria-haspopup="true"
-              />
+                aria-label="Close menu"
+              >
+                <NavMenuCloseIcon />
+              </IconButton>
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-    </div>
+    </nav>
   )
 }

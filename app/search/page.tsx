@@ -1,4 +1,4 @@
-import Copy, { Headline } from '@/ui/Typography';
+import { Copy, Headline } from '@/ui/Typography';
 
 export default function Search() {
   return (
