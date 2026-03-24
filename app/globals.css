@@ -1,26 +1,69 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --white: #ffffff;
   --off-white: #f5f5f5;
   --gray: #263238;
-  --base-blue: #1a237e;
-  --base-gray: #757575;
   --base-red: #ef9a9a;
   --base-green: #81c784;
-  --base-yellow:rgb(247, 192, 13);
+  --base-yellow: rgb(247, 192, 13);
 
   --text-blue: #1a237e;
   --text-gray: #263238;
+  --text-dark-gray: #1a2329;
   --text-light-gray: #757575;
   --text-off-white: #f5f5f5;
 
   --body: var(--white);
   --typography: var(--gray);
 
+  /* TextLink hover (lighter than --text-blue for contrast on light backgrounds) */
+  --text-link-hover: #1e88e5;
+  /* IconButton: default gray bg/border + white icon; hover/focus/active = white bg, gray border, gray icon */
+  --icon-button-bg: var(--gray);
+  --icon-button-border: var(--gray);
+  --icon-button-fg: var(--white);
+  --icon-button-hover-bg: var(--white);
+  --icon-button-hover-border: var(--gray);
+  --icon-button-hover-fg: var(--gray);
+
   --base-pad-x: 16px;
   --base-pad-y: 24px;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 }
 
 @media (min-width: 768px) {
@@ -37,48 +80,9 @@
   }
 }
 
-html.dark {
-  --body: var(--gray);
-  --typography: var(--white);
-  --base-red: #ffcdd2;
-  --base-green: #c8e6c9;
-  --base-yellow: #fff9c4;
-  --text-blue: #90caf9;
-  --text-gray: #cfd8dc;
-  --text-light-gray: #b0bec5;
-  --text-off-white: #eceff1;
-}
-
-@theme inline {
-  --font-primary: var(--font-primary);
-  --font-secondary: var(--font-secondary);
-  --color-white: var(--white);
-  --color-gray: var(--text-gray);
-  --color-blue: var(--text-blue);
-  --color-red: var(--base-red);
-  --color-green: var(--base-green);
-  --color-yellow: var(--base-yellow);
-  --color-light-gray: var(--text-light-gray);
-  --color-off-white: var(--text-off-white);
-  --color-body: var(--body);
-  --color-typography: var(--typography);
-}
-
-@utility p-base {
-  padding-inline: var(--base-pad-x);
-  padding-block: var(--base-pad-y);
-}
-
-@utility px-base {
-  padding-inline: var(--base-pad-x);
-}
-
-@utility py-base {
-  padding-block: var(--base-pad-y);
-}
-
+/* Pre-hydration / no .dark yet: system dark, but respect forced light (.light on html). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  html:not(.light):not(.dark) {
     --body: var(--gray);
     --typography: var(--white);
     --base-red: #ffcdd2;
@@ -88,6 +92,127 @@ html.dark {
     --text-gray: #cfd8dc;
     --text-light-gray: #b0bec5;
     --text-off-white: #eceff1;
+
+    --button-primary-text: var(--white);
+    --button-secondary: var(--base-yellow);
+    --button-secondary-text: var(--gray);
+    --button-secondary-border: var(--base-yellow);
+    --button-secondary-hover: var(--gray);
+    --button-secondary-hover-text: var(--color-yellow);
+    --button-secondary-hover-border: var(--color-yellow);
+    --button-tertiary: transparent;
+    --button-tertiary-text: var(--text-off-white);
+    --button-tertiary-hover: transparent;
+    --button-tertiary-hover-text: var(--text-blue);
+
+    --text-link-hover: #64b5f6;
+    /* IconButton: inverse of light — light surface + dark icon; hover = dark fill + white icon */
+    --icon-button-bg: var(--white);
+    --icon-button-border: var(--text-light-gray);
+    --icon-button-fg: var(--gray);
+    --icon-button-hover-bg: var(--gray);
+    --icon-button-hover-border: var(--text-light-gray);
+    --icon-button-hover-fg: var(--white);
+  }
+}
+
+@theme inline {
+  --font-primary: var(--font-primary);
+  --font-secondary: var(--font-secondary);
+  --font-sans: var(--font-primary);
+  --font-heading: var(--font-primary);
+  --color-white: var(--white);
+  --color-gray: var(--text-gray);
+  --color-dark-gray: var(--text-dark-gray);
+  --color-blue: var(--text-blue);
+  --color-red: var(--base-red);
+  --color-green: var(--base-green);
+  --color-yellow: var(--base-yellow);
+  --color-light-gray: var(--text-light-gray);
+  --color-off-white: var(--text-off-white);
+  --color-body: var(--body);
+  --color-typography: var(--typography);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  --button-primary: var(--color-blue);
+  --button-primary-text: var(--color-white);
+  --button-primary-border: var(--color-blue);
+  --button-primary-hover: var(--color-white);
+  --button-primary-hover-text: var(--color-blue);
+  --button-primary-hover-border: var(--color-blue);
+  --button-secondary: var(--color-yellow);
+  --button-secondary-text: var(--color-gray);
+  --button-secondary-border: var(--color-yellow);
+  --button-secondary-hover: var(--color-gray);
+  --button-secondary-hover-text: var(--color-yellow);
+  --button-secondary-hover-border: var(--color-gray);
+  --button-tertiary: transparent;
+  --button-tertiary-text: var(--color-gray);
+  --button-tertiary-border: none;
+  --button-tertiary-hover: transparent;
+  --button-tertiary-hover-text: var(--color-blue);
+  --button-tertiary-hover-border: none;
+
+  --z-navigation: 10;
+  --z-dropdown: 20;
+  --z-drawer-backdrop: 50;
+  --z-drawer: 51;
+}
+
+@utility p-base {
+  padding-block: 0;
+  padding-inline: var(--base-pad-x);
+}
+
+/* Dark shadow on light UI; white shadow in dark (via `dark` + system pre-hydration). */
+@utility shadow-nav {
+  box-shadow: 0 10px 28px -10px rgb(0 0 0 / 0.12);
+
+  @variant dark {
+    box-shadow: 0 10px 28px -10px rgb(255 255 255 / 0.12);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not(.light):not(.dark) .shadow-nav {
+    box-shadow: 0 10px 28px -10px rgb(255 255 255 / 0.12);
   }
 }
 
@@ -96,4 +221,81 @@ body {
   color: var(--typography);
   font-family: var(--font-primary), Arial, Helvetica, sans-serif;
   line-height: 1.5;
+}
+
+.dark {
+  --body: var(--gray);
+  --typography: var(--white);
+  --base-red: #ffcdd2;
+  --base-green: #c8e6c9;
+  --base-yellow: #fff9c4;
+  --text-blue: #90caf9;
+  --text-gray: #cfd8dc;
+  --text-light-gray: #b0bec5;
+  --text-off-white: #eceff1;
+
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+
+  --button-primary: var(--color-blue);
+  --button-primary-text: var(--gray);
+  --button-primary-border: var(--color-blue);
+  --button-primary-hover: var(--white);
+  --button-primary-hover-text: var(--color-dark-gray);
+  --button-primary-hover-border: var(--color-blue);
+  --button-secondary: var(--base-yellow);
+  --button-secondary-text: var(--gray);
+  --button-secondary-border: var(--base-yellow);
+  --button-secondary-hover: var(--gray);
+  --button-secondary-hover-text: var(--color-yellow);
+  --button-secondary-hover-border: var(--color-yellow);
+  --button-tertiary: transparent;
+  --button-tertiary-text: var(--text-off-white);
+  --button-tertiary-border: none;
+  --button-tertiary-hover: transparent;
+  --button-tertiary-hover-text: var(--text-blue);
+  --button-tertiary-hover-border: none;
+
+  --text-link-hover: #64b5f6;
+  --icon-button-bg: var(--white);
+  --icon-button-border: var(--text-light-gray);
+  --icon-button-fg: var(--gray);
+  --icon-button-hover-bg: var(--gray);
+  --icon-button-hover-border: var(--text-light-gray);
+  --icon-button-hover-fg: var(--white);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
 }

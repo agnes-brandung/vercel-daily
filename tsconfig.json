@@ -21,9 +21,10 @@
     "paths": {
       "@/*": ["./*"],
       "@/components/*": ["./components/*"],
+      "@/hooks/*": ["./hooks/*"],
       "@/lib/*": ["./lib/*"],
       "@/types/*": ["./types/*"],
-      "@/ui/*": ["./ui/*"],
+      "@/ui/*": ["./components/ui/*"],
       "@/utils/*": ["./utils/*"]
     }
   },

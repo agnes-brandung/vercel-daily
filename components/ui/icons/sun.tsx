@@ -4,7 +4,7 @@ export function SunIcon() {
       viewBox="0 0 16 16"
       width="24"
       height="24"
-      className="w-6 h-6 dark:hidden"
+      className="hidden w-6 h-6 dark:block"
       >
       <g clipPath="url(#clip0_53_17725)">
         <path
