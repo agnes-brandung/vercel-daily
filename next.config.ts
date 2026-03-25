@@ -45,12 +45,31 @@ const nextConfig: NextConfig = {
    *   expire: 3600      // Expire after 1hr
    * });
    * 
+   * Semantics:
+   * stale: Data is fresh for this duration (served from cache, no revalidation)
+   * revalidate: After this period, revalidate in the background using stale-while-revalidate (serve cached content while fetching fresh data in the background)
+   * expire: Maximum time before forced synchronous regeneration
+   * 
    * You can also use the cacheTag directive to cache based on a tag:
    * "use cache";
    * cacheTag('my-tag');
    * 
    */
   cacheComponents: true,
-};
+  cacheLife: {
+    // All articles catalog - moderate cache
+    articles: {
+      stale: 300, // 5 minutes fresh 
+      revalidate: 900, // 15 minutes before revalidation
+      expire: 3600, // 1 hour max
+    },
+    // Real-time data (breaking news) - minimal cache
+    breakingNews: {
+      stale: 15, // 15 seconds fresh
+      revalidate: 60, // 1 minute before revalidation
+      expire: 120, // 2 minutes max
+    },
+  },
+}
 
-export default nextConfig;
+export default nextConfig

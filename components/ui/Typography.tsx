@@ -22,9 +22,9 @@ export const headlineStyles = (color?: HeadlineColor, size?: 'xs' | 'sm' | 'base
       h1: `font-primary text-4xl font-bold uppercase md:text-[3.5rem] ${color ? `text-${color}` : 'text-blue'}`,
       h2: 'font-primary text-2xl uppercase font-bold md:text-[2.5rem]',
       h3: 'font-primary text-2xl font-medium uppercase md:text-[2rem]',
-      h4: 'font-primary text-xl font-medium md:text-[1.75rem]',
-      h5: 'font-primary text-xl font-normal',
-      h6: 'font-primary text-lg font-normal',
+      h4: 'font-primary text-xl font-medium md:text-[1.75rem] italic',
+      h5: 'font-primary text-xl font-normal italic',
+      h6: 'font-primary text-lg font-normal italic',
       p: 'font-primary text-base font-normal',
       brand: `font-secondary ${size ? `text-${size}` : 'text-4xl'} font-bold uppercase ${size ? `md:text-${size}` : 'md:text-[3.5rem]'} ${color ? `text-${color}` : 'text-blue'}`,
     },
@@ -77,6 +77,8 @@ const copyStyles = cva('whitespace-break-spaces', {
     color: {
       blue: 'text-blue',
       red: 'text-red',
+      error: 'text-error',
+      loading: 'text-loading',
       green: 'text-green',
       yellow: 'text-yellow',
       offWhite: 'text-off-white',
@@ -104,7 +106,7 @@ type CopyProps = {
   className?: string;
   size?: 'xs' | 'sm' | 'base' | 'lg';
   weight?: 'normal' | 'bold';
-  color?: 'blue' | 'red' | 'green' | 'yellow' | 'offWhite' | 'gray' | 'lightGray';
+  color?: 'blue' | 'red' | 'error' | 'loading' | 'green' | 'yellow' | 'offWhite' | 'gray' | 'lightGray';
   disabled?: boolean;
 };
 

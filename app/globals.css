@@ -7,6 +7,9 @@
   --white: #ffffff;
   --off-white: #f5f5f5;
   --gray: #263238;
+  --base-error: #c62828;
+  /* Orange–amber for loading / pending UI on light backgrounds */
+  --base-loading: #f57c00;
   --base-red: #ef9a9a;
   --base-green: #81c784;
   --base-yellow: rgb(247, 192, 13);
@@ -16,6 +19,13 @@
   --text-dark-gray: #1a2329;
   --text-light-gray: #757575;
   --text-off-white: #f5f5f5;
+
+  /* Accent text colors (light UI); also used for article categories */
+  --cyan: #0e7490;
+  --magenta: #8e24aa;
+  --emerald: #2e7d32;
+  --rose: #ad1457;
+  --violet: #5e35b1;
 
   --body: var(--white);
   --typography: var(--gray);
@@ -85,6 +95,9 @@
   html:not(.light):not(.dark) {
     --body: var(--gray);
     --typography: var(--white);
+    --base-error: #ff8a80;
+    /* Lighter amber for contrast on dark gray body */
+    --base-loading: #ffcc80;
     --base-red: #ffcdd2;
     --base-green: #c8e6c9;
     --base-yellow: #fff9c4;
@@ -92,6 +105,12 @@
     --text-gray: #cfd8dc;
     --text-light-gray: #b0bec5;
     --text-off-white: #eceff1;
+
+    --cyan: #67e8f9;
+    --magenta: #f0abfc;
+    --emerald: #a5d6a7;
+    --rose: #f48fb1;
+    --violet: #e1bee7;
 
     --button-primary-text: var(--white);
     --button-secondary: var(--base-yellow);
@@ -126,8 +145,15 @@
   --color-dark-gray: var(--text-dark-gray);
   --color-blue: var(--text-blue);
   --color-red: var(--base-red);
+  --color-error: var(--base-error);
+  --color-loading: var(--base-loading);
   --color-green: var(--base-green);
   --color-yellow: var(--base-yellow);
+  --color-cyan: var(--cyan);
+  --color-magenta: var(--magenta);
+  --color-emerald: var(--emerald);
+  --color-rose: var(--rose);
+  --color-violet: var(--violet);
   --color-light-gray: var(--text-light-gray);
   --color-off-white: var(--text-off-white);
   --color-body: var(--body);
@@ -190,8 +216,10 @@
   --button-tertiary-hover-text: var(--color-blue);
   --button-tertiary-hover-border: none;
 
-  --z-navigation: 10;
+  /* Below drawer layers (50+); above main content (z-0) */
+  --z-base: 0;
   --z-dropdown: 20;
+  --z-navigation: 40;
   --z-drawer-backdrop: 50;
   --z-drawer: 51;
 }
@@ -199,6 +227,70 @@
 @utility p-base {
   padding-block: 0;
   padding-inline: var(--base-pad-x);
+}
+
+/** Vertical rhythm for page sections (top offset + stack gap between direct children). */
+@utility section-base-space {
+  @apply space-y-6;
+}
+
+/** Home / landing: extra gap between major blocks (hero, breaking news, featured, …). */
+@utility page-section-stack {
+  @apply space-y-12 sm:space-y-16 lg:space-y-20;
+}
+
+@keyframes breaking-news-category-flash {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.22;
+  }
+  35% {
+    opacity: 0.06;
+  }
+  55% {
+    opacity: 0.2;
+  }
+  75% {
+    opacity: 0.05;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/**
+ * Breaking news card: subtle category-tinted wash over ~3s (opacity animated; text stays readable).
+ * Set `--breaking-flash-color` on the element (e.g. `var(--cyan)`).
+ */
+.breaking-news-card {
+  position: relative;
+  isolation: isolate;
+}
+
+.breaking-news-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background-color: var(--breaking-flash-color, transparent);
+  opacity: 0;
+  pointer-events: none;
+  animation: breaking-news-category-flash 3s ease-in-out forwards;
+}
+
+.breaking-news-card-inner {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .breaking-news-card::before {
+    animation: none;
+    opacity: 0;
+  }
 }
 
 /* Dark shadow on light UI; white shadow in dark (via `dark` + system pre-hydration). */
@@ -226,6 +318,8 @@ body {
 .dark {
   --body: var(--gray);
   --typography: var(--white);
+  --base-error: #ff8a80;
+  --base-loading: #ffcc80;
   --base-red: #ffcdd2;
   --base-green: #c8e6c9;
   --base-yellow: #fff9c4;
@@ -233,6 +327,12 @@ body {
   --text-gray: #cfd8dc;
   --text-light-gray: #b0bec5;
   --text-off-white: #eceff1;
+
+  --cyan: #67e8f9;
+  --magenta: #f0abfc;
+  --emerald: #a5d6a7;
+  --rose: #f48fb1;
+  --violet: #e1bee7;
 
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
