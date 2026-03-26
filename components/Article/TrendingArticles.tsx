@@ -24,18 +24,18 @@ export function TrendingArticles({ result }: { result: ArticlesResult }) {
   const listedArticles = result.data.slice(0, MAX_TRENDING);
 
   return (
-    <div className="mt-12 border-t border-border/50 pt-10">
-      <section aria-labelledby="trending-articles-heading" className="space-y-5">
+    <div className="border-t border-border/50">
+      <section aria-labelledby="trending-articles-heading" className="space-y-6">
         <Headline
           id="trending-articles-heading"
           type="h2"
           styleAs="h4"
           uppercase
-          className="w-full max-w-none text-balance"
+          className="mt-4 w-full max-w-none text-balance"
         >
           Trending now
         </Headline>
-        <ul className="m-0 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid list-none grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {listedArticles.map((article) => {
             const parsedArticle = parseArticle(article);
             return (

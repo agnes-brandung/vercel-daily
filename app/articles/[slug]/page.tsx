@@ -9,12 +9,18 @@ type ArticlePageProps = {
   params: Promise<{ slug: string }>;
 }
 
-// TODO: fix suspense message or replace with loading... ?
+/**
+ * 
+ * TODOS:
+ * - fix suspense message or replace with loading... ?
+ * - Subscribe button logic
+ * - Subscribe button in the navigation instead of the article page - add it in a layout specific for here?
+ */
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
 
   return (
-    <article className="mx-auto max-w-6xl py-block">
+    <article className="mx-auto max-w-6xl py-block space-y-12">
       <Suspense fallback={
         <InfoMessage type="loading" message="Loading article…">
           <LoadingSkeleton />
