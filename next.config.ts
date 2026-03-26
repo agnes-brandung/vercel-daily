@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    // Avoid picking a parent lockfile as workspace root.
+    root: new URL(".", import.meta.url).pathname,
+  },
   experimental: {
     /**
      * Cold starts that previously took 10–15 minutes now complete in seconds. All Vercel internal apps already use this feature with notable productivity improvements.

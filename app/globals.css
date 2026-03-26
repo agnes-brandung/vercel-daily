@@ -294,7 +294,7 @@
 }
 
 /* Dark shadow on light UI; white shadow in dark (via `dark` + system pre-hydration). */
-@utility shadow-nav {
+@utility shadow-elevated {
   box-shadow: 0 10px 28px -10px rgb(0 0 0 / 0.12);
 
   @variant dark {
@@ -303,7 +303,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  html:not(.light):not(.dark) .shadow-nav {
+  html:not(.light):not(.dark) .shadow-elevated {
     box-shadow: 0 10px 28px -10px rgb(255 255 255 / 0.12);
   }
 }

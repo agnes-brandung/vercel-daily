@@ -1,8 +1,6 @@
 import { FeaturedArticles } from '@/components/Articles/FeaturedArticles';
 import { BreakingNewsBanner } from '@/components/BreakingNews/BreakingNewsBanner';
-import { InfoMessage } from '@/components/ui/InfoMessage';
 import { Headline } from '@/ui/Typography';
-import { Suspense } from 'react';
 
 export default async function Home() {
   /**
@@ -10,8 +8,6 @@ export default async function Home() {
    * Hero Section:
    * - a visual element (featured story image or illustration).
    * Breaking News Banner: 
-   * - make category styles in typography for headlines
-   * - Change TextLink for article link
    * - Fix on top of navigation
    * Featured Articles:
    * - Fix hover effect on cards on top of navigation
@@ -26,18 +22,8 @@ export default async function Home() {
         </Headline>
         {/* TODO: add a visual element ...? */}
       </div>
-
-      <Suspense
-        fallback={<InfoMessage type="loading" message="Loading breaking news…" />}
-      >
-        <BreakingNewsBanner />
-      </Suspense>
-
-      <Suspense
-        fallback={<InfoMessage type="loading" message="Loading articles…" />}
-      >
-        <FeaturedArticles />
-      </Suspense>
+      <BreakingNewsBanner />
+      <FeaturedArticles />
     </div>
   );
 }

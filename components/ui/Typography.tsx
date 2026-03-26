@@ -27,12 +27,14 @@ export const headlineStyles = (color?: HeadlineColor, size?: 'xs' | 'sm' | 'base
       h6: 'font-primary text-lg font-normal italic',
       p: 'font-primary text-base font-normal',
       brand: `font-secondary ${size ? `text-${size}` : 'text-4xl'} font-bold uppercase ${size ? `md:text-${size}` : 'md:text-[3.5rem]'} ${color ? `text-${color}` : 'text-blue'}`,
+      /** Article category label: color via `className` (e.g. `categoryLabelClassName`). */
+      category: `font-primary ${size ? `text-${size}` : 'text-sm'} font-bold uppercase tracking-wide ${size ? `md:text-${size}` : 'md:text-base'} mb-0 leading-normal`,
     },
   },
 });
 
 type HeadlineColor = 'blue' | 'red' | 'green' | 'yellow' | 'offWhite' | 'gray' | 'lightGray';
-type HeadlineIntent = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'brand';
+type HeadlineIntent = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'brand' | 'category';
 
 const headlineTagByIntent: Record<HeadlineIntent, ElementType> = {
   h1: 'h1',
@@ -43,6 +45,7 @@ const headlineTagByIntent: Record<HeadlineIntent, ElementType> = {
   h6: 'h6',
   p: 'p',
   brand: 'span',
+  category: 'span',
 };
 
 export type HeadlineProps = {
@@ -56,6 +59,7 @@ export type HeadlineProps = {
   /**
    * DOM tag override. Typography comes from `styleAs`, or from `type` if `styleAs` is omitted.
    * Does not by itself switch font when `styleAs` is set (e.g. `styleAs="h1" type="brand"` → still Inter/h1 styles, `span` tag).
+   * `styleAs="category"` renders a `span` (not a heading); pair with `categoryLabelClassName` (or similar) for accent color.
    */
   type?: HeadlineIntent;
 };
