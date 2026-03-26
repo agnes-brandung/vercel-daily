@@ -35,6 +35,10 @@ export const buttonStyles = cva(baseButtonClasses, {
       labelWithIcon: 'justify-between gap-2 px-8',
       iconOnly: 'px-3',
     },
+    alignleft: {
+      true: 'pl-0',
+      false: '',
+    },
     fullWidth: {
       true: 'md:w-full',
     },
@@ -76,6 +80,7 @@ export type ButtonProps = {
   icon?: ReactNode;
   isLoading?: boolean;
   disabled?: boolean;
+  alignleft?: boolean;
   className?: string;
   href?: string;
   fullWidth?: boolean;
@@ -92,6 +97,7 @@ function Button({
   icon,
   isLoading = false,
   disabled = false,
+  alignleft = false,
   className,
   href,
   fullWidth,
@@ -114,7 +120,7 @@ function Button({
           ? 'labelWithIcon'
           : 'labelOnly';
 
-  const buttonClasses = cn(buttonStyles({ variant, layout, disabled, fullWidth }), className);
+  const buttonClasses = cn(buttonStyles({ variant, layout, disabled, fullWidth, alignleft }), className);
 
   const fallbackContent = (
     <span className="font-semibold">

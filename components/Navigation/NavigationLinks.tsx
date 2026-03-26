@@ -22,7 +22,7 @@ export function BrandLink({ size }: { size?: 'xs' | 'sm' | 'base' | 'lg' }) {
   return (
     <Link href="/" className="group flex shrink-0 items-center" aria-label="Home">
       <Headline styleAs="brand" size={size}>
-        The Daily Delivery
+        The Vercel Daily
       </Headline>
     </Link>
   )

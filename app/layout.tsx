@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
-import { ThemeProvider } from "next-themes";
+import { Suspense } from "react";
 import "./globals.css";
-import { fontPrimary, fontSecondary } from './fonts';
+import { fontPrimary, fontSecondary } from '../lib/fonts';
 import { cn } from '@/utils/cn';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
+import { ThemeProviders } from '@/components/Providers/ThemeProviders';
 
 export const metadata: Metadata = {
-  title: "The Daily Delivery",
-  description: "Professional and neutral news website delivering proven and reliable reports from around the globe.",
+  title: "The Vercel Daily",
+  description: "News and insights for modern web developers.",
 };
+
 
 export default function RootLayout({
   children,
@@ -23,15 +25,15 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="flex min-h-dvh flex-col">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProviders>
           <div className="flex min-h-dvh flex-col p-base">
             <Navigation />
-            <main className="bg-body text-typography flex flex-1 flex-col">
+            <main className="flex flex-1 flex-col bg-body text-typography">
               {children}
             </main>
             <Footer />
           </div>
-        </ThemeProvider>
+        </ThemeProviders>
       </body>
     </html>
   );
