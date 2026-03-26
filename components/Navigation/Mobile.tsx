@@ -1,7 +1,7 @@
 'use client'
 import { usePathname } from 'next/navigation'
 import { useState, type ReactNode } from 'react'
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
+import { VisuallyHidden } from 'radix-ui'
 import {
   Drawer,
   DrawerTrigger,
@@ -77,12 +77,12 @@ export default function NavigationMobile() {
           className="fixed top-0 left-0 h-full max-w-sm w-[80%] rounded-none border-border border-r bg-body text-typography shadow-lg"
           style={{ transform: open ? 'translateX(0)' : 'translateX(-100%)' }}
         >
-          <VisuallyHidden>
+          <VisuallyHidden.Root>
             <DrawerHeader>
               <DrawerTitle className="sr-only">Mobile navigation</DrawerTitle>
               <DrawerDescription className="sr-only">Mobile navigation</DrawerDescription>
             </DrawerHeader>
-          </VisuallyHidden>
+          </VisuallyHidden.Root>
           <nav className="flex flex-col gap-y-6 p-6" aria-label="Mobile navigation">
             <ul className="flex flex-col space-y-4">
               <MobileNavLink href="/" isActive={pathname === '/'}>
