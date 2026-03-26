@@ -1,5 +1,7 @@
+import { Suspense } from 'react';
 import NavigationDesktop from './Desktop';
 import NavigationMobile from './Mobile';
+import { InfoMessage } from '../ui/InfoMessage';
 
 /**
  * Above main (`z-0` in layout) so hover/transform on cards does not paint over the bar.
@@ -12,7 +14,9 @@ export default function Navigation() {
   return (
     <>
       <NavigationDesktop />
-      <NavigationMobile />
+      <Suspense fallback={<InfoMessage type="loading" message="Loading navigation…" />}>
+        <NavigationMobile />
+      </Suspense>
     </>
   )
 }
