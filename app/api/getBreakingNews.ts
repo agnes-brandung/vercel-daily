@@ -2,7 +2,7 @@ import { fetchNewsApi } from '@/lib/api';
 import { cacheLife } from 'next/cache';
 
 export type BreakingNewsResult =
-  | { ok: true; breakingNews: ApiBreakingNews }
+  | { ok: true; data: ApiBreakingNews }
   | { ok: false; error: string };
 
 /**
@@ -18,5 +18,5 @@ export async function getBreakingNews(): Promise<BreakingNewsResult> {
     return { ok: false, error: result.error };
   }
 
-  return { ok: true, breakingNews: result.data };
+  return { ok: true, data: result.data };
 }

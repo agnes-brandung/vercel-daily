@@ -11,25 +11,32 @@ import { cn } from '@/utils/cn';
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import { Suspense } from 'react';
-import { getBreakingNews } from './getBreakingNews';
-import { ArrowRightIcon } from '@/ui/icons/arrow-right';
-import Button from '../ui/Button';
+import { getBreakingNews, getArticleById } from '@/app/api';
+import { ReadArticleButton } from '@/components/ReadArticleButton';
+import { BreakingNewsTicker } from './BreakingNewsTicker';
+import { parseBreakingNews } from '@/utils/parseApiData';
 
 export async function BreakingNews() {
-  const data = await getBreakingNews();
+  const breakingNewsData = await getBreakingNews();
 
-  if (!data.ok) {
-    return <InfoMessage type="error" message={data.error} />;
+  if (!breakingNewsData.ok) {
+    return <InfoMessage type="error" message={"An error occurred while fetching the breaking news - try again later."} />;
   }
 
-  const { articleId, headline, summary, category, publishedAt, urgent } = data.breakingNews;
+  const parsedBreakingNews = parseBreakingNews(breakingNewsData.data);
+  const { articleId, headline, summary, category, publishedAt, urgent, categoryLabel } = parsedBreakingNews;
 
-  if (!headline?.trim()) {
+  const articleById = await getArticleById({ articleId });
+  if (!articleById.ok) {
+    return <InfoMessage type="error" message={"An error occurred while fetching the breaking news - try again later."} />;
+  }
+
+  const breakingNewsSlug = articleById.data?.slug;
+
+  if (!breakingNewsSlug || !headline) {
     return <InfoMessage type="info" message="No breaking news right now." />;
   }
 
-  const categoryLabel = category.replace(/-/g, ' ');
-  
   const breakingNewsCardContainerStyles = cn(
     'breaking-news-card group block overflow-hidden rounded-xl border-2 border-border bg-card text-typography shadow-elevated transition-[border-color,box-shadow] focus-visible:outline-none focus-visible:ring-2',
     categoryCardBorderClassName(category),
@@ -41,11 +48,10 @@ export async function BreakingNews() {
   } as CSSProperties;
 
   const urgentBadgeStyles = 'rounded-md bg-error px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-white';
-  const breakingNewsCardReadMoreAnimationStyles = 'inline-flex items-center transition-transform group-hover:translate-x-0.5';
 
   return (
     <Link
-      href={`/articles/${articleId}`}
+      href={`/articles/${breakingNewsSlug}`}
       className={breakingNewsCardContainerStyles}
       style={breakingNewsCardAnimationStyle}
     >
@@ -65,18 +71,18 @@ export async function BreakingNews() {
         <Headline
           type="h3"
           styleAs="h1"
-          className="text-balance normal-case leading-tight"
+          className="text-balance leading-tight"
         >
           {headline}
         </Headline>
-
-        {summary?.trim() ? (
+        {summary ? (
           <Copy size="lg" color="lightGray" className="max-w-3xl leading-relaxed">
             {summary}
           </Copy>
         ) : null}
-        <Button variant="tertiary" label="Read full story" alignleft icon={<ArrowRightIcon className={breakingNewsCardReadMoreAnimationStyles}/>} />
+        <ReadArticleButton />
       </div>
+      {urgent ? <BreakingNewsTicker /> : null}
     </Link>
   );
 }

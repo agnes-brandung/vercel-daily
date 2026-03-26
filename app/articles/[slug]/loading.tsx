@@ -1,9 +1,12 @@
+import { InfoMessage } from '@/components/ui/InfoMessage';
+import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
+
 export default function Loading() {
   return (
-    <div className="animate-pulse">
-      <div className="mb-4 h-8 w-1/3 rounded bg-gray-200" />
-      <div className="mb-2 h-4 w-full rounded bg-gray-200" />
-      <div className="h-4 w-2/3 rounded bg-gray-200" />
+    <div className="mx-auto w-full flex flex-col items-center justify-center max-w-5xl py-block">   
+      <InfoMessage type="loading" message="Loading article…">
+        <LoadingSkeleton />
+      </InfoMessage>
     </div>
   )
 }

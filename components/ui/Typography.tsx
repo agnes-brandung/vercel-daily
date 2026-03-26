@@ -19,9 +19,9 @@ export const headlineStyles = (color?: HeadlineColor, size?: 'xs' | 'sm' | 'base
       lightGray: 'text-light-gray',
     },
     styleAs: {
-      h1: `font-primary text-4xl font-bold uppercase md:text-[3.5rem] ${color ? `text-${color}` : 'text-blue'}`,
-      h2: 'font-primary text-2xl uppercase font-bold md:text-[2.5rem]',
-      h3: 'font-primary text-2xl font-medium uppercase md:text-[2rem]',
+      h1: `font-primary text-4xl font-bold md:text-[3.5rem] ${color ? `text-${color}` : 'text-blue'}`,
+      h2: 'font-primary text-2xl font-bold md:text-[2.5rem]',
+      h3: 'font-primary text-2xl font-medium md:text-[2rem]',
       h4: 'font-primary text-xl font-medium md:text-[1.75rem] italic',
       h5: 'font-primary text-xl font-normal italic',
       h6: 'font-primary text-lg font-normal italic',
@@ -54,6 +54,8 @@ export type HeadlineProps = {
   styleAs?: HeadlineIntent;
   children: ReactNode;
   className?: string;
+  /** All-caps display. `brand` and `category` styles are uppercase by default; use this for section labels (e.g. `h2`). */
+  uppercase?: boolean;
   color?: HeadlineColor;
   size?: 'xs' | 'sm' | 'base' | 'lg';
   /**
@@ -64,13 +66,16 @@ export type HeadlineProps = {
   type?: HeadlineIntent;
 };
 
-export function Headline({ id, styleAs, children, className, color, type, size }: HeadlineProps) {
+export function Headline({ id, styleAs, children, className, color, type, size, uppercase }: HeadlineProps) {
   const visualIntent = styleAs ?? type ?? 'h1';
   const domIntent = type ?? styleAs ?? 'h1';
   const Tag = headlineTagByIntent[domIntent];
 
   return (
-    <Tag id={id} className={cn(headlineStyles(color, size)({ styleAs: visualIntent }), className)}>
+    <Tag
+      id={id}
+      className={cn(headlineStyles(color, size)({ styleAs: visualIntent }), uppercase && 'uppercase', className)}
+    >
       {children}
     </Tag>
   );

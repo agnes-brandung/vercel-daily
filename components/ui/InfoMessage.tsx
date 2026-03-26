@@ -16,13 +16,15 @@ const typeStyles: Record<
 export interface InfoMessageProps {
   message: string;
   type: InfoMessageType;
+  children?: React.ReactNode;
 }
 
-export function InfoMessage({ message, type }: InfoMessageProps) {
+export function InfoMessage({ message, type, children }: InfoMessageProps) {
   const { border, copyColor } = typeStyles[type];
   return (
-    <div className={cn('rounded-md border-2 p-4', border)}>
+    <div className={cn('w-full rounded-md border-2 p-4 space-y-2', border)}>
       <Copy color={copyColor}>{message}</Copy>
+      {children ? children : null}
     </div>
   );
 }

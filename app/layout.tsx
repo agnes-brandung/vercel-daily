@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import "./globals.css";
 import { fontPrimary, fontSecondary } from '../lib/fonts';
 import { cn } from '@/utils/cn';
@@ -28,7 +27,7 @@ export default function RootLayout({
         <ThemeProviders>
           <div className="flex min-h-dvh flex-col p-base">
             <Navigation />
-            <main className="flex flex-1 flex-col bg-body text-typography">
+            <main className="relative z-base flex flex-1 flex-col bg-body text-typography">
               {children}
             </main>
             <Footer />

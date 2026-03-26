@@ -9,11 +9,25 @@ export type BackendResult<T> =
  */
 export async function fetchNewsApi<T>({
   endpoint,
+  queryParams,
 }: {
   endpoint: string;
+  queryParams?: Record<string, string | string[]>;
 }): Promise<BackendResult<T>> {
   try {
-    const res = await fetch(`${BASE_URL}/${endpoint}`, {
+    const url = new URL(`${BASE_URL}/${endpoint}`);
+
+    if (queryParams) {
+      Object.entries(queryParams).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach((v) => url.searchParams.append(key, v));
+        } else {
+          url.searchParams.append(key, value);
+        }
+      });
+    }
+
+    const res = await fetch(url.toString(), {
       headers: {
         "x-vercel-protection-bypass": process.env.VERCEL_PROTECTION_BYPASS!,
       },

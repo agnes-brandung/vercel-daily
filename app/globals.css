@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "../styles/components/breaking-news.css";
+@import "../styles/components/article.css";
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
@@ -85,8 +87,8 @@
 
 @media (min-width: 1024px) {
   :root {
-    --base-pad-x: 32px;
-    --base-pad-y: 32px;
+    --base-pad-x: 64px;
+    --base-pad-y: 64px;
   }
 }
 
@@ -216,8 +218,10 @@
   --button-tertiary-hover-text: var(--color-blue);
   --button-tertiary-hover-border: none;
 
-  /* Below drawer layers (50+); above main content (z-0) */
+  /* Below drawer layers (50+); above main content (z-base). z-content: text above decorative overlays. */
   --z-base: 0;
+  --z-raised: 1;
+  --z-content: 10;
   --z-dropdown: 20;
   --z-navigation: 40;
   --z-drawer-backdrop: 50;
@@ -239,58 +243,31 @@
   @apply space-y-12 sm:space-y-16 lg:space-y-20;
 }
 
-@keyframes breaking-news-category-flash {
-  0% {
-    opacity: 0;
-  }
-  15% {
-    opacity: 0.22;
-  }
-  35% {
-    opacity: 0.06;
-  }
-  55% {
-    opacity: 0.2;
-  }
-  75% {
-    opacity: 0.05;
-  }
-  100% {
-    opacity: 0;
-  }
+/** Stacking: nav (40) &lt; drawer overlay (50) &lt; drawer panel (51). Main/footer stay at z-base so scroll content does not paint over sticky nav. */
+@utility z-base {
+  z-index: var(--z-base);
 }
 
-/**
- * Breaking news card: subtle category-tinted wash over ~3s (opacity animated; text stays readable).
- * Set `--breaking-flash-color` on the element (e.g. `var(--cyan)`).
- */
-.breaking-news-card {
-  position: relative;
-  isolation: isolate;
+/** Above sibling backgrounds / ::before washes (e.g. breaking news card inner, ticker). */
+@utility z-raised {
+  z-index: var(--z-raised);
 }
 
-.breaking-news-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  border-radius: inherit;
-  background-color: var(--breaking-flash-color, transparent);
-  opacity: 0;
-  pointer-events: none;
-  animation: breaking-news-category-flash 3s ease-in-out forwards;
+/** Body copy above absolute gradient overlays (e.g. articles catalog cards). */
+@utility z-content {
+  z-index: var(--z-content);
 }
 
-.breaking-news-card-inner {
-  position: relative;
-  z-index: 1;
+@utility z-navigation {
+  z-index: var(--z-navigation);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .breaking-news-card::before {
-    animation: none;
-    opacity: 0;
-  }
+@utility z-drawer-backdrop {
+  z-index: var(--z-drawer-backdrop);
+}
+
+@utility z-drawer {
+  z-index: var(--z-drawer);
 }
 
 /* Dark shadow on light UI; white shadow in dark (via `dark` + system pre-hydration). */
