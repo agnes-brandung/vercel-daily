@@ -3,8 +3,9 @@ import { Copy, Headline } from '@/ui/Typography';
 import { cn } from '@/utils/cn';
 import Link from 'next/link';
 
-import { getArticles } from './getArticles';
+import { getArticles } from '@/app/api/getArticles';
 import { categoryCardBorderClassName, categoryLabelClassName } from '@/utils/mapCategoryColor';
+import { parseArticle } from '@/utils/parseApiData';
 import PublishedDate from '@/components/PublishedDate';
 import { Suspense } from 'react';
 
@@ -17,13 +18,14 @@ function pickGridArticles(all: ApiArticle[]): ApiArticle[] {
 }
 
 export async function FeaturedArticlesList() {
-  const data = await getArticles();
+  const allArticles = await getArticles();
 
-  if (!data.ok) {
-    return <InfoMessage type="error" message={data.error} />;
+  if (!allArticles.ok) {
+    return <InfoMessage type="error" message={"An error occurred while fetching the articles - try again later."} />;
   }
 
-  const articles = pickGridArticles(data.allArticles);
+  // TODO: to improve slighlty, remove article from grid if it is in the breaking news
+  const articles = pickGridArticles(allArticles.data);
 
   if (articles.length === 0) {
     return <InfoMessage type="info" message="No articles available yet." />;
@@ -31,40 +33,40 @@ export async function FeaturedArticlesList() {
 
   return (
     <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {articles.map((article) => (
-        <li key={article.id}>
-          <Link
-            href={`/articles/${article.slug}`}
-            className={cn(
-              'group block overflow-hidden rounded-lg border border-border bg-card text-typography shadow-elevated transition-[border-color,box-shadow] focus-visible:outline-none focus-visible:ring-2',
-              categoryCardBorderClassName(article.category),
-            )}
-          >
-            <div className="aspect-16/10 bg-muted">
-              {/* eslint-disable-next-line @next/next/no-img-element -- external URLs; skip Image remotePatterns */}
-              <img
-                src={article.image}
-                alt={article.title}
-                className="h-full w-full object-cover transition-transform md:group-hover:scale-[1.02]"
-              />
-            </div>
-            <div className="space-y-2 p-4">
-              <Headline
-                styleAs="category"
-                className={categoryLabelClassName(article.category)}
-              >
-                {article.category.replace(/-/g, ' ')}
-              </Headline>
-              <Copy size="lg" weight="bold">
-                {article.title}
-              </Copy>
-              <Suspense fallback={<Copy size="sm" color="lightGray">Loading date…</Copy>}>
-                <PublishedDate date={article.publishedAt} />
-              </Suspense>
-            </div>
-          </Link>
-        </li>
-      ))}
+      {articles.map((article) => {
+        const parsedArticle = parseArticle(article);
+        return (
+          <li key={parsedArticle.id}>
+            <Link
+              href={`/articles/${parsedArticle.slug}`}
+              className={cn(
+                'group block overflow-hidden rounded-lg border border-border bg-card text-typography shadow-elevated transition-[border-color,box-shadow] focus-visible:outline-none focus-visible:ring-2',
+                categoryCardBorderClassName(parsedArticle.category),
+              )}
+            >
+              <div className="aspect-16/10 bg-muted">
+                {/* eslint-disable-next-line @next/next/no-img-element -- external URLs; skip Image remotePatterns */}
+                <img
+                  src={parsedArticle.image}
+                  alt={parsedArticle.title}
+                  className="h-full w-full object-cover transition-transform md:group-hover:scale-[1.02]"
+                />
+              </div>
+              <div className="space-y-2 p-4">
+                <Headline styleAs="category" className={categoryLabelClassName(parsedArticle.category)}>
+                  {parsedArticle.categoryLabel}
+                </Headline>
+                <Copy size="lg" weight="bold">
+                  {parsedArticle.title}
+                </Copy>
+                <Suspense fallback={<Copy size="sm" color="lightGray">Loading date…</Copy>}>
+                  <PublishedDate date={parsedArticle.publishedAt} />
+                </Suspense>
+              </div>
+            </Link>
+          </li>
+        );
+      })}
     </ul>
   );
 }

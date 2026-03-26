@@ -1,10 +1,10 @@
 import { Copy, Headline } from '@/ui/Typography';
 
-export default function Search() {
+export default function SubscriptionPage() {
   return (
     <>
       <Headline styleAs="h1" uppercase>
-        Search
+        Subscription
       </Headline>
       <Copy>Lorem ipsum</Copy>
     </>

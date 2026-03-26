@@ -1,0 +1,109 @@
+/**
+ * Article detail: `--article-accent` is set inline on `.article-page-frame` (see `categoryFlashBackground`).
+ */
+/**
+ * Below `md` (768px): stretch the frame background to the viewport edges while the
+ * article column stays centered in `page.tsx` (`max-w-6xl`).
+ */
+@media (max-width: 767px) {
+  .article-page-frame {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    box-sizing: border-box;
+  }
+}
+
+.article-page-frame {
+  background:
+    /* Corner washes — soft “spotlight” without competing with text */
+    radial-gradient(
+      ellipse 115% 85% at 100% -25%,
+      color-mix(in srgb, var(--article-accent) 14%, transparent) 0%,
+      transparent 52%
+    ),
+    radial-gradient(
+      ellipse 95% 75% at -20% 105%,
+      color-mix(in srgb, var(--article-accent) 10%, transparent) 0%,
+      transparent 48%
+    ),
+    /* Mid-page haze — keeps the column feeling alive */
+    radial-gradient(
+      ellipse 70% 45% at 50% 40%,
+      color-mix(in srgb, var(--article-accent) 6%, transparent) 0%,
+      transparent 65%
+    ),
+    /* Very light dot grid (editorial texture) */
+    radial-gradient(
+        circle at 1px 1px,
+        color-mix(in srgb, var(--article-accent) 4.5%, transparent) 1px,
+        transparent 0
+      )
+      0 0 / 26px 26px,
+    /* Original top wash */
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--article-accent) 10%, transparent) 0%,
+      transparent min(35%, 10rem)
+    ),
+    var(--card);
+}
+
+.article-page-frame .article-title-accent::after {
+  content: "";
+  display: block;
+  height: 3px;
+  width: min(10rem, 40%);
+  margin-top: 0.85rem;
+  background: linear-gradient(90deg, var(--article-accent), color-mix(in srgb, var(--article-accent) 15%, transparent));
+}
+
+.article-content-divider {
+  height: 1px;
+  width: min(14rem, 100%);
+  margin-top: 0.25rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(90deg, var(--article-accent), transparent);
+  opacity: 0.35;
+}
+
+.article-page-frame .article-content-rte blockquote {
+  border-left-color: color-mix(in srgb, var(--article-accent) 55%, var(--typography));
+}
+
+/** Hero: faint bottom vignette in the category hue (image stays readable). */
+.article-hero-figure {
+  position: relative;
+}
+
+.article-hero-figure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--article-accent) 12%, transparent) 0%,
+    transparent 38%
+  );
+}
+
+/** In-body headings: short accent bar (RTE h2 / h3). */
+.article-page-frame .article-content-rte h2,
+.article-page-frame .article-content-rte h3 {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  padding-bottom: 0.4rem;
+}
+
+.article-page-frame .article-content-rte h2::after,
+.article-page-frame .article-content-rte h3::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: min(4.5rem, 28%);
+  height: 2px;
+  background: linear-gradient(90deg, var(--article-accent), transparent);
+  opacity: 0.55;
+}

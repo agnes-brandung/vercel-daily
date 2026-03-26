@@ -1,0 +1,109 @@
+@keyframes breaking-news-category-flash {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.22;
+  }
+  35% {
+    opacity: 0.06;
+  }
+  55% {
+    opacity: 0.2;
+  }
+  75% {
+    opacity: 0.05;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/**
+ * Breaking news card: subtle category-tinted wash over ~3s (opacity animated; text stays readable).
+ * Set `--breaking-flash-color` on the element (e.g. `var(--cyan)`).
+ */
+.breaking-news-card {
+  position: relative;
+  isolation: isolate;
+}
+
+.breaking-news-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Same layer as @utility z-base (see globals @theme --z-base). */
+  z-index: var(--z-base);
+  border-radius: inherit;
+  background-color: var(--breaking-flash-color, transparent);
+  opacity: 0;
+  pointer-events: none;
+  animation: breaking-news-category-flash 3s ease-in-out forwards;
+}
+
+.breaking-news-card-inner {
+  position: relative;
+  /* Same layer as @utility z-raised (see globals @theme --z-raised). */
+  z-index: var(--z-raised);
+}
+
+.breaking-news-ticker {
+  position: relative;
+  z-index: var(--z-raised);
+  overflow: hidden;
+  border-top: 1px solid rgb(255 255 255 / 0.2);
+  background-color: var(--base-error);
+  color: var(--white);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.breaking-news-ticker-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  gap: 8rem;
+  padding-left: 100%;
+  padding-block: 0.35rem;
+  animation: breaking-news-ticker-slide 7s linear infinite;
+  will-change: transform;
+}
+
+.breaking-news-ticker-group {
+  display: flex;
+  align-items: center;
+  gap: 8rem;
+}
+
+.breaking-news-ticker-item {
+  display: block;
+  white-space: nowrap;
+  font-style: italic;
+}
+
+.breaking-news-ticker-separator {
+  display: block;
+  opacity: 0.9;
+}
+
+@keyframes breaking-news-ticker-slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .breaking-news-card::before {
+    animation: none;
+    opacity: 0;
+  }
+
+  .breaking-news-ticker-track {
+    animation: none;
+  }
+}

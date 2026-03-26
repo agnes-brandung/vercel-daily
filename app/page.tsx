@@ -7,10 +7,6 @@ export default async function Home() {
    * TODOS:
    * Hero Section:
    * - a visual element (featured story image or illustration).
-   * Breaking News Banner: 
-   * - Fix on top of navigation
-   * Featured Articles:
-   * - Fix hover effect on cards on top of navigation
    */
   return (
     <div className="page-section-stack">
