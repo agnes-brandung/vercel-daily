@@ -18,7 +18,7 @@ export function FeaturedArticles() {
       <Suspense fallback={
         <>
           <InfoMessage type="loading" message="Loading articles…">
-            <LoadingSkeleton />
+            <LoadingSkeleton type="card" />
           </InfoMessage>
         </>
       }>
@@ -26,7 +26,6 @@ export function FeaturedArticles() {
       </Suspense>
       <Button
         label="View all articles"
-        variant="primary"
         href="/articles"
         icon={<ArrowRightIcon />}
       />

@@ -29,7 +29,7 @@ export default function ArticlesPage() {
       <Suspense fallback={
         <>
           <InfoMessage type="loading" message="Loading articles…">
-            <LoadingSkeleton />
+            <LoadingSkeleton type="default" />
           </InfoMessage>
         </>
       }>

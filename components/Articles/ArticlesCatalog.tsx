@@ -60,7 +60,7 @@ export async function ArticlesCatalog() {
           key={category}
           aria-labelledby={`catalog-category-${category}`}
           className={cn(
-            'overflow-hidden rounded-md border border-border bg-card shadow-elevated',
+            'surface-elevated overflow-hidden',
             categoryLeftBorderClassName(category),
           )}
         >

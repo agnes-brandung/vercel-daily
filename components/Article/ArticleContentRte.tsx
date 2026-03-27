@@ -2,7 +2,7 @@ import { Copy, Headline } from '@/ui/Typography';
 import { cn } from '@/utils/cn';
 import { renderInlineMarkdown } from '@/utils/renderInlineMarkdown';
 
-function isContentBlockArray(value: ApiArticle['content']): value is ContentBlock[] {
+function isApiContentBlockArray(value: ApiArticle['content']): value is ApiContentBlock[] {
   return Array.isArray(value);
 }
 
@@ -17,8 +17,8 @@ function isArticleContentPlainText(value: ApiArticle['content']): value is Artic
 }
 
 /** Normalizes API payloads: block array or plain-text `{ type, text }` body. */
-export function normalizeArticleContent(content: ApiArticle['content']): ContentBlock[] {
-  if (isContentBlockArray(content)) {
+export function normalizeArticleContent(content: ApiArticle['content']): ApiContentBlock[] {
+  if (isApiContentBlockArray(content)) {
     return content;
   }
   if (isArticleContentPlainText(content)) {
@@ -32,7 +32,7 @@ function nonEmptyListItems(items: string[]): string[] {
   return items.map((s) => s.trim()).filter(Boolean);
 }
 
-function ContentBlockView({ block, index }: { block: ContentBlock; index: number }) {
+function ApiContentBlockView({ block, index }: { block: ApiContentBlock; index: number }) {
   switch (block.type) {
     case 'paragraph': {
       const text = block.text?.trim();
@@ -156,7 +156,7 @@ export function ArticleContentRte({ content, className }: ArticleContentRteProps
   return (
     <div className={cn('article-content-rte space-y-6', className)}>
       {blocks.map((block, index) => (
-        <ContentBlockView key={index} block={block} index={index} />
+        <ApiContentBlockView key={index} block={block} index={index} />
       ))}
     </div>
   );

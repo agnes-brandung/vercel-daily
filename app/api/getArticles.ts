@@ -1,4 +1,4 @@
-import { fetchNewsApi } from '@/lib/api';
+import { fetchNewsApi } from '@/lib/api/fetchNewsApi';
 import { cacheLife } from 'next/cache';
 
 export type ArticlesResult =

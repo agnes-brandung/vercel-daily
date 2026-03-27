@@ -2,8 +2,6 @@ import { InfoMessage } from '@/components/ui/InfoMessage';
 import { Suspense } from 'react';
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 import { ArticleBody } from '@/components/Article/ArticleBody';
-import Button from '@/components/ui/Button';
-import { ArrowRightIcon } from '@/components/ui/icons/arrow-right';
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
@@ -12,8 +10,8 @@ type ArticlePageProps = {
 /**
  * 
  * TODOS:
+ * - still an issue with Route "/articles/[slug]": Runtime data such as `cookies()`, `headers()`, `params`, or `searchParams` was accessed outside of `<Suspense>`. This delays the entire page from rendering, resulting in a slow user experience. 
  * - fix suspense message or replace with loading... ?
- * - Subscribe button logic
  * - Subscribe button in the navigation instead of the article page - add it in a layout specific for here?
  */
 export default async function ArticlePage({ params }: ArticlePageProps) {
@@ -28,12 +26,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       }>
         <ArticleBody slug={slug} />
       </Suspense>
-      <Button
-        label="Subscribe"
-        variant="primary"
-        href="/subscription"
-        icon={<ArrowRightIcon />}
-      />
     </article>
   );
 }

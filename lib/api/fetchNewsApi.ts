@@ -1,8 +1,4 @@
-const BASE_URL = "https://vercel-daily-news-api.vercel.app/api";
-
-export type BackendResult<T> =
-  | { ok: true; data: T }
-  | { ok: false; error: string };
+import { BASE_URL } from './const';
 
 /**
  * Fetches from the news API and returns a result (no throw), branch on `ok` in the components.
@@ -13,7 +9,7 @@ export async function fetchNewsApi<T>({
 }: {
   endpoint: string;
   queryParams?: Record<string, string | string[]>;
-}): Promise<BackendResult<T>> {
+}): Promise<ApiBackendResult<T>> {
   try {
     const url = new URL(`${BASE_URL}/${endpoint}`);
 
@@ -62,17 +58,4 @@ export async function fetchNewsApi<T>({
     const message = e instanceof Error ? e.message : "Unknown error";
     return { ok: false, error: message };
   }
-}
-
-/** For Route Handlers etc.: same fetch, but throws on failure instead of `BackendResult`. */
-export async function fetchNewsApiOrThrow<T>({
-  endpoint,
-}: {
-  endpoint: string;
-}): Promise<T> {
-  const result = await fetchNewsApi<T>({ endpoint });
-  if (!result.ok) {
-    throw new Error(result.error);
-  }
-  return result.data;
 }

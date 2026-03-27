@@ -1,0 +1,1 @@
+export const BASE_URL = "https://vercel-daily-news-api.vercel.app/api";

@@ -1,0 +1,37 @@
+/**
+ * Home page hero: layered radials using category accent tokens (--cyan, --magenta, etc.).
+ * Light/dark follow :root / .dark variable overrides in globals.
+ */
+
+.home-hero-gradient {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  padding: clamp(1.5rem, 4.5vw, 2.75rem) clamp(1.25rem, 3vw, 2.25rem);
+  border: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+}
+
+.home-hero-gradient__bg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 125% 100% at 0% 0%, color-mix(in srgb, var(--cyan) 32%, transparent) 0%, transparent 58%),
+    radial-gradient(ellipse 115% 95% at 100% 0%, color-mix(in srgb, var(--magenta) 28%, transparent) 0%, transparent 54%),
+    radial-gradient(ellipse 100% 80% at 100% 100%, color-mix(in srgb, var(--violet) 24%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 70% at 0% 100%, color-mix(in srgb, var(--emerald) 22%, transparent) 0%, transparent 46%),
+    linear-gradient(
+      168deg,
+      color-mix(in srgb, var(--body) 93%, var(--rose)) 0%,
+      var(--body) 48%,
+      color-mix(in srgb, var(--body) 91%, var(--cyan)) 100%
+    );
+}
+
+.home-hero-gradient__content {
+  position: relative;
+  z-index: 1;
+}

@@ -20,10 +20,10 @@ export default function Error({
 
   return (
     <section className="section-base-space">
-      <div className="flex flex-col items-center justify-center w-full space-y-4 rounded-md border border-border bg-card p-6 text-center text-typography shadow-elevated sm:p-8">
+      <div className="surface-elevated flex w-full flex-col items-center justify-center space-y-4 p-6 text-center text-typography sm:p-8">
         <Headline styleAs="h3">Something went wrong</Headline>
         <Copy color="gray">{message}</Copy>
-        <Button type="button" onClick={reset} label="Try again" variant="primary" />
+        <Button type="button" onClick={reset} label="Try again" />
         <Button type="button" href="/" label="Back to homepage" variant="secondary" />
       </div>
     </section>
