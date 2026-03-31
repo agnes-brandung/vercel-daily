@@ -14,7 +14,7 @@ import { Suspense } from 'react';
 import { ArticleContentRte } from './ArticleContentRte';
 import { ArticleSubscriptionGate } from './ArticleSubscriptionGate';
 import { parseArticle } from '@/utils/parseApiData';
-import { isSubscribed } from '@/lib/subscription';
+import { getSubscriptionStatus } from '@/lib/subscription';
 import { TrendingArticles } from '../TrendingArticles/TrendingArticles';
 import LoadingSkeleton from '../ui/LoadingSkeleton';
 
@@ -40,7 +40,8 @@ export async function ArticleBody({ slug }: { slug: string }) {
   const parsedArticle = parseArticle(article);
   const { id, category, title, publishedAt, excerpt, image, author, categoryLabel } = parsedArticle;
 
-  const userIsSubscribed = await isSubscribed();
+  // Pages using isSubscribed (with cookies()) becomes dynamic (no prerendering)
+  const { isActive, hasToken } = await getSubscriptionStatus();
 
   const accentStyle = {
     '--article-accent': categoryFlashBackground(category),
@@ -92,7 +93,8 @@ export async function ArticleBody({ slug }: { slug: string }) {
         </figure>
 
         <div className="article-content-divider" aria-hidden />
-        <ArticleSubscriptionGate isSubscribed={userIsSubscribed}>
+        {/** // TODO: maybe this is the issue with the dynamic page? */}
+        <ArticleSubscriptionGate isActive={isActive} hasToken={hasToken}>
           <ArticleContentRte content={parsedArticle.content} />
         </ArticleSubscriptionGate>
       </div>

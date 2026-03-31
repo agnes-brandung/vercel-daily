@@ -1,9 +1,9 @@
-import { cache } from 'react';
 import { cookies } from 'next/headers';
+import { cacheLife, cacheTag } from 'next/cache';
 
 import { fetchSubscriptionStatus } from '@/lib/api/subscription/fetchSubscriptionApi';
 
-/** HttpOnly cookie storing the upstream subscription token (set by `/api/subscription/create`). */
+/** HttpOnly cookie storing the upstream subscription token. */
 export const SUBSCRIPTION_TOKEN_COOKIE = 'subscription_token';
 
 const COOKIE_MAX_AGE_SEC = 60 * 60 * 24 * 30; // 30 days
@@ -31,31 +31,39 @@ export type SubscriptionStatus = {
 }
 
 /**
- * Single upstream GET per request; use for Subscribe/Unsubscribe UI hints and `isSubscribed`.
+ * Stable cache tag for a given subscription token.
+ * Keep it token-scoped to avoid invalidating other users.
  */
-export const getSubscriptionStatus = cache(async (): Promise<SubscriptionStatus> => {
-  const subscriptionTokenCookie = (await cookies()).get(SUBSCRIPTION_TOKEN_COOKIE)?.value;
-  if (!subscriptionTokenCookie) {
-    return { isActive: false, hasToken: false };
-  }
+export function subscriptionTag(token: string): string {
+  return `subscription:${token}`;
+}
 
-  const result = await fetchSubscriptionStatus(subscriptionTokenCookie);
+async function readSubscriptionTokenFromCookie(): Promise<string | null> {
+  const token = (await cookies()).get(SUBSCRIPTION_TOKEN_COOKIE)?.value;
+  return token?.trim() ? token.trim() : null;
+}
+
+async function getSubscriptionStatusByToken(token: string): Promise<SubscriptionStatus> {
+  'use cache';
+  cacheLife('days');
+  cacheTag(subscriptionTag(token));
+
+  const result = await fetchSubscriptionStatus(token);
   if (!result.ok) {
     return { isActive: false, hasToken: true };
   }
 
-  return {
-    isActive: result.data.status === 'active',
-    hasToken: true,
-  };
-});
+  return { isActive: result.data.status === 'active', hasToken: true };
+}
 
 /**
- * Central check: subscribed only when the cookie exists and upstream GET reports `status === 'active'`.
- * Use in Server Components, Server Actions, and route handlers (not in client components).
+ * Subscription status for the current request (cookie-aware).
+ * Reads runtime cookie data outside the cached scope and passes it as argument.
  */
-// TODO: use next cacheLife instead of react cache + revalidate the cache when the subscription status changes
-export const isSubscribed = cache(async (): Promise<boolean> => {
-  const subscription = await getSubscriptionStatus();
-  return subscription.isActive;
-});
+export async function getSubscriptionStatus(): Promise<SubscriptionStatus> {
+  const token = await readSubscriptionTokenFromCookie();
+  if (!token) {
+    return { isActive: false, hasToken: false };
+  }
+  return getSubscriptionStatusByToken(token);
+}

@@ -6,8 +6,6 @@ export default async function Subscription() {
   const { isActive, hasToken } = await getSubscriptionStatus();
 
   return (
-    <div className="p-4">
-      <SubscriptionButton isActive={isActive} hasToken={hasToken} />
-    </div>
+    <SubscriptionButton isActive={isActive} hasToken={hasToken} />
   );
 }
