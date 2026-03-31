@@ -3,6 +3,7 @@
 @import "shadcn/tailwind.css";
 @import "../styles/components/breaking-news.css";
 @import "../styles/components/article.css";
+@import "../styles/components/home.css";
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
@@ -221,6 +222,8 @@
   /* Below drawer layers (50+); above main content (z-base). z-content: text above decorative overlays. */
   --z-base: 0;
   --z-raised: 1;
+  /* Above ::after/gradient layers at z-raised; below z-content. */
+  --z-overlay: 2;
   --z-content: 10;
   --z-dropdown: 20;
   --z-navigation: 40;
@@ -253,6 +256,11 @@
   z-index: var(--z-raised);
 }
 
+/** CTAs and interactive chrome above decorative overlays (e.g. paywall gradient, z-raised siblings). */
+@utility z-overlay {
+  z-index: var(--z-overlay);
+}
+
 /** Body copy above absolute gradient overlays (e.g. articles catalog cards). */
 @utility z-content {
   z-index: var(--z-content);
@@ -283,6 +291,18 @@
   html:not(.light):not(.dark) .shadow-elevated {
     box-shadow: 0 10px 28px -10px rgb(255 255 255 / 0.12);
   }
+}
+
+/**
+ * `surface-elevated` — card panels (404/error, catalog, skeleton cards).
+ * `surface-bordered` — border + radius only (skeleton image areas on `bg-muted`, etc.).
+ */
+@utility surface-elevated {
+  @apply rounded-md border border-border bg-card shadow-elevated;
+}
+
+@utility surface-bordered {
+  @apply rounded-md border border-border;
 }
 
 body {

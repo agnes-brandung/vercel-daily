@@ -17,7 +17,7 @@ export function BreakingNewsBanner() {
       <Suspense
         fallback={
           <InfoMessage type="loading" message="Loading breaking news…">
-            <LoadingSkeleton />
+            <LoadingSkeleton type="excerpt" />
           </InfoMessage>}
         >
         <BreakingNews />

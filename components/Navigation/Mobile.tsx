@@ -19,6 +19,7 @@ import { TextLink } from '@/ui/Typography'
 import { BrandLink, HomeIconLink } from './NavigationLinks'
 import { cn } from '@/lib/utils'
 import { navStickyContainerStyles } from '.'
+// import { SubscriptionButton } from '../Subscription/SubscriptionButton'
 
 interface MobileNavLinkProps {
   href: string
@@ -41,7 +42,7 @@ function MobileNavLink({ href, children, isActive }: MobileNavLinkProps) {
   )
 }
 
-export default function NavigationMobile() {
+export default function NavigationMobile({ isActive, hasToken }: { isActive: boolean; hasToken: boolean }) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const [prevPathname, setPrevPathname] = useState(pathname)
@@ -94,6 +95,7 @@ export default function NavigationMobile() {
             </ul>
           </nav>
           <DrawerFooter className="w-full items-center">
+            {/* <SubscriptionButton isActive={isActive} hasToken={hasToken} /> */}
             <DrawerClose asChild>
               <IconButton
                 aria-expanded={open}
