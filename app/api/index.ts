@@ -1,6 +1,6 @@
 import { getBreakingNews } from './getBreakingNews';
 import { getArticleById } from './getArticleById';
-import { getArticles } from './getArticles';
+import { getArticleMethods } from './getArticlesMethods';
 import { getTrendingArticles } from './getTrendingArticles';
 
-export { getBreakingNews, getArticleById, getArticles, getTrendingArticles };
+export { getBreakingNews, getArticleById, getArticleMethods, getTrendingArticles };

@@ -9,26 +9,34 @@ const CATEGORY_COLOR_CLASS = {
 /** `md+`: colored border on hover and on keyboard focus. Below `md`: category border color only while pressed (`:active`). */
 const CATEGORY_CARD_BORDER_CLASS = {
   changelog:
-    'md:hover:border-cyan focus-visible:border-cyan focus-visible:ring-cyan max-md:active:border-cyan',
+    'md:hover:border-cyan focus-visible:border-cyan focus-visible:ring-2 focus-visible:ring-cyan max-md:active:border-cyan',
   engineering:
-    'md:hover:border-magenta focus-visible:border-magenta focus-visible:ring-magenta max-md:active:border-magenta',
+    'md:hover:border-magenta focus-visible:border-magenta focus-visible:ring-2 focus-visible:ring-magenta max-md:active:border-magenta',
   customers:
-    'md:hover:border-emerald focus-visible:border-emerald focus-visible:ring-emerald max-md:active:border-emerald',
+    'md:hover:border-emerald focus-visible:border-emerald focus-visible:ring-2 focus-visible:ring-emerald max-md:active:border-emerald',
   'company-news':
-    'md:hover:border-rose focus-visible:border-rose focus-visible:ring-rose max-md:active:border-rose',
+    'md:hover:border-rose focus-visible:border-rose focus-visible:ring-2 focus-visible:ring-rose max-md:active:border-rose',
   community:
-    'md:hover:border-violet focus-visible:border-violet focus-visible:ring-violet max-md:active:border-violet',
+    'md:hover:border-violet focus-visible:border-violet focus-visible:ring-2 focus-visible:ring-violet max-md:active:border-violet',
 } as const satisfies Record<ApiArticle['category'], string>;
 
-export function categoryLabelClassName(category: ApiArticle['category']): string {
-  return CATEGORY_COLOR_CLASS[category];
+/** Catalog-only section key (not an API category). Uses `lightGray` accent styling. */
+export type ArticlesCatalogSectionCategory = ApiArticle['category'] | 'most-recent';
+
+const CATEGORY_COLOR_CLASS_WITH_CATALOG: Record<ArticlesCatalogSectionCategory, string> = {
+  ...CATEGORY_COLOR_CLASS,
+  'most-recent': 'text-light-gray',
+};
+
+export function categoryLabelClassName(category: ApiArticle['category'] | 'most-recent'): string {
+  return CATEGORY_COLOR_CLASS_WITH_CATALOG[category];
 }
 
 export function categoryCardBorderClassName(category: ApiArticle['category']): string {
   return CATEGORY_CARD_BORDER_CLASS[category];
 }
 
-/** Static left accent for prominent cards (e.g. breaking news). */
+/** Static left accent for prominent cards (e.g. breaking news, catalog). */
 const CATEGORY_LEFT_BORDER_CLASS = {
   changelog: 'border-l-cyan',
   engineering: 'border-l-magenta',
@@ -37,8 +45,13 @@ const CATEGORY_LEFT_BORDER_CLASS = {
   community: 'border-l-violet',
 } as const satisfies Record<ApiArticle['category'], string>;
 
-export function categoryLeftBorderClassName(category: ApiArticle['category']): string {
-  return `border-l-4 ${CATEGORY_LEFT_BORDER_CLASS[category]}`;
+const CATEGORY_LEFT_BORDER_WITH_CATALOG: Record<ArticlesCatalogSectionCategory, string> = {
+  ...CATEGORY_LEFT_BORDER_CLASS,
+  'most-recent': 'border-l-light-gray',
+};
+
+export function categoryLeftBorderClassName(category: ApiArticle['category'] | 'most-recent'): string {
+  return `border-l-4 ${CATEGORY_LEFT_BORDER_WITH_CATALOG[category]}`;
 }
 
 /** Solid category color for CSS `background-color` (e.g. breaking-news flash overlay). */
@@ -85,10 +98,22 @@ const CATEGORY_CATALOG_SECTION_HEADER = {
   community: 'border-b border-b-violet/25 bg-violet/[0.08]',
 } as const satisfies Record<ApiArticle['category'], string>;
 
-export function categoryCatalogSectionHeaderClassName(category: ApiArticle['category']): string {
-  return CATEGORY_CATALOG_SECTION_HEADER[category];
+const CATEGORY_CATALOG_SECTION_HEADER_WITH_CATALOG: Record<ArticlesCatalogSectionCategory, string> = {
+  ...CATEGORY_CATALOG_SECTION_HEADER,
+  'most-recent': 'border-b border-b-light-gray/25 bg-light-gray/[0.08]',
+};
+
+export function categoryCatalogSectionHeaderClassName(
+  category: ApiArticle['category'] | 'most-recent',
+): string {
+  return CATEGORY_CATALOG_SECTION_HEADER_WITH_CATALOG[category];
 }
 
-export function categoryCatalogDotClassName(category: ApiArticle['category']): string {
-  return `h-2 w-2 shrink-0 rounded-full shadow-sm ${CATEGORY_ACCENT_SOLID_BG[category]}`;
+const CATEGORY_ACCENT_SOLID_BG_WITH_CATALOG: Record<ArticlesCatalogSectionCategory, string> = {
+  ...CATEGORY_ACCENT_SOLID_BG,
+  'most-recent': 'bg-light-gray',
+};
+
+export function categoryCatalogDotClassName(category: ApiArticle['category'] | 'most-recent'): string {
+  return `h-2 w-2 shrink-0 rounded-full shadow-sm ${CATEGORY_ACCENT_SOLID_BG_WITH_CATALOG[category]}`;
 }

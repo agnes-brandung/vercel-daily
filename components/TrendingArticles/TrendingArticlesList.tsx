@@ -31,7 +31,7 @@ export async function TrendingArticlesList({ excludeArticleId }: { excludeArticl
             <Link
               href={`/articles/${parsedArticle.slug}`}
               className={cn(
-                'group surface-elevated flex h-full min-h-48 flex-col overflow-hidden text-typography transition-[border-color,box-shadow,transform] focus-visible:outline-none focus-visible:ring-2 md:hover:-translate-y-0.5',
+                'group surface-elevated flex h-full min-h-48 flex-col overflow-hidden text-typography transition-[border-color,box-shadow,transform] focus-visible:outline-none md:hover:-translate-y-0.5',
                 categoryCardBorderClassName(parsedArticle.category),
               )}
             >

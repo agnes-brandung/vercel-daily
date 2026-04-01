@@ -25,7 +25,7 @@ export function ReadArticleButton({ className }: ReadArticleButtonProps) {
     >
       <span className="font-semibold">Read full article</span>
       <span data-testid="icon">
-        <ArrowRightIcon className={readArticleIconClass} />
+        <ArrowRightIcon className={readArticleIconClass}/>
       </span>
     </span>
   );

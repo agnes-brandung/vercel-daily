@@ -57,3 +57,9 @@ interface ApiSubscriptionStatus {
   updatedAt: string;
   subscribedAt?: string;
 }
+
+interface ApiCategory {
+  id: string;
+  name: string;
+  slug: string;
+}

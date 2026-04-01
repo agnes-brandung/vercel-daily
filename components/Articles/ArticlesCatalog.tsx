@@ -1,105 +1,117 @@
 import { InfoMessage } from '@/components/ui/InfoMessage';
-import { getArticles } from '@/app/api/getArticles';
 import { ReadArticleButton } from '@/components/ReadArticleButton';
 import { Copy, Headline } from '@/ui/Typography';
 import {
+  type ArticlesCatalogSectionCategory,
   categoryCatalogDotClassName,
   categoryCatalogSectionHeaderClassName,
   categoryLabelClassName,
   categoryLeftBorderClassName,
 } from '@/utils/mapCategoryColor';
 import { cn } from '@/utils/cn';
-import { formatArticleCategoryLabel, parseArticle, type ParsedArticle } from '@/utils/parseApiData';
+import { formatArticleCategoryLabel, ParsedArticle } from '@/utils/parseApiData';
 import Link from 'next/link';
+import { getArticleMethods } from '@/app/api/getArticlesMethods';
 
-/** Display order for category sections (API may return articles in any order). */
-const CATEGORY_SECTION_ORDER: ApiArticle['category'][] = [
-  'changelog',
-  'engineering',
-  'customers',
-  'company-news',
-  'community',
-];
+function ArticleLink({ article }: { article: ParsedArticle }) {
+  return (
+    <Link
+      href={`/articles/${article.slug}`}
+      className={cn(
+        'group flex flex-col gap-3 px-4 py-5 sm:px-5 sm:py-6 no-underline lg:flex-row lg:items-start lg:gap-4 focus-ring',
+      )}
+    >
+      <figure className="order-1 shrink-0 overflow-hidden rounded-md lg:order-2 lg:w-[200px]">
+        {/* eslint-disable-next-line @next/next/no-img-element -- external URLs; skip Image remotePatterns */}
+        <img
+          src={article.image}
+          alt={article.title}
+          className="max-h-[200px] w-full object-cover lg:h-[200px] lg:w-[200px]"
+        />
+      </figure>
+      <div className="order-2 flex min-w-0 flex-1 flex-col gap-2 lg:order-1">
+        <Headline type="h3" styleAs="h4" className="text-balance text-typography">
+          {article.title}
+        </Headline>
+        {article.excerpt ? (
+          <Copy color="lightGray" className="text-pretty">
+            {article.excerpt}
+          </Copy>
+        ) : null}
+        <ReadArticleButton />
+      </div>
+    </Link>
+  );
+}
 
-function groupArticlesByCategory(articles: ParsedArticle[]): Array<{
-  category: ApiArticle['category'];
+function articlesCatalogSectionLabel(section: ArticlesCatalogSectionCategory): string {
+  if (section === 'most-recent') {
+    return 'Most recent';
+  }
+  return formatArticleCategoryLabel(section);
+}
+
+const paddings = 'px-4 py-3 sm:px-5 sm:py-4';
+
+function ArticlesCatalogSection({
+  section,
+  articles,
+}: {
+  section: ArticlesCatalogSectionCategory;
   articles: ParsedArticle[];
-}> {
-  const byCategory = new Map<ApiArticle['category'], ParsedArticle[]>();
-  for (const article of articles) {
-    const list = byCategory.get(article.category) ?? [];
-    list.push(article);
-    byCategory.set(article.category, list);
-  }
-  for (const list of byCategory.values()) {
-    list.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
-  }
-  return CATEGORY_SECTION_ORDER.filter((c) => (byCategory.get(c)?.length ?? 0) > 0).map((c) => ({
-    category: c,
-    articles: byCategory.get(c)!,
-  }));
+}) {
+  return (
+    <section
+      aria-labelledby={`catalog-category-${section}`}
+      className={cn('surface-elevated overflow-hidden', categoryLeftBorderClassName(section))}
+    >
+      <header className={cn(paddings, categoryCatalogSectionHeaderClassName(section))}>
+        <div className="flex items-center gap-2.5">
+          <span className={categoryCatalogDotClassName(section)} aria-hidden />
+          <Headline
+            id={`catalog-category-${section}`}
+            type="h2"
+            styleAs="h3"
+            uppercase
+            className={cn('mb-0 tracking-wide', categoryLabelClassName(section))}
+          >
+            {articlesCatalogSectionLabel(section)}
+          </Headline>
+        </div>
+      </header>
+      {articles.length > 0 ? (
+        <ul className="m-0 list-none divide-y divide-border p-0">
+          {articles.map((article) => (
+            <li key={`${article.id}-${section}`} className="transition-colors hover:bg-muted/40">
+              <ArticleLink article={article} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className={paddings}>
+          <Copy color="lightGray">No articles for this category yet</Copy>
+        </div>
+      )}
+    </section>
+  );
 }
 
 export async function ArticlesCatalog() {
-  const allArticles = await getArticles();
-
+  const allArticles = await getArticleMethods();
   if (!allArticles.ok) {
-    return <InfoMessage type="error" message={"An error occurred while fetching the articles - try again later."} />;
+    return <InfoMessage type="error" message="An error occurred while fetching the articles - try again later." />;
   }
-  if (allArticles.data.length === 0) {
-    return <InfoMessage type="info" message="No articles available yet." />;
-  }
-
-  const parsedArticles = allArticles.data.map((article) => parseArticle(article));
-  const sections = groupArticlesByCategory(parsedArticles);
+  const { articlesByCategory, mostRecentArticles } = allArticles.data;
 
   return (
     <div className="flex flex-col gap-10 sm:gap-12">
-      {sections.map(({ category, articles }) => (
-        <section
-          key={category}
-          aria-labelledby={`catalog-category-${category}`}
-          className={cn(
-            'surface-elevated overflow-hidden',
-            categoryLeftBorderClassName(category),
-          )}
-        >
-          <header className={cn('px-4 py-3 sm:px-5 sm:py-4', categoryCatalogSectionHeaderClassName(category))}>
-            <div className="flex items-center gap-2.5">
-              <span className={categoryCatalogDotClassName(category)} aria-hidden />
-              <Headline
-                id={`catalog-category-${category}`}
-                type="h2"
-                styleAs="h3"
-                uppercase
-                className={cn('mb-0 tracking-wide', categoryLabelClassName(category))}
-              >
-                {formatArticleCategoryLabel(category)}
-              </Headline>
-            </div>
-          </header>
-          <ul className="m-0 list-none divide-y divide-border p-0">
-            {articles.map((article) => (
-              <li key={article.id} className="transition-colors hover:bg-muted/40">
-                <Link
-                  href={`/articles/${article.slug}`}
-                  className="group flex flex-col gap-2 px-4 py-5 sm:px-6 sm:py-6 no-underline outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-blue)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--body)]"
-                >
-                  <Headline type="h3" styleAs="h4" className="text-balance text-typography">
-                    {article.title}
-                  </Headline>
-                  {article.excerpt ? (
-                    <Copy color="lightGray" className="text-pretty">
-                      {article.excerpt}
-                    </Copy>
-                  ) : null}
-                  <ReadArticleButton />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+      {articlesByCategory.length > 0 ? (
+        articlesByCategory.map(({ category, articles }) => (
+          <ArticlesCatalogSection key={category} section={category} articles={articles} />
+        ))
+      ) : (
+        <ArticlesCatalogSection section="most-recent" articles={mostRecentArticles} />
+      )}
     </div>
   );
 }

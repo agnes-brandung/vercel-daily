@@ -1,5 +1,5 @@
 import PublishedDate from '@/components/PublishedDate';
-import { getArticles } from '@/app/api/getArticles';
+import { getArticleMethods } from '@/app/api/getArticlesMethods';
 import { InfoMessage } from '@/components/ui/InfoMessage';
 import {
   categoryFlashBackground,
@@ -24,15 +24,19 @@ import LoadingSkeleton from '../ui/LoadingSkeleton';
  * and do not block the shell from streaming (see Next.js “blocking route” guidance).
  */
 export async function ArticleBody({ slug }: { slug: string }) {
-  const allArticles = await getArticles();
+  const articlesResult = await getArticleMethods();
+  if (!articlesResult.ok) {
+    return <InfoMessage type="error" message="An error occurred while fetching the articles - try again later." />;
+  }
+  const { allArticles } = articlesResult.data;
 
-  if (!allArticles.ok) {
+  if (allArticles.length === 0) {
     return (
-      <InfoMessage type="error" message="An error occurred while fetching the articles — try again later." />
+      <InfoMessage type="info" message="No articles available yet." />
     );
   }
 
-  const article = allArticles.data.find((a) => a.slug === slug);
+  const article = allArticles.find((a) => a.slug === slug);
   if (!article) {
     notFound();
   }
