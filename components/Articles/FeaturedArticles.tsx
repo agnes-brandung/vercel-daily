@@ -3,7 +3,7 @@ import { Headline } from '@/ui/Typography';
 import Button from '@/components/ui/Button';
 import { ArrowRightIcon } from '@/components/ui/icons/arrow-right';
 import { Suspense } from 'react';
-import { FeaturedArticlesList } from './FeaturedArticlesList';
+import { FeaturedArticlesGrid } from './FeaturedArticlesGrid';
 import LoadingSkeleton from '@/ui/LoadingSkeleton';
 
 /**
@@ -27,7 +27,7 @@ export function FeaturedArticles() {
           </InfoMessage>
         </>
       }>
-        <FeaturedArticlesList />
+        <FeaturedArticlesGrid />
       </Suspense>
       <Button
         label="View all articles"

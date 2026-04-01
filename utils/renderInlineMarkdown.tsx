@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { getSanitizedHref } from '@/utils/getSanitizedHref';
 
 const inlineLinkClassName =
-  'text-blue underline underline-offset-2 decoration-from-font hover:text-[var(--text-link-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-blue)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--body)]';
+  'text-blue underline underline-offset-2 decoration-from-font hover:text-[var(--text-link-hover)] focus-ring';
 
 const inlineEmClassName = 'font-medium not-italic text-[var(--article-accent,var(--color-blue))]';
 

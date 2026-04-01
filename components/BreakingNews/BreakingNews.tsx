@@ -39,7 +39,7 @@ export async function BreakingNews() {
   }
 
   const breakingNewsCardContainerStyles = cn(
-    'breaking-news-card group block overflow-hidden rounded-xl border-2 border-border bg-card text-typography shadow-elevated transition-[border-color,box-shadow] focus-visible:outline-none focus-visible:ring-2',
+    'breaking-news-card group block overflow-hidden rounded-xl border-2 border-border bg-card text-typography shadow-elevated transition-[border-color,box-shadow] focus-visible:outline-none',
     categoryCardBorderClassName(category),
     categoryLeftBorderClassName(category),
   );

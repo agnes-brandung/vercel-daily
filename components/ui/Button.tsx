@@ -13,9 +13,8 @@ import LoadingIcon from './icons/loading';
 import { cva } from 'class-variance-authority';
 import { getSanitizedHref, isInternalUrl } from '@/utils';
 
-// Shared button classes (blue keyboard focus ring + body-colored offset, matches typical focus outline)
 const baseButtonClasses =
-  'flex h-min w-full flex-nowrap items-center justify-center rounded-md border px-2 py-4 uppercase whitespace-nowrap md:w-fit cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-blue)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--body)]';
+  'flex h-min w-full flex-nowrap items-center justify-center rounded-md border px-2 py-4 uppercase whitespace-nowrap md:w-fit cursor-pointer focus-ring';
 const disabledClasses =
   'cursor-not-allowed border-gray-300 bg-gray-300 text-white hover:border-gray-300 hover:bg-gray-300 active:border-gray-300 active:bg-gray-300 focus-visible:border-gray-300 focus-visible:bg-gray-300 focus-visible:ring-0 cursor-not-allowed';
 
@@ -52,6 +51,12 @@ export const buttonStyles = cva(baseButtonClasses, {
       variant: ['primary', 'secondary', 'tertiary', 'iconOnly'],
       disabled: true,
       class: disabledClasses,
+    },
+    /** Full-width rows: `labelWithIcon` alone uses space-between; with alignleft, keep icon beside the label. */
+    {
+      layout: 'labelWithIcon',
+      alignleft: true,
+      class: 'justify-start',
     },
   ],
   defaultVariants: {

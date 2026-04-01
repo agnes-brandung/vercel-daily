@@ -305,6 +305,11 @@
   @apply rounded-md border border-border;
 }
 
+/** Keyboard focus: blue ring + body-colored offset (buttons, links, inputs, triggers). */
+@utility focus-ring {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--color-blue) focus-visible:ring-offset-2 focus-visible:ring-offset-body;
+}
+
 body {
   background: var(--body);
   color: var(--typography);

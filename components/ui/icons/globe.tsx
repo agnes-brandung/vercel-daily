@@ -41,15 +41,11 @@ const dMono = `M32,0C14.328,0,0,14.328,0,32s14.328,32,32,32s32-14.328,32-32S49.6
 	c2.492-2.785,2.41-7.836,6.129-7.375c3.039,0.422,2.5,4.23,4.906,6.125c2.836,2.266,6.328,0.824,8.59,3.676
 	c2.969,3.77,2.277,8.066,0,12.293c-1.676,3.055-3.836,4.137-6.723,5.742C21.316,55.438,13.34,49.555,9.867,41.289z`;
 
-interface GlobeIconProps {
-  className?: string;
-}
-
 /**
  * Colored globe in light mode; monochrome (`currentColor`) in dark mode.
  * Pairs with next-themes + Tailwind `dark:` on `html`
  */
-export function GlobeIcon({ className }: GlobeIconProps) {
+export function GlobeIcon({ className }: { className?: string }) {
   const sizeClass = cn('h-10 w-10 shrink-0', className);
 
   return (
