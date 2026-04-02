@@ -2,7 +2,7 @@ import { InfoMessage } from '@/components/ui/InfoMessage';
 import { Headline } from '@/ui/Typography';
 import { Suspense } from 'react';
 import { BreakingNews } from './BreakingNews';
-import LoadingSkeleton from '../ui/LoadingSkeleton';
+import LoadingSkeleton from '@/ui/LoadingSkeleton';
 
 export function BreakingNewsBanner() {
   return (

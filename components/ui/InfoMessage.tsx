@@ -2,15 +2,16 @@ import { cn } from '@/utils/cn';
 
 import { Copy } from './Typography';
 
-export type InfoMessageType = 'loading' | 'error' | 'info';
+export type InfoMessageType = 'loading' | 'error' | 'info' | 'success';
 
 const typeStyles: Record<
   InfoMessageType,
-  { border: string; copyColor: 'loading' | 'error' | 'green' }
+  { border: string; copyColor: 'loading' | 'error' | 'green' | 'yellow' }
 > = {
   loading: { border: 'border-loading', copyColor: 'loading' },
+  success: { border: 'border-green', copyColor: 'green' },
   error: { border: 'border-error', copyColor: 'error' },
-  info: { border: 'border-green', copyColor: 'green' },
+  info: { border: 'border-yellow', copyColor: 'yellow' },
 };
 
 export interface InfoMessageProps {

@@ -20,12 +20,18 @@ import {
 import { Copy } from '@/ui/Typography';
 import { searchBarContainerStyles, searchInputContainerStyles } from './styles';
 import { CategoryDropdown, CategoryDropdownTrigger } from './CategoryDropdown';
-import { CATEGORIES_QUERY_KEY, SEARCH_TERM_QUERY_KEY } from '@/utils/filterArticlesBySearchParams';
+import {
+  CATEGORIES_QUERY_KEY,
+  MIN_SEARCH_TERM_LENGTH,
+  SEARCH_TERM_QUERY_KEY,
+} from '@/utils/filterArticlesBySearchParams';
 
 const AUTO_SEARCH_DEBOUNCE_MS = 300;
-const MIN_SEARCH_TERM_LENGTH = 3;
 
-type SearchBarProps = {
+/** Close category popover after last toggle so the user does not have to click outside the popover to close it. */
+const CATEGORY_POPOVER_CLOSE_DEBOUNCE_MS = 1500;
+
+type SearchClientProps = {
   categories: ApiCategory[];
 };
 
@@ -34,7 +40,7 @@ function readCategorySlugsFromUrlSearchParams(searchParams: { getAll: (name: str
   return searchParams.getAll(CATEGORIES_QUERY_KEY).map((s) => s.trim()).filter(Boolean);
 }
 
-export function SearchBar({ categories }: SearchBarProps) {
+export function SearchClient({ categories }: SearchClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(() => searchParams.get(SEARCH_TERM_QUERY_KEY) ?? '');
@@ -45,18 +51,45 @@ export function SearchBar({ categories }: SearchBarProps) {
   /** Latest category selection for debounced search (updated in handlers + URL sync). */
   const selectedSlugsRef = useRef(selectedSlugs);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closeCategoryPopoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [categoryFilterOpen, setCategoryFilterOpen] = useState(false);
+
+  const scheduleCloseCategoryPopover = useCallback(() => {
+    if (closeCategoryPopoverTimerRef.current) {
+      clearTimeout(closeCategoryPopoverTimerRef.current);
+    }
+    closeCategoryPopoverTimerRef.current = setTimeout(() => {
+      closeCategoryPopoverTimerRef.current = null;
+      setCategoryFilterOpen(false);
+    }, CATEGORY_POPOVER_CLOSE_DEBOUNCE_MS);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (closeCategoryPopoverTimerRef.current) {
+        clearTimeout(closeCategoryPopoverTimerRef.current);
+      }
+    };
+  }, []);
 
   /**
    * When the URL changes, align local state.
    * Debouncing stays in `handleQueryChange`; `useEffect` is only for this external sync.
    */
   useEffect(() => {
-    const nextQuery = searchParams.get(SEARCH_TERM_QUERY_KEY) ?? '';
+    const nextQueryFromUrl = searchParams.get(SEARCH_TERM_QUERY_KEY) ?? '';
     const nextCategories = readCategorySlugsFromUrlSearchParams(searchParams);
     // Defer state updates out of the effect’s synchronous body (avoids cascading-render lint;
     // still runs immediately after the current commit).
     queueMicrotask(() => {
-      setQuery(nextQuery);
+      setQuery((prev) => {
+        // Keep leading/trailing spaces in the input; the URL only stores trimmed text.
+        if (nextQueryFromUrl === prev.trim()) {
+          return prev;
+        }
+        return nextQueryFromUrl;
+      });
       setSelectedSlugs(nextCategories);
       selectedSlugsRef.current = nextCategories;
       if (debounceTimerRef.current) {
@@ -69,6 +102,7 @@ export function SearchBar({ categories }: SearchBarProps) {
   const commitSearch = useCallback(
     (nextQuery: string, slugs: string[]) => {
       const params = new URLSearchParams();
+      // Normalised search term for the URL only; `query` state keeps spaces as typed.
       const trimmed = nextQuery.trim();
       if (trimmed.length > 0) {
         params.set(SEARCH_TERM_QUERY_KEY, trimmed);
@@ -95,12 +129,6 @@ export function SearchBar({ categories }: SearchBarProps) {
       debounceTimerRef.current = null;
     }
 
-    const trimmed = value.trim();
-    if (trimmed.length < MIN_SEARCH_TERM_LENGTH) {
-      console.log('search term too short')
-      return;
-    }
-
     debounceTimerRef.current = setTimeout(() => {
       debounceTimerRef.current = null;
       commitSearch(value, selectedSlugsRef.current);
@@ -113,6 +141,7 @@ export function SearchBar({ categories }: SearchBarProps) {
       queueMicrotask(() => commitSearch(query, next));
       return next;
     });
+    scheduleCloseCategoryPopover();
   }
 
   function toggleCategory(slug: string, checked: boolean) {
@@ -126,6 +155,7 @@ export function SearchBar({ categories }: SearchBarProps) {
       queueMicrotask(() => commitSearch(query, next));
       return next;
     });
+    scheduleCloseCategoryPopover();
   }
 
   const allCategorySlugs = categories.map((category) => category.slug);
@@ -133,7 +163,6 @@ export function SearchBar({ categories }: SearchBarProps) {
     categories.length > 0 &&
     allCategorySlugs.length === selectedSlugs.length &&
     allCategorySlugs.every((slug) => selectedSlugs.includes(slug));
-  const someSelected = selectedSlugs.length > 0 && !allSelected;
 
   function toggleSelectAll(checked: boolean) {
     applyCategorySelection(checked ? [...allCategorySlugs] : []);
@@ -148,16 +177,17 @@ export function SearchBar({ categories }: SearchBarProps) {
 
   const selectedCount = selectedSlugs.length;
 
-  const [categoryFilterOpen, setCategoryFilterOpen] = useState(false);
-
   function SelectAllCheckbox() {
     return (
       <Checkbox
         id="search-category-select-all"
-        checked={allSelected ? true : someSelected ? 'indeterminate' : false}
-        onCheckedChange={(value) => toggleSelectAll(value === true)}
+        checked={allSelected}
+        onCheckedChange={(value) => {
+          if (value === 'indeterminate') return;
+          toggleSelectAll(value);
+        }}
       />
-    )
+    );
   }
 
   function CategoryCheckbox(category: ApiCategory) {
@@ -185,14 +215,23 @@ export function SearchBar({ categories }: SearchBarProps) {
             value={query}
             onChange={handleQueryChange}
             onKeyDown={onKeyDown}
-            placeholder="Search articles…"
+            placeholder="Search articles..."
             autoComplete="off"
             aria-label="Search"
-            className="h-11 pr-10 md:text-base"
+            className="h-12 md:text-base"
           />
         </div>
 
-        <Popover open={categoryFilterOpen} onOpenChange={setCategoryFilterOpen}>
+        <Popover
+          open={categoryFilterOpen}
+          onOpenChange={(open) => {
+            if (open && closeCategoryPopoverTimerRef.current) {
+              clearTimeout(closeCategoryPopoverTimerRef.current);
+              closeCategoryPopoverTimerRef.current = null;
+            }
+            setCategoryFilterOpen(open);
+          }}
+        >
           <CategoryDropdownTrigger selectedCount={selectedCount} categoryFilterOpen={categoryFilterOpen} />
           <CategoryDropdown 
             categories={categories} 
@@ -211,8 +250,7 @@ export function SearchBar({ categories }: SearchBarProps) {
       </div>
 
       <Copy size="sm" color="lightGray">
-        Press Enter or use Search to run anytime. With {MIN_SEARCH_TERM_LENGTH}+ characters, results update shortly after you
-        stop typing.
+        Press Enter or use Search to run with {MIN_SEARCH_TERM_LENGTH}+ characters. Results update shortly after you stop typing.
       </Copy>
     </div>
   );
