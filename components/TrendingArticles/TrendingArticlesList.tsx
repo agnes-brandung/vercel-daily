@@ -6,7 +6,7 @@ import { categoryCardBorderClassName, categoryLabelClassName } from '@/utils/map
 import { cn } from '@/utils/cn';
 import { parseArticle } from '@/utils/parseApiData';
 import { InfoMessage } from '@/ui/InfoMessage';
-import { getTrendingArticles } from '@/app/api';
+import { getTrendingArticles } from '@/app/api/getTrendingArticles';
 
 const MAX_TRENDING = 4;
 

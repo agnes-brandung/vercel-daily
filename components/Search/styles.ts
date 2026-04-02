@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils';
 
-export const searchBarContainerStyles = 'flex w-full max-w-2xl flex-col gap-4'
+export const searchBarContainerStyles = 'flex w-full max-w-2xl flex-col space-y-4'
 
-export const searchInputContainerStyles = 'flex flex-col gap-3 sm:flex-row sm:items-stretch sm:gap-2'
+export const searchInputContainerStyles = 'flex flex-col gap-4 sm:flex-row sm:items-stretch'
 
 export const categoryFilterTriggerButtonStyles = cn(
   'inline-flex h-11 shrink-0 items-center justify-between gap-2 rounded-lg border border-input bg-transparent px-3 text-sm outline-none cursor-pointer transition-colors',
