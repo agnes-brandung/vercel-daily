@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { categoryCardBorderClassName, categoryLabelClassName } from '@/utils/mapCategoryColor';
 import PublishedDate from '@/components/PublishedDate';
 import { Suspense } from 'react';
-import { ParsedArticle } from '@/utils/parseApiData';
+import type { ParsedArticle } from '@/utils/parseApiData';
 
 export function ArticlesGrid({
   articles,

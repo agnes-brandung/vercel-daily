@@ -13,7 +13,7 @@ import {
   DrawerFooter,
 } from '@/components/ui/drawer'
 import { NavMenuOpenIcon } from '@/ui/icons/nav-menu-open'
-import { NavMenuCloseIcon } from '@/ui/icons/nav-menu-close'
+import { CloseIcon } from '@/ui/icons/close'
 import { IconButton } from '@/ui/IconButton'
 import { TextLink } from '@/ui/Typography'
 import { BrandLink, HomeIconLink } from './NavigationLinks'
@@ -103,7 +103,7 @@ export default function NavigationMobile({ isActive, hasToken }: { isActive: boo
                 aria-haspopup="true"
                 aria-label="Close menu"
               >
-                <NavMenuCloseIcon />
+                <CloseIcon />
               </IconButton>
             </DrawerClose>
           </DrawerFooter>

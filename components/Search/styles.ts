@@ -1,14 +1,14 @@
 import { cn } from '@/lib/utils';
 
-export const searchBarContainerStyles = 'flex w-full max-w-2xl flex-col space-y-4'
-
-export const searchInputContainerStyles = 'flex flex-col gap-4 sm:flex-row sm:items-stretch'
+export const searchInnerContainerStyles = 'flex flex-col gap-4 md:flex-row md:items-stretch w-full'
 
 export const categoryFilterTriggerButtonStyles = cn(
-  'inline-flex h-11 shrink-0 items-center justify-between gap-2 rounded-lg border border-input bg-transparent px-3 text-sm outline-none cursor-pointer transition-colors',
+  'inline-flex h-12 min-h-12 shrink-0 items-center justify-between gap-2 rounded-lg border border-input px-3 text-sm outline-none cursor-pointer transition-colors box-border',
   'hover:bg-muted/50 focus-ring',
   'dark:bg-input/30',
 )
+
+export const categoryFilterTriggerButtonDisabledStyles = 'text-muted-foreground bg-muted/50 cursor-not-allowed'
 
 export const categoryFilterNumberStyles = "inline-block min-w-[1ch] text-center tabular-nums"
 

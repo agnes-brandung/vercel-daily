@@ -1,16 +1,14 @@
 import type { ParsedArticle } from '@/utils/parseApiData';
 
+export const SEARCH_FIRST_RESULTS_MAX = 5;
 export const SEARCH_TERM_QUERY_KEY = 'searchTerm';
 export const CATEGORIES_QUERY_KEY = 'categories';
-
 export const MIN_SEARCH_TERM_LENGTH = 3;
 
 /** User query: exact letters `ai` only (any case). Lets 2-char searches run despite {@link MIN_SEARCH_TERM_LENGTH}. */
 const SPECIAL_AI_USER_QUERY = /^ai$/i;
 
-/**
- * Article search: only searches for whole-word, capitalised ` AI ` only. Substrings like `ai` inside "plain text" must not match, even if the user typed `ai`.
- */
+/** Article search: only searches for whole-word, capitalised ` AI ` only. Substrings like `ai` inside "plain text" must not match, even if the user typed `ai`.*/
 const WHOLE_WORD_CAPITAL_AI_IN_TEXT = /\bAI\b/;
 
 /** True when the search box / URL carries the special 2-letter AI query (any casing). */
@@ -18,12 +16,17 @@ export function isSpecialShortSearchTerm(trimmedQuery: string): boolean {
   return SPECIAL_AI_USER_QUERY.test(trimmedQuery);
 }
 
+/** Case-insensitive substring; not used for the special `ai` query (see {@link articleMatchesSearchTerm}). */
+function textIncludes(haystack: string, needle: string): boolean {
+  return haystack.toLowerCase().includes(needle.toLowerCase());
+}
+
+// TODO remove test - only search in title for now
 function articleMatchesSearchTerm(article: ParsedArticle, searchTerm: string): boolean {
   const bodyText = articleContentToSearchableText(article.content);
-  
+
   if (SPECIAL_AI_USER_QUERY.test(searchTerm)) {
-      // TODO remove test - only search in title
-      return article.title.includes(searchTerm);
+    return article.title.includes(searchTerm);
     return (
       WHOLE_WORD_CAPITAL_AI_IN_TEXT.test(article.title) ||
       WHOLE_WORD_CAPITAL_AI_IN_TEXT.test(article.excerpt) ||
@@ -32,16 +35,13 @@ function articleMatchesSearchTerm(article: ParsedArticle, searchTerm: string): b
     );
   }
 
-  // TODO remove test - only search in title
+  return textIncludes(article.title, searchTerm);
+  // Case-insensitive everywhere; AI branch above stays the exception (whole-word `AI`, test stub).
   return (
-    article.title.includes(searchTerm)
-  );
-
-  return (
-    article.title.includes(searchTerm) ||
-    article.excerpt.includes(searchTerm) ||
-    bodyText.includes(searchTerm) ||
-    article.tags.some((tag) => tag.includes(searchTerm))
+    textIncludes(article.title, searchTerm) ||
+    textIncludes(article.excerpt, searchTerm) ||
+    textIncludes(bodyText, searchTerm) ||
+    article.tags.some((tag) => textIncludes(tag, searchTerm))
   );
 }
 
@@ -72,21 +72,56 @@ export function articleContentToSearchableText(content: ParsedArticle['content']
   return content.text;
 }
 
-function searchParamToStringArray(value: string | string[] | undefined | null): string[] {
-  if (value === undefined || value === null) {
+/**
+ * Single `categories` param: `?categories=changelog+engineering` (literal `+` between slugs).
+ * Parsers decode `+` as space, so we split on spaces or `+` and decode each segment.
+ */
+export function parseCategorySlugsFromSearchParam(raw: string | null | undefined): string[] {
+  const trimmed = (raw ?? '').trim();
+  if (trimmed.length === 0) {
     return [];
   }
-  if (Array.isArray(value)) {
-    return value.map((s) => s.trim()).filter(Boolean);
-  }
-  return value.trim() ? [value.trim()] : [];
+  return trimmed
+    .split(/[\s+]+/)
+    .map((segment) => {
+      try {
+        return decodeURIComponent(segment);
+      } catch {
+        return segment;
+      }
+    })
+    .filter(Boolean);
 }
 
-/** Repeated keys: `?categories=a&categories=b` → Next may give string or string[]. */
+function firstSearchParamValue(value: string | string[] | undefined | null): string {
+  if (value === undefined || value === null) {
+    return '';
+  }
+  if (Array.isArray(value)) {
+    return (value[0] ?? '').trim();
+  }
+  return value.trim();
+}
+
+/** One `categories` key, slugs joined with `+` in the URL. */
 export function readCategorySlugsFromSearchParamsRecord(
   searchParams: Record<string, string | string[] | undefined | null>,
 ): string[] {
-  return searchParamToStringArray(searchParams[CATEGORIES_QUERY_KEY]);
+  return parseCategorySlugsFromSearchParam(firstSearchParamValue(searchParams[CATEGORIES_QUERY_KEY]));
+}
+
+/** Builds `searchTerm=…&categories=a+b` with literal `+` between category slugs. */
+export function buildSearchQueryString(trimmedSearchTerm: string, categorySlugs: string[]): string {
+  const parts: string[] = [];
+  if (trimmedSearchTerm.length > 0) {
+    parts.push(`${SEARCH_TERM_QUERY_KEY}=${encodeURIComponent(trimmedSearchTerm)}`);
+  }
+  if (categorySlugs.length > 0) {
+    parts.push(
+      `${CATEGORIES_QUERY_KEY}=${categorySlugs.map((slug) => encodeURIComponent(slug)).join('+')}`,
+    );
+  }
+  return parts.join('&');
 }
 
 export function readSearchTermFromSearchParamsRecord(
@@ -116,17 +151,19 @@ export function filterArticlesBySearchTermAndCategories(
     return allArticles;
   }
 
-  const filteredBySearchTerm = allArticles.filter((article) =>
-    articleMatchesSearchTerm(article, searchTerm),
-  );
-
-  if (selectedCategories.length === 0) {
-    return filteredBySearchTerm;
-  }
-
-  const finalFilteredArticles = filteredBySearchTerm.filter((article) =>
+  const filteredByCategories = allArticles.filter((article) =>
     selectedCategories.includes(article.category),
   );
+
+  let finalFilteredArticles: ParsedArticle[] = [];
+
+  if (searchTerm.length >= MIN_SEARCH_TERM_LENGTH) {
+    finalFilteredArticles = filteredByCategories.filter((article) =>
+      articleMatchesSearchTerm(article, searchTerm),
+    );
+  } else {
+    finalFilteredArticles = filteredByCategories;
+  }
 
   return finalFilteredArticles;
 }

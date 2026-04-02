@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 
 import { SearchClient } from '@/components/Search/SearchClient';
-import { ArticlesGrid } from '@/components/Articles/ArticlesGrid';
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 import { InfoMessage } from '@/components/ui/InfoMessage';
 import { getCategories } from '@/app/api/getCategories';
@@ -13,16 +12,12 @@ import {
   readCategorySlugsFromSearchParamsRecord,
   readSearchTermFromSearchParamsRecord,
 } from '@/utils/filterArticlesBySearchParams';
-import { Headline } from '@/ui/Typography';
-import { ParsedArticle } from '@/utils';
-
-const articlesGridStyles = "w-full shrink-0 sm:w-[calc(50%-0.75rem)] lg:w-[calc((100%-3rem)/3)]";
+import { ResultsGrid } from '@/components/Search/ResultsGrid';
+import { Copy } from '@/components/ui/Typography';
 
 type SearchPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined | null>>;
 };
-
-const SEARCH_RESULTS_MAX = 5;
 
 async function SearchBar() {
   const categoriesResult = await getCategories();
@@ -36,7 +31,14 @@ async function SearchBar() {
     return <InfoMessage type="info" message="No categories found." />;
   }
 
-  return <SearchClient categories={categories} />
+  return (
+    <div className="flex w-full flex-col space-y-4">
+      <SearchClient categories={categories} />
+      <Copy size="sm" color="lightGray">
+        Press Enter or use Search to run with {MIN_SEARCH_TERM_LENGTH}+ characters. Results update shortly after you stop typing or change categories.
+      </Copy>
+    </div>
+  )
 }
 
 async function SearchResults({ searchParams }: SearchPageProps) {
@@ -47,7 +49,6 @@ async function SearchResults({ searchParams }: SearchPageProps) {
   }
 
   const allArticles = allArticlesResult.data.allArticles;
-  const defaultArticles = allArticles.slice(0, SEARCH_RESULTS_MAX);
   const searchTerm = readSearchTermFromSearchParamsRecord(params);
   const selectedCategories = readCategorySlugsFromSearchParamsRecord(params);
   const filteredArticles = filterArticlesBySearchTermAndCategories({
@@ -56,52 +57,56 @@ async function SearchResults({ searchParams }: SearchPageProps) {
     selectedCategories,
   });
 
-  const resultsGrid = (
-    articles: ParsedArticle[],
-  ) => (
-      <ul className="flex flex-wrap justify-center gap-6">
-        <ArticlesGrid articles={articles} itemClassName={articlesGridStyles} />
-      </ul>
-  );
+  const noSearchTerm = searchTerm.length === 0;
+  const noCategories = selectedCategories.length === 0;
+  const hasFilteredResults = filteredArticles.length > 0;
 
-  if (searchTerm.length === 0) {
-    return resultsGrid(defaultArticles);
+  if (noSearchTerm && noCategories) {
+    return (
+      <ResultsGrid 
+        articles={allArticles}
+        headline="No search term or categories selected. Here are some recent articles handpicked by us:" 
+      />
+    );
   }
 
   const searchSpecificEnough =
     searchTerm.length >= MIN_SEARCH_TERM_LENGTH || isSpecialShortSearchTerm(searchTerm);
 
-  if (!searchSpecificEnough) {
-    return (
-      <div className="space-y-4">
-        <InfoMessage
-          type="info"
-          message="Your search is not specific enough (less than 3 characters). Here are some recent articles handpicked by us:"
+  if (!searchSpecificEnough && hasFilteredResults) {
+    if (noCategories) {
+      return (
+        <ResultsGrid 
+          articles={allArticles}
+          infoMessage="Your search is not specific enough (less than 3 characters and no categories selected). Here are some recent articles handpicked by us:"
+          headline="Here are some recent articles handpicked by us:" 
         />
-        {resultsGrid(defaultArticles)}
-      </div>
+      );
+    }
+    return (
+      <ResultsGrid 
+        articles={filteredArticles}
+        infoMessage="Filtering by categories."
+        headline={`Results: ${filteredArticles.length} article${filteredArticles.length === 1 ? '' : 's'} found`}
+      />
     );
   }
 
-  // TODO: sometimes not updated correclty when deselected categories
-  if (filteredArticles.length === 0) {
+  if (!hasFilteredResults) {
     return (
-      <div className="space-y-4">
-        <InfoMessage
-          type="info"
-          message="No articles found for search term and categories. Please search for another term or reset categories."
-        />
-        <Headline type="h5">Here are some recent articles handpicked by us:</Headline>
-        {resultsGrid(defaultArticles)}
-      </div>
+      <ResultsGrid 
+        articles={allArticles}
+        infoMessage="No articles found for selected search term and categories. Please search for another term or set/reset categories."
+        headline="Here are some recent articles handpicked by us:"
+      />
     );
   }
 
   return (
-    <div className="space-y-4" >
-      <Headline type="h5" className="text-green">Results: {filteredArticles.length} article{filteredArticles.length === 1 ? '' : 's'} found</Headline>
-      {resultsGrid(filteredArticles.slice(0, SEARCH_RESULTS_MAX))}
-    </div>
+    <ResultsGrid 
+      articles={filteredArticles}
+      headline={`Results: ${filteredArticles.length} article${filteredArticles.length === 1 ? '' : 's'} found`}
+    />
   );
 }
 

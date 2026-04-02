@@ -9,7 +9,7 @@ import {
   categoryLeftBorderClassName,
 } from '@/utils/mapCategoryColor';
 import { cn } from '@/utils/cn';
-import { formatArticleCategoryLabel, ParsedArticle } from '@/utils/parseApiData';
+import { formatArticleCategoryLabel, type ParsedArticle } from '@/utils/parseApiData';
 import Link from 'next/link';
 import { getArticleMethods } from '@/app/api/getArticlesMethods';
 

@@ -1,5 +1,5 @@
 import Button from '@/ui/Button';
-import { NavMenuCloseIcon } from '@/ui/icons/nav-menu-close';
+import { CloseIcon } from '@/ui/icons/close';
 import { NavMenuOpenIcon } from '@/ui/icons/nav-menu-open';
 import { Copy, Headline } from '@/ui/Typography';
 
@@ -20,7 +20,7 @@ export default function TestPage() {
       <Button variant="secondary" label="Test button Secondary" />
       <Button variant="tertiary" label="Test button Tertiary" />
       <Button variant="iconOnly" label={<NavMenuOpenIcon />} />
-      <Button variant="iconOnly" label={<NavMenuCloseIcon />} />
+      <Button variant="iconOnly" label={<CloseIcon />} />
       <Button variant="iconOnly" label="Test button Icon Only with missing icon" />
       <Button label="Test button Label Hidden" labelHidden={true} />
 
