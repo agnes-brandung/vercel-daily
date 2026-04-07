@@ -5,7 +5,7 @@ import { InfoMessage } from '@/ui/InfoMessage';
 import { TrendingArticlesList } from './TrendingArticlesList';
 import LoadingSkeleton from '@/ui/LoadingSkeleton';
 
-export function TrendingArticles({ excludeArticleId }: { excludeArticleId: ApiArticle['id'] }) {
+export function TrendingArticles({ excludeArticleId }: { excludeArticleId?: ApiArticle['id'] }) {
   return (
     <div className="border-t border-border/50">
       <section aria-labelledby="trending-articles-heading" className="space-y-6">

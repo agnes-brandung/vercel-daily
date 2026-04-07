@@ -32,6 +32,7 @@ export function BreakingNewsCardImageBackdrop({
         alt={imageAlt}
         fill
         preload
+        loading="eager"
         sizes="100vw"
         className={cn(
           'absolute inset-0 z-base h-full min-h-96 w-full object-cover transition-transform duration-500 ease-out motion-safe:group-hover:scale-[1.02] sm:min-h-104 lg:min-h-76',

@@ -1,6 +1,6 @@
 import { cn } from '@/utils/cn';
 
-export type LoadingSkeletonType = 'default' | 'article' | 'card' | 'excerpt';
+export type LoadingSkeletonType = 'default' | 'article' | 'card' | 'excerpt' | 'button';
 
 type LoadingSkeletonProps = {
   type?: LoadingSkeletonType;
@@ -58,23 +58,47 @@ function ExcerptSkeleton() {
 
 function CardGridSkeleton() {
   return (
-    <div className="grid w-full animate-pulse grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+    <div className="staggered-card-list grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
       {[0, 1, 2].map((i) => (
         <div
           key={i}
-          className="surface-elevated flex w-full min-w-0 flex-col overflow-hidden"
+          className="staggered-card-alive surface-elevated flex w-full min-w-0 flex-col overflow-hidden"
         >
-          <div
-            className={cn('h-28 w-full shrink-0 border-b border-border sm:h-32', bar)}
-          />
-          <div className="flex flex-1 flex-col gap-1.5 p-3">
-            <div className={cn(bar, 'h-4 w-4/5')} />
-            <div className={cn(bar, 'h-2.5 w-full')} />
-            <div className={cn(bar, 'h-2.5 w-full')} />
-            <div className={cn(bar, 'h-2.5 w-2/3')} />
+          <div className="animate-pulse flex min-h-0 w-full flex-1 flex-col">
+            <div
+              className={cn('h-28 w-full shrink-0 border-b border-border sm:h-32', bar)}
+            />
+            <div className="flex flex-1 flex-col gap-1.5 p-3">
+              <div className={cn(bar, 'h-4 w-4/5')} />
+              <div className={cn(bar, 'h-2.5 w-full')} />
+              <div className={cn(bar, 'h-2.5 w-full')} />
+              <div className={cn(bar, 'h-2.5 w-2/3')} />
+            </div>
           </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+/** Primary CTA shape + staggered “alive” motion like card grid; inner `animate-pulse` for shimmer. */
+function ButtonSkeleton() {
+  return (
+    <div className="flex w-full justify-center">
+      <div className="staggered-card-alive w-full md:w-auto">
+        <div
+          className={cn(
+            'animate-pulse flex h-min w-full flex-nowrap items-center justify-center rounded-md border border-border bg-muted px-8 py-4 md:w-fit',
+          )}
+          aria-busy
+        >
+          <span className="sr-only">Loading</span>
+          <div
+            className="h-4 w-30 shrink-0 rounded-md bg-muted-foreground/25"
+            aria-hidden
+          />
+        </div>
+      </div>
     </div>
   );
 }
@@ -97,6 +121,8 @@ export default function LoadingSkeleton({ type = 'default' }: LoadingSkeletonPro
       return <ExcerptSkeleton />;
     case 'card':
       return <CardGridSkeleton />;
+    case 'button':
+      return <ButtonSkeleton />;
     default:
       return <DefaultSkeleton />;
   }

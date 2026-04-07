@@ -9,7 +9,7 @@ export async function fetchNewsApi<T>({
 }: {
   endpoint: string;
   queryParams?: Record<string, string | string[]>;
-}): Promise<ApiBackendResult<T>> {
+}): Promise<ApiBackendResult<T>> {  
   try {
     const url = new URL(`${BASE_URL}/${endpoint}`);
 

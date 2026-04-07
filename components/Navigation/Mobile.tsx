@@ -1,6 +1,7 @@
 'use client'
+
 import { usePathname } from 'next/navigation'
-import { useState, type ReactNode } from 'react'
+import { Suspense, useState, type ReactNode } from 'react'
 import { VisuallyHidden } from 'radix-ui'
 import {
   Drawer,
@@ -18,7 +19,9 @@ import { IconButton } from '@/ui/IconButton'
 import { TextLink } from '@/ui/Typography'
 import { BrandLink, HomeIconLink } from './NavigationLinks'
 import { cn } from '@/lib/utils'
-import { navStickyContainerStyles } from '.'
+import { navStickyContainerStyles } from './Navigation'
+import { InfoMessage } from '../ui/InfoMessage'
+import LoadingSkeleton from '../ui/LoadingSkeleton'
 // import { SubscriptionButton } from '../Subscription/SubscriptionButton'
 
 interface MobileNavLinkProps {
@@ -95,7 +98,13 @@ export default function NavigationMobile({ isActive, hasToken }: { isActive: boo
             </ul>
           </nav>
           <DrawerFooter className="w-full items-center">
-            {/* <SubscriptionButton isActive={isActive} hasToken={hasToken} /> */}
+            {/* <Suspense fallback={
+              <InfoMessage type="loading" message="Loading subscription status...">
+                <LoadingSkeleton type="card" />
+              </InfoMessage>
+            }>
+              <SubscriptionButton isActive={isActive} hasToken={hasToken} />
+            </Suspense> */}
             <DrawerClose asChild>
               <IconButton
                 aria-expanded={open}

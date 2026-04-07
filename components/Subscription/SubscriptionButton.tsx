@@ -14,9 +14,10 @@ import {
 type SubscriptionButtonProps = {
   isActive: boolean;
   hasToken: boolean;
+  hideUnsubscribe?: boolean;
 }
 
-export function SubscriptionButton({ isActive, hasToken }: SubscriptionButtonProps) {
+export function SubscriptionButton({ isActive, hasToken, hideUnsubscribe }: SubscriptionButtonProps) {
   const initialState: SubscriptionActionState = { ok: true };
   const [subscribeState, subscribeFormAction] = useActionState(subscribeAction, initialState);
   const [unsubscribeState, unsubscribeFormAction] = useActionState(unsubscribeAction, initialState);
@@ -27,17 +28,22 @@ export function SubscriptionButton({ isActive, hasToken }: SubscriptionButtonPro
   return (
     <div className="flex flex-col gap-3">
       {error ? <InfoMessage type="error" message={error} /> : null}
-      {isActive ? (
-        <form action={unsubscribeFormAction}>
-          <SubmitButton
-            variant="secondary"
-            label="Unsubscribe"
-          />
-        </form>
-      ) : (
-        <form action={subscribeFormAction}>
-          <SubmitButton label={hasToken ? 'Activate subscription' : 'Subscribe'} />
-        </form>
+      {hideUnsubscribe ? null : (
+        isActive ? (
+          <form action={unsubscribeFormAction}>
+            <SubmitButton
+              variant="secondary"
+              label="Unsubscribe"
+            />
+          </form>
+        ) : (
+          <form action={subscribeFormAction}>
+            <SubmitButton
+              attentionPulse
+              label={hasToken ? 'Activate subscription' : 'Subscribe'}
+            />
+          </form>
+        )
       )}
     </div>
   );
@@ -46,9 +52,11 @@ export function SubscriptionButton({ isActive, hasToken }: SubscriptionButtonPro
 function SubmitButton({
   label,
   variant,
+  attentionPulse,
 }: {
   label: string;
   variant?: React.ComponentProps<typeof Button>['variant'];
+  attentionPulse?: boolean;
 }) {
   const { pending } = useFormStatus();
 
@@ -59,6 +67,7 @@ function SubmitButton({
       label={label}
       disabled={pending}
       isLoading={pending}
+      className={attentionPulse ? 'subscription-cta-attention' : undefined}
     />
   );
 }

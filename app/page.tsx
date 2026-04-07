@@ -4,7 +4,7 @@ import { Headline } from '@/ui/Typography';
 
 export default async function Home() {
   return (
-    <div className="page-section-stack">
+    <div className="section-base-space">
       <div className="home-hero-gradient">
         <div className="home-hero-gradient__bg" aria-hidden />
         <div className="home-hero-gradient__content space-y-4">

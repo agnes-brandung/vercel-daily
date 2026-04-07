@@ -1,5 +1,6 @@
 /**
- * Home page hero: layered radials using category accent tokens (--cyan, --magenta, etc.).
+ * Home page hero: layered radials using category accent tokens (--base-yellow, --magenta, etc.).
+ * Left side leans warm (yellow); bottom-left avoids emerald so the wash stays airy, not green.
  * Light/dark follow :root / .dark variable overrides in globals.
  */
 
@@ -19,15 +20,15 @@
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 125% 100% at 0% 0%, color-mix(in srgb, var(--cyan) 32%, transparent) 0%, transparent 58%),
-    radial-gradient(ellipse 115% 95% at 100% 0%, color-mix(in srgb, var(--magenta) 28%, transparent) 0%, transparent 54%),
-    radial-gradient(ellipse 100% 80% at 100% 100%, color-mix(in srgb, var(--violet) 24%, transparent) 0%, transparent 50%),
-    radial-gradient(ellipse 90% 70% at 0% 100%, color-mix(in srgb, var(--emerald) 22%, transparent) 0%, transparent 46%),
+    radial-gradient(ellipse 125% 100% at 0% 0%, color-mix(in srgb, var(--base-yellow) 28%, transparent) 0%, transparent 58%),
+    radial-gradient(ellipse 115% 95% at 100% 0%, color-mix(in srgb, var(--magenta) 22%, transparent) 0%, transparent 54%),
+    radial-gradient(ellipse 100% 80% at 100% 100%, color-mix(in srgb, var(--violet) 18%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse 95% 75% at 0% 100%, color-mix(in srgb, var(--base-yellow) 12%, transparent) 0%, transparent 48%),
     linear-gradient(
       168deg,
-      color-mix(in srgb, var(--body) 93%, var(--rose)) 0%,
-      var(--body) 48%,
-      color-mix(in srgb, var(--body) 91%, var(--cyan)) 100%
+      color-mix(in srgb, var(--body) 97%, var(--base-yellow)) 0%,
+      var(--body) 50%,
+      color-mix(in srgb, var(--body) 96%, var(--cyan)) 100%
     );
 }
 

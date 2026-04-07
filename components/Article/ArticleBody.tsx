@@ -100,6 +100,7 @@ export async function ArticleBody({ slug }: { slug: string }) {
               alt={title}
               fill
               preload
+              loading="eager"
               sizes="(max-width: 768px) 100vw, min(896px, 92vw)"
               className="object-cover"
             />
@@ -107,7 +108,7 @@ export async function ArticleBody({ slug }: { slug: string }) {
         </figure>
 
         <div className="article-content-divider" aria-hidden />
-        <ArticleSubscriptionGate isActive={isActive} hasToken={hasToken}>
+        <ArticleSubscriptionGate isActive={isActive} hasToken={hasToken} hideUnsubscribe>
           <ArticleContentRte content={parsedArticle.content} />
         </ArticleSubscriptionGate>
       </div>

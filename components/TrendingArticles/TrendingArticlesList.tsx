@@ -6,13 +6,13 @@ import PublishedDate from '@/components/PublishedDate';
 import { Copy, Headline } from '@/ui/Typography';
 import { categoryCardBorderClassName, categoryLabelClassName } from '@/utils/mapCategoryColor';
 import { cn } from '@/utils/cn';
-import { parseArticle } from '@/utils/parseApiData';
+import { formatArticleCategoryLabel } from '@/utils/parseApiData';
 import { InfoMessage } from '@/ui/InfoMessage';
 import { getTrendingArticles } from '@/app/api/getTrendingArticles';
 
 const MAX_TRENDING = 4;
 
-export async function TrendingArticlesList({ excludeArticleId }: { excludeArticleId: ApiArticle['id'] }) {
+export async function TrendingArticlesList({ excludeArticleId }: { excludeArticleId?: ApiArticle['id'] }) {
   const trendingResult = await getTrendingArticles({ excludeArticleId });
   if (!trendingResult.ok) {
     return <InfoMessage type="error" message="An error occurred while fetching the trending articles — try again later." />;
@@ -27,40 +27,39 @@ export async function TrendingArticlesList({ excludeArticleId }: { excludeArticl
   return (
     <ul className="grid list-none grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {listedArticles.map((article) => {
-        const parsedArticle = parseArticle(article);
         return (
-          <li key={parsedArticle.id} className="min-w-0">
+          <li key={article.id} className="min-w-0">
             <Link
-              href={`/articles/${parsedArticle.slug}`}
+              href={`/articles/${article.slug}`}
               className={cn(
                 'group surface-elevated flex h-full min-h-48 flex-col overflow-hidden text-typography transition-[border-color,box-shadow,transform] focus-visible:outline-none md:hover:-translate-y-0.5',
-                categoryCardBorderClassName(parsedArticle.category),
+                categoryCardBorderClassName(article.category),
               )}
             >
               <div className="relative aspect-5/3 shrink-0 bg-muted lg:aspect-4/3">
                 <ImageWithFallback
-                  src={parsedArticle.image}
-                  alt={`${parsedArticle.title} image`}
+                  src={article.image}
+                  alt={`${article.title} image`}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                 />
               </div>
               <div className="flex flex-1 flex-col gap-2 p-3 sm:p-4">
-                <Headline styleAs="category" className={categoryLabelClassName(parsedArticle.category)}>
-                  {parsedArticle.categoryLabel}
+                <Headline styleAs="category" className={categoryLabelClassName(article.category)}>
+                  {formatArticleCategoryLabel(article.category)}
                 </Headline>
                 <Copy size="sm" weight="bold" className="line-clamp-2 leading-snug text-typography sm:text-base">
-                  {parsedArticle.title}
+                  {article.title}
                 </Copy>
-                {parsedArticle.excerpt ? (
+                {article.excerpt ? (
                   <Copy size="xs" color="lightGray" className="line-clamp-2 leading-relaxed">
-                    {parsedArticle.excerpt}
+                    {article.excerpt}
                   </Copy>
                 ) : null}
                 <div className="mt-auto pt-1">
                   <Suspense fallback={<Copy size="xs" color="lightGray">…</Copy>}>
-                    <PublishedDate date={parsedArticle.publishedAt} />
+                    <PublishedDate date={article.publishedAt} />
                   </Suspense>
                 </div>
               </div>

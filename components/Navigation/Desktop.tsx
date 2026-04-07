@@ -1,28 +1,28 @@
 import { TextLink } from "@/ui/Typography";
 import { BrandLink, HomeIconLink } from './NavigationLinks';
-import { navStickyContainerStyles } from './index';
+import { navStickyContainerStyles } from './Navigation';
 import { cn } from '@/lib/utils';
-// import { SubscriptionButton } from '../Subscription/SubscriptionButton';
+import LoadingSkeleton from '@/ui/LoadingSkeleton';
+import { Suspense } from 'react';
+import { SubscriptionButton } from '@/components/Subscription/SubscriptionButton';
 
 const navContainerStyles = "py-6 hidden lg:block";
+const innerContainerStyles = "mx-auto flex h-full w-full max-w-full items-center justify-between gap-4";
 
-/**
- * Navigation in ul list since best practice for accessibility and screen readers (clear structure)
- */
 export default function NavigationDesktop({ isActive, hasToken }: { isActive: boolean; hasToken: boolean }) {
   return (
-    <nav className={cn(navStickyContainerStyles, navContainerStyles)}>
-      <div className="mx-auto flex h-full max-w-full items-center justify-between">
-        <ul className="flex w-full list-none items-center justify-between">
+    <nav className={cn(navStickyContainerStyles, navContainerStyles)} aria-label="Main">
+      <div className={innerContainerStyles}>
+        <HomeIconLink />
+
+        <BrandLink />
+
+        <ul className="flex list-none items-center gap-6">
           <li>
-            <HomeIconLink />
+            <Suspense fallback={<LoadingSkeleton type="button" />}>
+              <SubscriptionButton isActive={isActive} hasToken={hasToken} />
+            </Suspense>
           </li>
-          <li>
-            <BrandLink />
-          </li>
-          {/* <li>
-            <SubscriptionButton isActive={isActive} hasToken={hasToken} />
-          </li> */}
           <li>
             <TextLink href="/search">Search</TextLink>
           </li>
