@@ -1,32 +1,40 @@
 import { Suspense } from 'react';
 import NavigationDesktop from './Desktop';
 import NavigationMobile from './Mobile';
-import { InfoMessage } from '../ui/InfoMessage';
+import LoadingSkeleton from '../ui/LoadingSkeleton';
 import { getSubscriptionStatus } from '@/lib/subscription';
+import { SubscriptionButton } from '../Subscription/SubscriptionButton';
 
 /**
  * Above main (`z-base` in layout) so hover/transform on cards does not paint over the bar.
  * Below drawer (`z-drawer-backdrop` / `z-drawer` in globals).
- * 
- * TODO: add SubscriptionButton but issue rendering on mobile
+ *
+ * Subscription UI: async server fetch + client `SubscriptionButton` is wrapped in Suspense here
+ * and passed as `children` into nav shells (including client `NavigationMobile`). That composition
+ * pattern keeps streaming boundaries at the server; see Suspense/streaming in Next.js docs.
+ *
+ * Sticky class string lives in `navStickyStyles.ts` so client `Mobile.tsx` never imports this file.
+ * TODO: error in Article Page because of Mobile NavigationSubscriptionSlot
  */
-export const navStickyContainerStyles =
-  'sticky top-0 z-navigation mb-8 w-full bg-body text-typography shadow-elevated -mx-(--base-pad-x) w-[calc(100%+2*var(--base-pad-x))] px-(--base-pad-x)';
+export async function NavigationSubscriptionSlot() {
+  const { isActive, hasToken } = await getSubscriptionStatus();
+
+  return (
+    <Suspense fallback={<LoadingSkeleton type="button" />}>
+      <SubscriptionButton isActive={isActive} hasToken={hasToken} />
+    </Suspense>
+  );
+}
 
 export default function Navigation() {
   return (
-    <Suspense fallback={<InfoMessage type="loading" message="Loading navigation…" />}>
-      <NavigationInner />
-    </Suspense>
-  )
-}
-
-async function NavigationInner() {
-  const { isActive, hasToken } = await getSubscriptionStatus();
-  return (
     <>
-      <NavigationDesktop isActive={isActive} hasToken={hasToken} />
-      {/* <NavigationMobile isActive={isActive} hasToken={hasToken} /> */}
+      <NavigationDesktop>
+        <NavigationSubscriptionSlot />
+      </NavigationDesktop>
+      <NavigationMobile>
+        <NavigationSubscriptionSlot />
+      </NavigationMobile>
     </>
   );
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { Suspense, useState, type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { VisuallyHidden } from 'radix-ui'
 import {
   Drawer,
@@ -14,17 +14,14 @@ import {
   DrawerFooter,
 } from '@/components/ui/drawer'
 import { NavMenuOpenIcon } from '@/ui/icons/nav-menu-open'
-import { CloseIcon } from '@/ui/icons/close'
 import { IconButton } from '@/ui/IconButton'
 import { TextLink } from '@/ui/Typography'
 import { BrandLink, HomeIconLink } from './NavigationLinks'
 import { cn } from '@/lib/utils'
-import { navStickyContainerStyles } from './Navigation'
-import { InfoMessage } from '../ui/InfoMessage'
-import LoadingSkeleton from '../ui/LoadingSkeleton'
-// import { SubscriptionButton } from '../Subscription/SubscriptionButton'
+import { navStickyContainerStyles } from './navStickyStyles'
+import { CloseIcon } from '@/components/ui/icons/close'
 
-interface MobileNavLinkProps {
+type MobileNavLinkProps = {
   href: string
   children: ReactNode
   isActive: boolean
@@ -45,7 +42,7 @@ function MobileNavLink({ href, children, isActive }: MobileNavLinkProps) {
   )
 }
 
-export default function NavigationMobile({ isActive, hasToken }: { isActive: boolean; hasToken: boolean }) {
+export default function NavigationMobile({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const [prevPathname, setPrevPathname] = useState(pathname)
@@ -97,24 +94,25 @@ export default function NavigationMobile({ isActive, hasToken }: { isActive: boo
               </MobileNavLink>
             </ul>
           </nav>
-          <DrawerFooter className="w-full items-center">
-            {/* <Suspense fallback={
-              <InfoMessage type="loading" message="Loading subscription status...">
-                <LoadingSkeleton type="card" />
-              </InfoMessage>
-            }>
-              <SubscriptionButton isActive={isActive} hasToken={hasToken} />
-            </Suspense> */}
-            <DrawerClose asChild>
-              <IconButton
-                aria-expanded={open}
-                aria-controls="mobile-navigation"
-                aria-haspopup="true"
-                aria-label="Close menu"
-              >
-                <CloseIcon />
-              </IconButton>
-            </DrawerClose>
+          <DrawerFooter className="flex w-full flex-col items-stretch gap-4">
+            {/*
+              Subscription slot is composed in Navigation (Server Component): Suspense + async
+              NavigationSubscriptionButton. Client boundaries receive server output as children;
+              do not import the async button inside this file.
+            */}
+            <div className="flex w-full justify-center">{children}</div>
+            <div className="flex justify-center">
+              <DrawerClose asChild>
+                <IconButton
+                  aria-expanded={open}
+                  aria-controls="mobile-navigation"
+                  aria-haspopup="true"
+                  aria-label="Close menu"
+                >
+                  <CloseIcon />
+                </IconButton>
+              </DrawerClose>
+            </div>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
