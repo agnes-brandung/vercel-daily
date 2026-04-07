@@ -32,24 +32,19 @@
   content: "";
   position: absolute;
   inset: 0;
-  /* Same layer as @utility z-base (see globals @theme --z-base). */
-  z-index: var(--z-base);
+  /* Above hero image (z-base) + scrims (z-raised); below body copy (z-content). */
+  z-index: var(--z-overlay);
   border-radius: inherit;
   background-color: var(--breaking-flash-color, transparent);
   opacity: 0;
   pointer-events: none;
-  animation: breaking-news-category-flash 3s ease-in-out forwards;
-}
-
-.breaking-news-card-inner {
-  position: relative;
-  /* Same layer as @utility z-raised (see globals @theme --z-raised). */
-  z-index: var(--z-raised);
+  animation: breaking-news-category-flash 2.5s ease-in-out forwards;
 }
 
 .breaking-news-ticker {
   position: relative;
-  z-index: var(--z-raised);
+  /* Above category flash (::before at z-overlay) so the urgent strip stays visible. */
+  z-index: var(--z-content);
   overflow: hidden;
   border-top: 1px solid rgb(255 255 255 / 0.2);
   background-color: var(--base-error);

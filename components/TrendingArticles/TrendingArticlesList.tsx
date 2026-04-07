@@ -1,4 +1,6 @@
 import Link from 'next/link';
+
+import { ImageWithFallback } from '@/components/ui/PlaceholderImg';
 import { Suspense } from 'react';
 import PublishedDate from '@/components/PublishedDate';
 import { Copy, Headline } from '@/ui/Typography';
@@ -35,12 +37,13 @@ export async function TrendingArticlesList({ excludeArticleId }: { excludeArticl
                 categoryCardBorderClassName(parsedArticle.category),
               )}
             >
-              <div className="aspect-5/3 shrink-0 bg-muted lg:aspect-4/3">
-                {/* eslint-disable-next-line @next/next/no-img-element -- external URLs; skip Image remotePatterns */}
-                <img
+              <div className="relative aspect-5/3 shrink-0 bg-muted lg:aspect-4/3">
+                <ImageWithFallback
                   src={parsedArticle.image}
                   alt={`${parsedArticle.title} image`}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                 />
               </div>
               <div className="flex flex-1 flex-col gap-2 p-3 sm:p-4">

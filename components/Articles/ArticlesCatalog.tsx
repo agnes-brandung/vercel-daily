@@ -11,6 +11,8 @@ import {
 import { cn } from '@/utils/cn';
 import { formatArticleCategoryLabel, type ParsedArticle } from '@/utils/parseApiData';
 import Link from 'next/link';
+
+import { ImageWithFallback } from '@/components/ui/PlaceholderImg';
 import { getArticleMethods } from '@/app/api/getArticlesMethods';
 
 function ArticleLink({ article }: { article: ParsedArticle }) {
@@ -21,12 +23,13 @@ function ArticleLink({ article }: { article: ParsedArticle }) {
         'group flex flex-col gap-3 px-4 py-5 sm:px-5 sm:py-6 no-underline lg:flex-row lg:items-start lg:gap-4 focus-ring',
       )}
     >
-      <figure className="order-1 shrink-0 overflow-hidden rounded-md lg:order-2 lg:w-[200px]">
-        {/* eslint-disable-next-line @next/next/no-img-element -- external URLs; skip Image remotePatterns */}
-        <img
+      <figure className="relative order-1 h-[200px] w-full shrink-0 overflow-hidden rounded-md lg:order-2 lg:w-[200px]">
+        <ImageWithFallback
           src={article.image}
           alt={article.title}
-          className="max-h-[200px] w-full object-cover lg:h-[200px] lg:w-[200px]"
+          fill
+          sizes="(max-width: 1024px) 100vw, 200px"
+          className="object-cover"
         />
       </figure>
       <div className="order-2 flex min-w-0 flex-1 flex-col gap-2 lg:order-1">
