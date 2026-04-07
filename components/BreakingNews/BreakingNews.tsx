@@ -14,9 +14,14 @@ import { Suspense } from 'react';
 import { getArticleById } from '@/app/api/getArticleById';
 import { getBreakingNews } from '@/app/api/getBreakingNews';
 import { ReadArticleButton } from '@/components/ReadArticleButton';
+import {
+  BreakingNewsCardImageBackdrop,
+  BREAKING_NEWS_DESKTOP_TEXT_COLUMN_MAX,
+} from './BreakingNewsCardImageBackdrop';
 import { BreakingNewsTicker } from './BreakingNewsTicker';
 import { parseBreakingNews } from '@/utils/parseApiData';
 
+// TODO check of parallel promiseAll is the best here https://vercel.com/academy/nextjs-foundations/query-performance-patterns
 export async function BreakingNews() {
   const breakingNewsData = await getBreakingNews();
 
@@ -27,7 +32,10 @@ export async function BreakingNews() {
   const parsedBreakingNews = parseBreakingNews(breakingNewsData.data);
   const { articleId, headline, summary, category, publishedAt, urgent, categoryLabel } = parsedBreakingNews;
 
-  const articleById = await getArticleById({ articleId });
+  const [articleById] = await Promise.all([
+    getArticleById({ articleId }),
+  ]);
+
   if (!articleById.ok) {
     return <InfoMessage type="error" message={"An error occurred while fetching the breaking news - try again later."} />;
   }
@@ -51,9 +59,27 @@ export async function BreakingNews() {
 
   const urgentBadgeStyles = 'rounded-md bg-error px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-white';
 
+  /** With image: mobile = text in lower band under clear photo (vertical mirror of desktop); desktop unchanged. */
+  const textBlockWithImageStyles = cn(
+    'flex min-h-96 flex-col sm:min-h-104',
+    'max-lg:justify-start max-lg:pt-50',
+    `lg:${BREAKING_NEWS_DESKTOP_TEXT_COLUMN_MAX}`,
+    'lg:min-h-76 lg:flex-none lg:justify-center lg:pr-4 xl:pr-8',
+  );
+
   const textBlock = (
-    <div className="breaking-news-card-inner space-y-4 p-6 sm:p-8 lg:flex-1 lg:min-w-0 lg:order-1">
-      <div className="flex flex-wrap items-center gap-3">
+    <div
+      className={cn(
+        'breaking-news-card-inner space-y-4 p-6 sm:p-8',
+        breakingNewsImage ? textBlockWithImageStyles : 'lg:flex-1 lg:min-w-0 lg:order-1',
+      )}
+    >
+      <div
+        className={cn(
+          'flex flex-wrap items-center gap-3',
+          breakingNewsImage ? 'max-lg:pt-6' : null,
+        )}
+      >
         {urgent ? (
           <span className={urgentBadgeStyles}>Urgent</span>
         ) : null}
@@ -84,17 +110,9 @@ export async function BreakingNews() {
       style={breakingNewsCardAnimationStyle}
     >
       {breakingNewsImage ? (
-        <div className="flex flex-col lg:flex-row lg:items-stretch">
-          <div className="relative aspect-video w-full shrink-0 overflow-hidden border-border border-b lg:order-2 lg:aspect-auto lg:h-auto lg:min-h-48 lg:w-72 lg:max-w-[40%] lg:border-b-0 lg:border-l">
-            {/* eslint-disable-next-line @next/next/no-img-element -- external URLs; skip Image remotePatterns */}
-            <img
-              src={breakingNewsImage}
-              alt={headline}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-            />
-          </div>
+        <BreakingNewsCardImageBackdrop imageSrc={breakingNewsImage} imageAlt={headline}>
           {textBlock}
-        </div>
+        </BreakingNewsCardImageBackdrop>
       ) : (
         textBlock
       )}

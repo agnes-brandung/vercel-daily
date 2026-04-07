@@ -1,5 +1,5 @@
 import { fetchNewsApi } from '@/lib/api/fetchNewsApi';
-import { parseArticle, ParsedArticle } from '@/utils/parseApiData';
+import { parseArticle, type ParsedArticle } from '@/utils/parseApiData';
 import { cacheLife } from 'next/cache';
 
 export type ArticlesResult =

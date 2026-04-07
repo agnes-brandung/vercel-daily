@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { cn } from '@/utils/cn';
 
 
-import LoadingIcon from './icons/loading';
+import LoadingIcon from '@/ui/icons/loading';
 
 import { cva } from 'class-variance-authority';
 import { getSanitizedHref, isInternalUrl } from '@/utils';
@@ -111,7 +111,7 @@ function Button({
   onClick,
   ...rest
 }: ButtonProps) {
-  const usedIcon = isLoading ? <LoadingIcon className={'animate-spin'} /> : icon;
+  const usedIcon = isLoading ? <LoadingIcon /> : icon;
   const hasVisualIcon = Boolean(usedIcon);
 
   /** Only hide label visually when an icon (or spinner) is present; otherwise sr-only would leave an empty-looking control. */

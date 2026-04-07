@@ -8,14 +8,21 @@ import {
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { Copy } from '@/ui/Typography';
-import { categoryFilterChevronIconStyles, categoryFilterNumberStyles, categoryFilterSelectLabelStyles, categoryFilterTriggerButtonStyles } from './styles';
+import { categoryFilterChevronIconStyles, categoryFilterNumberStyles, categoryFilterSelectLabelStyles, categoryFilterTriggerButtonDisabledStyles, categoryFilterTriggerButtonStyles } from './styles';
 
-export function CategoryDropdownTrigger({ selectedCount, categoryFilterOpen }: { selectedCount: number, categoryFilterOpen: boolean }) {
+type CategoryDropdownTriggerProps = {
+  selectedCount: number;
+  categoryFilterOpen: boolean;
+  isLoading?: boolean;
+}
+
+export function CategoryDropdownTrigger({ selectedCount, categoryFilterOpen, isLoading = false }: CategoryDropdownTriggerProps) {
   return (
     <PopoverTrigger asChild>
       <button
         type="button"
-        className={categoryFilterTriggerButtonStyles}
+        className={isLoading ? cn(categoryFilterTriggerButtonStyles, categoryFilterTriggerButtonDisabledStyles) : cn(categoryFilterTriggerButtonStyles, 'bg-transparent')}
+        disabled={isLoading}
       >
         <span className="truncate">
           Categories
@@ -23,12 +30,15 @@ export function CategoryDropdownTrigger({ selectedCount, categoryFilterOpen }: {
             {' '}(<span className={categoryFilterNumberStyles}>{selectedCount}</span>)
           </span>
         </span>
-        <ChevronDownIcon
-          className={cn(
-            categoryFilterChevronIconStyles,
-            categoryFilterOpen && 'rotate-180',
-          )}
-        />
+        <span className="inline-flex size-4 shrink-0 items-center justify-center" aria-hidden>
+          <ChevronDownIcon
+            className={cn(
+              'size-4',
+              categoryFilterChevronIconStyles,
+              categoryFilterOpen && 'rotate-180',
+            )}
+          />
+        </span>
       </button>
     </PopoverTrigger>
   )
