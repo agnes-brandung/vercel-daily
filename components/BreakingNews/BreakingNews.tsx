@@ -21,6 +21,7 @@ import {
 import { BreakingNewsTicker } from './BreakingNewsTicker';
 import { parseBreakingNews } from '@/utils/parseApiData';
 
+// TODO: add next image
 // TODO check of parallel promiseAll is the best here https://vercel.com/academy/nextjs-foundations/query-performance-patterns
 export async function BreakingNews() {
   const breakingNewsData = await getBreakingNews();
