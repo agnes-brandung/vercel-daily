@@ -32,6 +32,15 @@ const nextConfig: NextConfig = {
       fullUrl: true,
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.public.blob.vercel-storage.com',
+      },
+    ],
+    formats: ['image/avif', 'image/webp'],
+  },
   /**
    * Nothing is cached by default. 
    * Instead, you explicitly mark what should be cached using cacheComponents config here and

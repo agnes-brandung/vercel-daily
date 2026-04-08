@@ -1,5 +1,6 @@
 import { Copy, Headline } from '@/ui/Typography';
 import { cn } from '@/utils/cn';
+import { ImageWithFallback } from '@/components/ui/PlaceholderImg';
 import { renderInlineMarkdown } from '@/utils/renderInlineMarkdown';
 
 function isApiContentBlockArray(value: ApiArticle['content']): value is ApiContentBlock[] {
@@ -118,12 +119,13 @@ function ApiContentBlockView({ block, index }: { block: ApiContentBlock; index: 
       return (
         <figure key={index} className="my-0">
           <div className="article-hero-figure overflow-hidden border border-border bg-muted">
-            {/* eslint-disable-next-line @next/next/no-img-element -- external URLs; skip Image remotePatterns */}
-            <img
+            <ImageWithFallback
               src={src}
               alt={block.alt}
+              width={1200}
+              height={675}
+              sizes="(max-width: 768px) 100vw, min(896px, 100vw)"
               className="h-auto w-full object-cover"
-              loading="lazy"
             />
           </div>
           {block.caption?.trim() ? (

@@ -2,6 +2,8 @@ import { Copy, Headline } from '@/ui/Typography';
 import { cn } from '@/utils/cn';
 import Link from 'next/link';
 
+import { ImageWithFallback } from '@/components/ui/PlaceholderImg';
+
 import { categoryCardBorderClassName, categoryLabelClassName } from '@/utils/mapCategoryColor';
 import PublishedDate from '@/components/PublishedDate';
 import { Suspense } from 'react';
@@ -25,12 +27,13 @@ export function ArticlesGrid({
               categoryCardBorderClassName(article.category),
             )}
           >
-            <div className="aspect-16/10 bg-muted">
-              {/* eslint-disable-next-line @next/next/no-img-element -- external URLs; skip Image remotePatterns */}
-              <img
+            <div className="relative aspect-16/10 bg-muted">
+              <ImageWithFallback
                 src={article.image}
                 alt={article.title}
-                className="h-full w-full object-cover transition-transform md:group-hover:scale-[1.02]"
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover transition-transform md:group-hover:scale-[1.02]"
               />
             </div>
             <div className="space-y-2 p-4">

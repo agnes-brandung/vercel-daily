@@ -2,6 +2,10 @@ import Link from 'next/link';
 import { Headline } from '../ui/Typography';
 import { GlobeIcon } from '../ui/icons/globe';
 
+/**
+ * Link over anchor tags: <Link> provides soft navigation (client-side transitions) that preserves state, enables prefetching, and feels faster. 
+ * Plain <a> tags trigger hard navigation with full page reloads.
+ */
 export function HomeIconLink() {
   const globeIconAnimation = "inline-flex origin-center motion-reduce:group-hover:animate-none group-hover:animate-[spin_4s_linear_infinite]";
 
