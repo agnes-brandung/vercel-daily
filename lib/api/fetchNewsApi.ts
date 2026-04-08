@@ -1,4 +1,5 @@
 import { BASE_URL } from './const';
+import { parseBackendJson } from './parseBackendJson';
 
 /**
  * Fetches from the news API and returns a result (no throw), branch on `ok` in the components.
@@ -36,24 +37,7 @@ export async function fetchNewsApi<T>({
       };
     }
 
-    // TODO: improve type once we know all the endpoints and their data schemes?
-    const backend: unknown = await res.json();
-
-    if (
-      typeof backend !== "object" ||
-      backend === null ||
-      !("success" in backend) ||
-      !("data" in backend) ||
-      !(backend as { success: unknown }).success ||
-      (backend as { data: unknown }).data === undefined
-    ) {
-      return {
-        ok: false,
-        error: `Invalid response from ${endpoint} (${res.status})`,
-      };
-    }
-
-    return { ok: true, data: (backend as { data: T }).data };
+    return await parseBackendJson<T>(res);
   } catch (e) {
     const message = e instanceof Error ? e.message : "Unknown error";
     return { ok: false, error: message };

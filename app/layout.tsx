@@ -6,7 +6,19 @@ import Navigation from '@/components/Navigation/Navigation';
 import Footer from '@/components/Footer';
 import { ThemeProviders } from '@/components/Providers/ThemeProviders';
 
+function metadataBaseUrl(): URL {
+  if (process.env.VERCEL_URL) {
+    return new URL(`https://${process.env.VERCEL_URL}`);
+  }
+  const site = process.env.NEXT_PUBLIC_SITE_URL;
+  if (site) {
+    return new URL(site);
+  }
+  return new URL('http://localhost:3000');
+}
+
 export const metadata: Metadata = {
+  metadataBase: metadataBaseUrl(),
   title: "The Vercel Daily",
   description: "News and insights for modern web developers.",
 };

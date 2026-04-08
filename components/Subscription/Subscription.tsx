@@ -1,4 +1,4 @@
-import { getSubscriptionStatus } from '@/lib/subscription';
+import { getSubscriptionStatus } from '@/app/api/getSubscriptionStatus';
 
 import { SubscriptionButton } from './SubscriptionButton';
 

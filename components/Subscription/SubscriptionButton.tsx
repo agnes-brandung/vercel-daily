@@ -17,6 +17,19 @@ type SubscriptionButtonProps = {
   hideUnsubscribe?: boolean;
 }
 
+/**
+ * SubscriptionButton was built as form components with useActionState. No need for (zod) validation since we are only using a SubmitButton.
+ * However, this allows an easy implementation of:
+ * - Mutations on the server – Cookie reads/writes and calls like activateSubscription / deactivateSubscription stay in 'use server' code, so tokens and any backend secrets are not exposed to the client.
+ * - Keep typed result state (SubscriptionActionState) and show InfoMessage from the last submission with useActionState + <form action={...}> – You k
+ * - Returning errors instead of throwing for expected failures (“surface errors without leaking stack traces”)
+ * - Displaying pending state on the button with useFormStatus + SubmitButton
+ * 
+ * subscribeAction / unsubscribeAction – 'use server' functions from @/app/actions/subscription. 
+ * When the matching <form> is submitted, React runs that action on the server.
+ * subscribeFormAction / unsubscribeFormAction – the function you pass to <form action={...}>. It submits the form and feeds the result back into the hook so the component can re-render (to to show InfoMessage when ok is false)
+ * One hook per form: hooks run server actions on submit, and keep the last result in state for the UI.
+ */
 export function SubscriptionButton({ isActive, hasToken, hideUnsubscribe }: SubscriptionButtonProps) {
   const initialState: SubscriptionActionState = { ok: true };
   const [subscribeState, subscribeFormAction] = useActionState(subscribeAction, initialState);
@@ -49,6 +62,9 @@ export function SubscriptionButton({ isActive, hasToken, hideUnsubscribe }: Subs
   );
 }
 
+/**
+ * useFormStatus only works in components that are children of a <form>. That's why we extract the submit button into its own component. This pattern keeps loading state isolated and reusable.
+ */
 function SubmitButton({
   label,
   variant,
@@ -67,7 +83,7 @@ function SubmitButton({
       label={label}
       disabled={pending}
       isLoading={pending}
-      className={attentionPulse ? 'subscription-cta-attention' : undefined}
+      className={attentionPulse && !pending ? 'subscription-cta-attention' : undefined}
     />
   );
 }
