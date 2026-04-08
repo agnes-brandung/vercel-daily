@@ -62,7 +62,7 @@ export async function BreakingNews() {
 
   /** With image: mobile = text in lower band under clear photo (vertical mirror of desktop); desktop unchanged. */
   const textBlockWithImageStyles = cn(
-    'flex min-h-96 flex-col sm:min-h-104',
+    'flex min-h-96 flex-col sm:min-h-104 lg:w-[80%]',
     'max-lg:justify-start max-lg:pt-50',
     `lg:${BREAKING_NEWS_DESKTOP_TEXT_COLUMN_MAX}`,
     'lg:min-h-76 lg:flex-none lg:justify-center lg:pr-4 xl:pr-8',
@@ -71,7 +71,7 @@ export async function BreakingNews() {
   const textBlock = (
     <div
       className={cn(
-        'breaking-news-card-inner space-y-4 p-6 sm:p-8',
+        'relative z-content space-y-4 p-6 sm:p-8',
         breakingNewsImage ? textBlockWithImageStyles : 'lg:flex-1 lg:min-w-0 lg:order-1',
       )}
     >
@@ -96,7 +96,7 @@ export async function BreakingNews() {
         {headline}
       </Headline>
       {summary ? (
-        <Copy size="lg" color="lightGray" className="max-w-3xl leading-relaxed">
+        <Copy size="lg" color="gray" className="max-w-3xl leading-relaxed">
           {summary}
         </Copy>
       ) : null}

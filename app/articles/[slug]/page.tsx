@@ -7,29 +7,21 @@ type ArticlePageProps = {
   params: Promise<{ slug: string }>;
 }
 
-/**
- * 
- * TODOS:
- * - fix suspense message or replace with loading... ?
- * - Subscribe button in the navigation instead of the article page - add it in a layout specific for here?
- */
-
-// TODO: do we really need this Inner??
 export default function ArticlePage({ params }: ArticlePageProps) {
   return (
-    <article className="mx-auto max-w-6xl py-block space-y-12">
-      <Suspense fallback={
-        <InfoMessage type="loading" message="Loading article…">
-          <LoadingSkeleton />
-        </InfoMessage>
-      }>
-        <ArticlePageInner params={params} />
-      </Suspense>
-    </article>
+    <Suspense fallback={
+      <InfoMessage type="loading" message="Loading article…">
+        <LoadingSkeleton />
+      </InfoMessage>
+    }>
+      <ArticlePageInner params={params} />
+    </Suspense>
   );
 }
 
-async function ArticlePageInner({ params }: { params: Promise<{ slug: string }> }) {
+async function ArticlePageInner({ params }: ArticlePageProps) {
   const { slug } = await params;
+  // Simulate an error
+  // throw new Error('Simulated error');
   return <ArticleBody slug={slug} />;
 }

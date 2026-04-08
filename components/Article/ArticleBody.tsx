@@ -9,11 +9,12 @@ import {
 import { Copy, Headline } from '@/ui/Typography';
 import { cn } from '@/utils/cn';
 import { notFound } from 'next/navigation';
+
+import { ImageWithFallback } from '@/components/ui/PlaceholderImg';
 import type { CSSProperties } from 'react';
 import { Suspense } from 'react';
 import { ArticleContentRte } from './ArticleContentRte';
 import { ArticleSubscriptionGate } from './ArticleSubscriptionGate';
-import { parseArticle } from '@/utils/parseApiData';
 import { getSubscriptionStatus } from '@/lib/subscription';
 import { TrendingArticles } from '../TrendingArticles/TrendingArticles';
 import LoadingSkeleton from '../ui/LoadingSkeleton';
@@ -41,8 +42,7 @@ export async function ArticleBody({ slug }: { slug: string }) {
     notFound();
   }
 
-  const parsedArticle = parseArticle(article);
-  const { id, category, title, publishedAt, excerpt, image, author, categoryLabel } = parsedArticle;
+  const { id, category, title, publishedAt, excerpt, image, author, categoryLabel } = article;
 
   // Pages using isSubscribed (with cookies()) becomes dynamic (no prerendering)
   const { isActive, hasToken } = await getSubscriptionStatus();
@@ -64,10 +64,12 @@ export async function ArticleBody({ slug }: { slug: string }) {
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <div className="flex flex-wrap items-center gap-3">
               {author.avatar ? (
-                // eslint-disable-next-line @next/next/no-img-element -- external URLs; skip Image remotePatterns
-                <img
+                <ImageWithFallback
                   src={author.avatar}
                   alt="Author avatar"
+                  width={40}
+                  height={40}
+                  sizes="40px"
                   className="h-10 w-10 shrink-0 border border-border object-cover ring-2 ring-[color-mix(in_srgb,var(--article-accent)_35%,transparent)] ring-offset-2 ring-offset-card"
                 />
               ) : null}
@@ -90,16 +92,22 @@ export async function ArticleBody({ slug }: { slug: string }) {
             categoryImageRingClassName(category),
           )}
         >
-          <div className="aspect-16/10 w-full overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element -- external URLs; skip Image remotePatterns */}
-            <img src={image} alt={title} className="h-full w-full object-cover" />
+          <div className="relative aspect-16/10 w-full overflow-hidden">
+            <ImageWithFallback
+              src={image}
+              alt={title}
+              fill
+              preload
+              loading="eager"
+              sizes="(max-width: 768px) 100vw, min(896px, 92vw)"
+              className="object-cover"
+            />
           </div>
         </figure>
 
         <div className="article-content-divider" aria-hidden />
-        {/** // TODO: maybe this is the issue with the dynamic page? */}
-        <ArticleSubscriptionGate isActive={isActive} hasToken={hasToken}>
-          <ArticleContentRte content={parsedArticle.content} />
+        <ArticleSubscriptionGate isActive={isActive} hasToken={hasToken} hideUnsubscribe>
+          <ArticleContentRte content={article.content} />
         </ArticleSubscriptionGate>
       </div>
       <Suspense fallback={

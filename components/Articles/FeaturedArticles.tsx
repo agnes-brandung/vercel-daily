@@ -21,11 +21,9 @@ export function FeaturedArticles() {
         <Headline styleAs="h5">Handpicked stories from the team</Headline>
       </header>
       <Suspense fallback={
-        <>
-          <InfoMessage type="loading" message="Loading articles…">
-            <LoadingSkeleton type="card" />
-          </InfoMessage>
-        </>
+        <InfoMessage type="loading" message="Loading articles…">
+          <LoadingSkeleton type="card" />
+        </InfoMessage>
       }>
         <FeaturedArticlesGrid />
       </Suspense>

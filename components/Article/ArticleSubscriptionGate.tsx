@@ -6,6 +6,7 @@ interface ArticleSubscriptionGateProps {
   isActive: boolean;
   hasToken: boolean;
   children: React.ReactNode;
+  hideUnsubscribe?: boolean;
 }
 
 const subscriptionGateBgStyles = 'relative max-h-[min(28rem,55vh)] overflow-hidden rounded-sm';
@@ -15,13 +16,13 @@ const subscriptionGateGradientBgStyles = 'after:pointer-events-none after:absolu
  * When `isActive` is false, shows a preview of article body with a gradient + CTA overlay.
  * When true, renders children unchanged.
  */
-export function ArticleSubscriptionGate({ isActive, hasToken, children }: ArticleSubscriptionGateProps) {
+export function ArticleSubscriptionGate({ isActive, hasToken, children, hideUnsubscribe }: ArticleSubscriptionGateProps) {
   if (isActive && hasToken) {
     return (
       <>
         {children}
         <div className="flex flex-col items-center">
-          <SubscriptionButton isActive={isActive} hasToken={hasToken} />
+          <SubscriptionButton isActive={isActive} hasToken={hasToken} hideUnsubscribe={hideUnsubscribe} />
         </div>
       </>
     );
