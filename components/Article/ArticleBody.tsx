@@ -15,7 +15,6 @@ import type { CSSProperties } from 'react';
 import { Suspense } from 'react';
 import { ArticleContentRte } from './ArticleContentRte';
 import { ArticleSubscriptionGate } from './ArticleSubscriptionGate';
-import { parseArticle } from '@/utils/parseApiData';
 import { getSubscriptionStatus } from '@/lib/subscription';
 import { TrendingArticles } from '../TrendingArticles/TrendingArticles';
 import LoadingSkeleton from '../ui/LoadingSkeleton';
@@ -43,8 +42,7 @@ export async function ArticleBody({ slug }: { slug: string }) {
     notFound();
   }
 
-  const parsedArticle = parseArticle(article);
-  const { id, category, title, publishedAt, excerpt, image, author, categoryLabel } = parsedArticle;
+  const { id, category, title, publishedAt, excerpt, image, author, categoryLabel } = article;
 
   // Pages using isSubscribed (with cookies()) becomes dynamic (no prerendering)
   const { isActive, hasToken } = await getSubscriptionStatus();
@@ -109,7 +107,7 @@ export async function ArticleBody({ slug }: { slug: string }) {
 
         <div className="article-content-divider" aria-hidden />
         <ArticleSubscriptionGate isActive={isActive} hasToken={hasToken} hideUnsubscribe>
-          <ArticleContentRte content={parsedArticle.content} />
+          <ArticleContentRte content={article.content} />
         </ArticleSubscriptionGate>
       </div>
       <Suspense fallback={
