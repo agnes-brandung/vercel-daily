@@ -1,10 +1,9 @@
 /**
- * Home page hero: layered radials using category accent tokens (--base-yellow, --magenta, etc.).
- * Left side leans warm (yellow); bottom-left avoids emerald so the wash stays airy, not green.
+ * Hero gradient: layered radials using category accent tokens (--base-yellow, --magenta, etc.).
  * Light/dark follow :root / .dark variable overrides in globals.
  */
 
-.home-hero-gradient {
+.hero-gradient {
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -13,7 +12,7 @@
   border: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
 }
 
-.home-hero-gradient__bg {
+.hero-gradient__bg {
   position: absolute;
   inset: 0;
   border-radius: inherit;
@@ -32,7 +31,7 @@
     );
 }
 
-.home-hero-gradient__content {
+.hero-gradient__content {
   position: relative;
   z-index: 1;
 }
