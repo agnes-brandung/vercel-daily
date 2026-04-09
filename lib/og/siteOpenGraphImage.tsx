@@ -9,23 +9,6 @@ export const ogImageSize = { width: 1200, height: 630 };
 
 export const ogImageContentType = 'image/png';
 
-const background = '#ffffff';
-const textPrimary = '#263238';
-const textMuted = '#757575';
-
-// TODO: avoid duplications?
-const CATEGORY_ACCENT: Record<ApiArticle['category'], string> = {
-  changelog: '#0e7490',
-  engineering: '#8e24aa',
-  customers: '#2e7d32',
-  'company-news': '#ad1457',
-  community: '#5e35b1',
-};
-
-export function categoryAccentColor(category: ApiArticle['category']): string {
-  return CATEGORY_ACCENT[category];
-}
-
 type SiteOpenGraphImageOptions = {
   eyebrow: string;
   title: string;
@@ -48,7 +31,7 @@ export async function siteOpenGraphImage({
           display: 'flex',
           width: '100%',
           height: '100%',
-          backgroundColor: background,
+          backgroundColor: 'var(--background)',
           position: 'relative',
         }}
       >
@@ -80,7 +63,7 @@ export async function siteOpenGraphImage({
             style={{
               fontSize: 22,
               fontWeight: 600,
-              color: textMuted,
+              color: 'var(--text-muted)',
               letterSpacing: '0.04em',
               textTransform: 'uppercase',
             }}
@@ -91,7 +74,7 @@ export async function siteOpenGraphImage({
             style={{
               fontSize: 56,
               fontWeight: 600,
-              color: textPrimary,
+              color: 'var(--text-primary)',
               lineHeight: 1.12,
               fontFamily: 'Inter',
             }}
@@ -103,7 +86,7 @@ export async function siteOpenGraphImage({
               style={{
                 fontSize: 28,
                 fontWeight: 600,
-                color: textMuted,
+                color: 'var(--text-muted)',
                 lineHeight: 1.35,
                 maxWidth: 920,
                 fontFamily: 'Inter',

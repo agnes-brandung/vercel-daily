@@ -3,15 +3,15 @@ import { Suspense } from 'react';
 import { SearchClient } from '@/components/Search/SearchClient';
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 import { InfoMessage } from '@/components/ui/InfoMessage';
-import { getCategories } from '@/app/api/getCategories';
-import { getArticleMethods } from '@/app/api/getArticlesMethods';
+import { getCategories } from '@/lib/server-data/getCategories';
+import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
 import {
   filterArticlesBySearchTermAndCategories,
   isSpecialShortSearchTerm,
   MIN_SEARCH_TERM_LENGTH,
   readCategorySlugsFromSearchParamsRecord,
   readSearchTermFromSearchParamsRecord,
-} from '@/utils/filterArticlesBySearchParams';
+} from '@/components/Search/utils/filterArticlesBySearchParams';
 import { ResultsGrid } from '@/components/Search/ResultsGrid';
 import { Copy } from '@/components/ui/Typography';
 
@@ -113,6 +113,7 @@ async function SearchResults({ searchParams }: SearchPageProps) {
 /**
  * TODOS:
  * - Bonus: add breadcrumb?
+ * - Only use Suspense for the Category Input, not whole component?
  */
 export default function SearchPage({ searchParams }: SearchPageProps) {
   return (

@@ -11,8 +11,8 @@ import { cn } from '@/utils/cn';
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import { Suspense } from 'react';
-import { getArticleById } from '@/app/api/getArticleById';
-import { getBreakingNews } from '@/app/api/getBreakingNews';
+import { getArticleById } from '@/lib/server-data/getArticleById';
+import { getBreakingNews } from '@/lib/server-data/getBreakingNews';
 import { ReadArticleButton } from '@/components/ReadArticleButton';
 import {
   BreakingNewsCardImageBackdrop,

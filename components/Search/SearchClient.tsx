@@ -25,7 +25,7 @@ import {
   CATEGORIES_QUERY_KEY,
   parseCategorySlugsFromSearchParam,
   SEARCH_TERM_QUERY_KEY,
-} from '@/utils/filterArticlesBySearchParams';
+} from '@/components/Search/utils/filterArticlesBySearchParams';
 import { CloseIcon } from '@/ui/icons/close';
 
 const AUTO_SEARCH_DEBOUNCE_MS = 600;
