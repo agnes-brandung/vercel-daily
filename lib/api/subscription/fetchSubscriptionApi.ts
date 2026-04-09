@@ -1,5 +1,6 @@
 import { BASE_URL } from '../const';
 import { parseBackendJson } from '../parseBackendJson';
+import { vercelProtectionBypassHeaders } from '../vercelProtectionHeaders';
 
 const SUBSCRIPTION_OPERATION = {
   GET: 'status',
@@ -14,14 +15,12 @@ const getErrorMessage = (operation: keyof typeof SUBSCRIPTION_OPERATION) => `Som
  * When `subscriptionToken` is set, `x-subscription-token` is added as well.
  */
 function subscriptionApiHeaders(subscriptionToken?: string): Record<string, string> {
-  const headers: Record<string, string> = {
-  'x-vercel-protection-bypass': process.env.VERCEL_PROTECTION_BYPASS!,
-  };
+  const headers: Record<string, string> = { ...vercelProtectionBypassHeaders() };
 
   if (subscriptionToken?.trim()) {
     headers['x-subscription-token'] = subscriptionToken.trim();
   }
-  
+
   return headers;
 }
 

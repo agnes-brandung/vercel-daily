@@ -1,5 +1,5 @@
 import PublishedDate from '@/components/PublishedDate';
-import { getArticleMethods } from '@/app/api/getArticlesMethods';
+import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
 import { InfoMessage } from '@/components/ui/InfoMessage';
 import {
   categoryFlashBackground,
@@ -15,7 +15,7 @@ import type { CSSProperties } from 'react';
 import { Suspense } from 'react';
 import { ArticleContentRte } from './ArticleContentRte';
 import { ArticleSubscriptionGate } from './ArticleSubscriptionGate';
-import { getSubscriptionStatus } from '@/app/api/getSubscriptionStatus';
+import { getSubscriptionStatus } from '@/lib/server-data/getSubscriptionStatus';
 import { TrendingArticles } from '../TrendingArticles/TrendingArticles';
 import LoadingSkeleton from '../ui/LoadingSkeleton';
 

@@ -11,7 +11,8 @@ import { cn } from '@/utils/cn';
 import LoadingIcon from '@/ui/icons/loading';
 
 import { cva } from 'class-variance-authority';
-import { getSanitizedHref, isInternalUrl } from '@/utils';
+import { getSanitizedHref } from '@/utils/getSanitizedHref';
+import { isInternalUrl } from '@/utils/isInternalUrl';
 
 const baseButtonClasses =
   'flex h-min w-full flex-nowrap items-center justify-center rounded-md border px-2 py-4 uppercase whitespace-nowrap md:w-fit cursor-pointer focus-ring';

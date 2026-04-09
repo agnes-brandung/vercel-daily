@@ -13,7 +13,7 @@ import { formatArticleCategoryLabel, type ParsedArticle } from '@/utils/parseApi
 import Link from 'next/link';
 
 import { ImageWithFallback } from '@/components/ui/PlaceholderImg';
-import { getArticleMethods } from '@/app/api/getArticlesMethods';
+import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
 
 function ArticleLink({ article }: { article: ParsedArticle }) {
   return (

@@ -1,5 +1,5 @@
 import { InfoMessage } from '@/components/ui/InfoMessage';
-import { getArticleMethods } from '@/app/api/getArticlesMethods';
+import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
 import { ArticlesGrid } from './ArticlesGrid';
 
 export async function FeaturedArticlesGrid() {
