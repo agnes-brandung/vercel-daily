@@ -1,5 +1,6 @@
 import { BASE_URL } from './const';
 import { parseBackendJson } from './parseBackendJson';
+import { vercelProtectionBypassHeaders } from './vercelProtectionHeaders';
 
 /**
  * Fetches from the news API and returns a result (no throw), branch on `ok` in the components.
@@ -25,9 +26,7 @@ export async function fetchNewsApi<T>({
     }
 
     const res = await fetch(url.toString(), {
-      headers: {
-        "x-vercel-protection-bypass": process.env.VERCEL_PROTECTION_BYPASS!,
-      },
+      headers: vercelProtectionBypassHeaders(),
     });
 
     if (!res.ok) {

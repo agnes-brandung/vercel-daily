@@ -3,7 +3,7 @@
 import { type ReactNode, useId, useState } from 'react';
 
 import Button from '@/components/ui/Button';
-import { SEARCH_FIRST_RESULTS_MAX } from '@/utils/filterArticlesBySearchParams';
+import { SEARCH_FIRST_RESULTS_MAX } from '@/components/Search/utils/filterArticlesBySearchParams';
 
 type MoreResultsProps = {
   children: ReactNode;

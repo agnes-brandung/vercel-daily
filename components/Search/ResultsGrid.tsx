@@ -1,4 +1,4 @@
-import { SEARCH_FIRST_RESULTS_MAX } from '@/utils/filterArticlesBySearchParams';
+import { SEARCH_FIRST_RESULTS_MAX } from '@/components/Search/utils/filterArticlesBySearchParams';
 import { ArticlesGrid } from '../Articles/ArticlesGrid';
 import { InfoMessage } from '@/ui/InfoMessage';
 import { Headline } from '@/ui/Typography';

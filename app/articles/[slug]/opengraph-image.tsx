@@ -1,12 +1,12 @@
 import { notFound } from 'next/navigation';
 
-import { getArticleMethods } from '@/app/api/getArticlesMethods';
+import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
 import {
-  categoryAccentColor,
   ogImageContentType,
   ogImageSize,
   siteOpenGraphImage,
 } from '@/lib/og/siteOpenGraphImage';
+import { CATEGORY_COLOR_MAP } from '@/utils/mapCategoryColor';
 
 export const alt = 'Article on The Vercel Daily';
 
@@ -32,6 +32,7 @@ export default async function Image({
   }
 
   const article = result.data.allArticles.find((a) => a.slug === slug);
+  console.log('article', article);
   if (!article) {
     notFound();
   }
@@ -40,6 +41,6 @@ export default async function Image({
     eyebrow: article.categoryLabel,
     title: article.title,
     subtitle: article.excerpt,
-    accentColor: categoryAccentColor(article.category),
+    accentColor: CATEGORY_COLOR_MAP[article.category],
   });
 }
