@@ -3,7 +3,7 @@
 @import "shadcn/tailwind.css";
 @import "../styles/components/breaking-news.css";
 @import "../styles/components/article.css";
-@import "../styles/components/home.css";
+@import "../styles/components/hero.css";
 @import "../styles/components/subscription.css";
 @custom-variant dark (&:where(.dark, .dark *));
 

@@ -15,7 +15,7 @@ import type { CSSProperties } from 'react';
 import { Suspense } from 'react';
 import { ArticleContentRte } from './ArticleContentRte';
 import { ArticleSubscriptionGate } from './ArticleSubscriptionGate';
-import { getSubscriptionStatus } from '@/lib/subscription';
+import { getSubscriptionStatus } from '@/app/api/getSubscriptionStatus';
 import { TrendingArticles } from '../TrendingArticles/TrendingArticles';
 import LoadingSkeleton from '../ui/LoadingSkeleton';
 

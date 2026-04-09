@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { Copy, Headline } from '@/components/ui/Typography';
 import { cn } from '@/utils/cn';
+import { HeroGradient } from '@/components/ui/HeroGradient';
 
 export const metadata: Metadata = {
   title: "Subscription - The Vercel Daily",
@@ -39,9 +40,7 @@ export default function SubscriptionLayout({
 }>) {
   return (
     <div className="section-base-space">
-      <div className="home-hero-gradient">
-        <div className="home-hero-gradient__bg" aria-hidden />
-        <div className="home-hero-gradient__content space-y-6">
+      <HeroGradient>
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
             <Headline styleAs="category" className="text-emerald mb-0">
               Free forever
@@ -80,8 +79,7 @@ export default function SubscriptionLayout({
           </ul>
 
           <div className="flex flex-col items-center">{children}</div>
-        </div>
-      </div>
+      </HeroGradient>
     </div>
   );
 }

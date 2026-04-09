@@ -17,7 +17,7 @@ export default function NavigationMobile({ children }: NavigationMobileProps) {
   const [open, setOpen] = useState(false)
 
   return (
-    <nav className={cn(navStickyContainerStyles, 'block py-4 lg:hidden')} aria-label="Main">
+    <div className={cn(navStickyContainerStyles, 'block py-4 lg:hidden')} aria-label="Main">
       <Drawer open={open} onOpenChange={setOpen} direction="left">
         <MobileNavigationDrawerHeader open={open} />
         <DrawerContent
@@ -34,6 +34,6 @@ export default function NavigationMobile({ children }: NavigationMobileProps) {
           <MobileNavigationFooter open={open}>{children}</MobileNavigationFooter>
         </DrawerContent>
       </Drawer>
-    </nav>
+    </div>
   )
 }

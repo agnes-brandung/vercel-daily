@@ -12,7 +12,7 @@ import {
   SUBSCRIPTION_TOKEN_COOKIE,
   subscriptionTag,
   subscriptionTokenCookieOptions,
-} from '@/lib/subscription';
+} from '@/lib/api/subscription/utils';
 
 export type SubscriptionActionState = {
   ok: boolean;
@@ -41,20 +41,24 @@ async function getOrCreateToken(): Promise<{ ok: true; token: string } | { ok: f
   return { ok: true, token: created.token };
 }
 
+/**
+ * Server Actions that are revalidated when the user changes their subscription status.
+ * Data is mutated instantly and revalidated in the background so users see fresh content automatically.
+ */
 export async function subscribeAction(): Promise<SubscriptionActionState> {
-  const token = await getOrCreateToken();
-  if (!token.ok) {
-    return errorState(token.error);
+  const tokenResponse = await getOrCreateToken();
+  if (!tokenResponse.ok) {
+    return errorState(tokenResponse.error);
   }
 
   // TODO: when using activation, token was found but then nothing happens.
-  const activated = await activateSubscription(token.token);
+  const activated = await activateSubscription(tokenResponse.token);
   if (!activated.ok) {
     return errorState(activated.error);
   }
 
   // use 'max' for stale-while-revalidate semantics
-  revalidateTag(subscriptionTag(token.token), 'max');
+  revalidateTag(subscriptionTag(tokenResponse.token), 'max');
   return okState;
 }
 
