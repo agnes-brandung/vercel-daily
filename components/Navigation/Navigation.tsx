@@ -1,9 +1,9 @@
 import { Suspense } from 'react';
 import NavigationDesktop from './Desktop';
 import NavigationMobile from './Mobile/MobileNavigation';
-import { Copy } from '@/ui/Typography';
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 import Subscription from '@/components/Subscription/Subscription';
+import { NavigationSkeleton } from './Mobile/MobileNavigationSkeleton';
 
 /**
  * SubscriptionButton: async server fetch + client `SubscriptionButton` is wrapped in Suspense here
@@ -12,7 +12,6 @@ import Subscription from '@/components/Subscription/Subscription';
  *
  * Sticky class string lives in `navStickyStyles.ts` so client `Mobile.tsx` never imports this file.
  */
-
 export default function Navigation() {
   return (
     <>
@@ -21,7 +20,7 @@ export default function Navigation() {
           <Subscription />
         </Suspense>
       </NavigationDesktop>
-      <Suspense fallback={<Copy>Loading navigation...</Copy>}>
+      <Suspense fallback={<NavigationSkeleton />}>
         <NavigationMobile>
           <Subscription />
         </NavigationMobile>

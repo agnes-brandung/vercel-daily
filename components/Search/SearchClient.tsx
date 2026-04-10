@@ -236,7 +236,8 @@ export function SearchClient({ categories }: SearchClientProps) {
         icon={<SearchIcon />}
         onClick={runManualSearch}
         isLoading={isResultsLoading}
-        disabled={isResultsLoading}
+        ariaDisabled={isResultsLoading}
+        ariaBusy={isResultsLoading}
         className={searchBarControlClassName}
       />
 
@@ -251,7 +252,8 @@ export function SearchClient({ categories }: SearchClientProps) {
           commitSearch('', []);
         }}
         isLoading={isResultsLoading}
-        disabled={isResultsLoading}
+        ariaDisabled={isResultsLoading}
+        ariaBusy={isResultsLoading}
         className={searchBarControlClassName}
       />
     </div>

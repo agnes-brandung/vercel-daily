@@ -16,7 +16,7 @@ import { isInternalUrl } from '@/utils/isInternalUrl';
 
 const baseButtonClasses =
   'flex h-min w-full flex-nowrap items-center justify-center rounded-md border px-2 py-4 uppercase whitespace-nowrap md:w-fit cursor-pointer focus-ring';
-const disabledClasses =
+const loadingClasses =
   'cursor-not-allowed border-gray-300 bg-gray-300 text-white hover:border-gray-300 hover:bg-gray-300 active:border-gray-300 active:bg-gray-300 focus-visible:border-gray-300 focus-visible:bg-gray-300 focus-visible:ring-0 cursor-not-allowed';
 
 export const buttonStyles = cva(baseButtonClasses, {
@@ -42,16 +42,16 @@ export const buttonStyles = cva(baseButtonClasses, {
     fullWidth: {
       true: 'md:w-full',
     },
-    disabled: {
-      true: disabledClasses,
+    isLoading: {
+      true: loadingClasses,
       false: '',
     },
   },
   compoundVariants: [
     {
       variant: ['primary', 'secondary', 'tertiary', 'iconOnly'],
-      disabled: true,
-      class: disabledClasses,
+      isLoading: true,
+      class: loadingClasses,
     },
     /** Full-width rows: `labelWithIcon` alone uses space-between; with alignleft, keep icon beside the label. */
     {
@@ -85,7 +85,10 @@ export type ButtonProps = {
   type?: 'button' | 'submit' | 'reset';
   icon?: ReactNode;
   isLoading?: boolean;
-  disabled?: boolean;
+  /** In-flight async work; keeps the control focusable unlike `disabled`. Pair with guarding actual activation (e.g. form `onSubmit`). */
+  ariaBusy?: boolean;
+  /** Semantically unavailable while staying focusable; you must block submits/clicks in JS when true (see WAI-ARIA `aria-disabled`). */
+  ariaDisabled?: boolean;
   alignleft?: boolean;
   className?: string;
   href?: string;
@@ -102,7 +105,8 @@ function Button({
   type = 'button',
   icon,
   isLoading = false,
-  disabled = false,
+  ariaBusy = false,
+  ariaDisabled = false,
   alignleft = false,
   className,
   href,
@@ -126,7 +130,7 @@ function Button({
           ? 'labelWithIcon'
           : 'labelOnly';
 
-  const buttonClasses = cn(buttonStyles({ variant, layout, disabled, fullWidth, alignleft }), className);
+  const buttonClasses = cn(buttonStyles({ variant, layout, isLoading, fullWidth, alignleft }), className);
 
   const fallbackContent = (
     <span className="font-semibold">
@@ -151,6 +155,11 @@ function Button({
   const target = href && !isInternalUrl(href) ? '_blank' : undefined;
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement, MouseEvent>) {
+    if (ariaDisabled) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
     if (onClick) onClick(event);
   }
 
@@ -169,7 +178,8 @@ function Button({
       ref={ref}
       type={type}
       className={buttonClasses}
-      disabled={disabled}
+      aria-busy={ariaBusy || undefined}
+      aria-disabled={ariaDisabled || undefined}
       onClick={handleClick}
       {...rest}
     >

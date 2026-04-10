@@ -4,7 +4,7 @@ import { navStickyContainerStyles } from './navStickyStyles';
 import { cn } from '@/lib/utils';
 import { ReactNode } from 'react';
 
-const navContainerStyles = "py-6 hidden lg:block";
+const navContainerStyles = "py-6 hidden xl:block";
 const innerContainerStyles = "mx-auto flex h-full w-full max-w-full items-center justify-between gap-4";
 
 export default function NavigationDesktop({ children }: { children: ReactNode }) {

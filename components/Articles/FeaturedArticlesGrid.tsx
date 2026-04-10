@@ -1,6 +1,6 @@
 import { InfoMessage } from '@/components/ui/InfoMessage';
 import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
-import { ArticlesGrid } from './ArticlesGrid';
+import { ArticlesGridItems } from './ArticlesGridItems';
 
 export async function FeaturedArticlesGrid() {
   const articlesResult = await getArticleMethods();
@@ -15,7 +15,7 @@ export async function FeaturedArticlesGrid() {
 
   return (
     <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <ArticlesGrid articles={featuredArticles} />
+      <ArticlesGridItems articles={featuredArticles} />
     </ul>
   );
 }

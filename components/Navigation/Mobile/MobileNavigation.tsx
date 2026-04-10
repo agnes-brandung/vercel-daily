@@ -1,9 +1,7 @@
 'use client'
 
 import { useState, type ReactNode } from 'react'
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
-import { cn } from '@/lib/utils'
-import { navStickyContainerStyles } from '../navStickyStyles'
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { MobileNavigationFooter } from './MobileNavigationFooter'
 import { VisuallyHidden } from 'radix-ui'
 import { MobileNavigationLinks } from './MobileNavigationLinks'
@@ -17,7 +15,7 @@ export default function NavigationMobile({ children }: NavigationMobileProps) {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className={cn(navStickyContainerStyles, 'block py-4 lg:hidden')} aria-label="Main">
+    <div className="block py-4 xl:hidden">
       <Drawer open={open} onOpenChange={setOpen} direction="left">
         <MobileNavigationDrawerHeader open={open} />
         <DrawerContent

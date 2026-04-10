@@ -1,6 +1,15 @@
+import { searchInnerContainerStyles } from '@/components/Search/styles';
 import { cn } from '@/utils/cn';
 
-export type LoadingSkeletonType = 'default' | 'article' | 'card' | 'excerpt' | 'button';
+export type LoadingSkeletonType =
+  | 'default'
+  | 'article'
+  | 'card'
+  | 'excerpt'
+  | 'form'
+  | 'button'
+  /** Matches `IconButton` default (`size-10`, circular) — e.g. mobile nav menu trigger. */
+  | 'icon-button';
 
 type LoadingSkeletonProps = {
   type?: LoadingSkeletonType;
@@ -81,6 +90,19 @@ function CardGridSkeleton() {
   );
 }
 
+/** Same footprint as `IconButton` default: `size-10`, round, bordered (mobile nav menu trigger). */
+function IconButtonSkeleton() {
+  return (
+    <div
+      className="size-10 shrink-0 animate-pulse rounded-sm border border-border bg-muted"
+      aria-busy
+      aria-label="Loading"
+    >
+      <span className="sr-only">Loading</span>
+    </div>
+  );
+}
+
 /** Primary CTA shape + staggered “alive” motion like card grid; inner `animate-pulse` for shimmer. */
 function ButtonSkeleton() {
   return (
@@ -98,6 +120,60 @@ function ButtonSkeleton() {
             aria-hidden
           />
         </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Search-bar-shaped row: long control, category-style block, two `h-12` actions.
+ * `staggered-card-list` + `staggered-card-alive` reuse subscription.css delays (0 / 0.14s / 0.28s / 0.42s).
+ */
+function FormSkeleton() {
+  return (
+    <div
+      className={cn('staggered-card-list', searchInnerContainerStyles)}
+      aria-busy
+      aria-label="Loading search form"
+    >
+      <div className="staggered-card-alive relative min-w-0 flex-1">
+        <div
+          className={cn(
+            'animate-pulse border border-border bg-muted',
+            'h-12 w-full rounded-md md:min-h-12',
+          )}
+          aria-hidden
+        />
+      </div>
+
+      <div className="staggered-card-alive shrink-0">
+        <div
+          className={cn(
+            'animate-pulse border border-border bg-muted',
+            'h-12 w-full rounded-md md:min-h-12 md:w-44',
+          )}
+          aria-hidden
+        />
+      </div>
+
+      <div className="staggered-card-alive shrink-0">
+        <div
+          className={cn(
+            'animate-pulse border border-border bg-muted',
+            'h-12 min-h-12 w-full rounded-md md:min-w-28 md:max-w-40',
+          )}
+          aria-hidden
+        />
+      </div>
+
+      <div className="staggered-card-alive shrink-0">
+        <div
+          className={cn(
+            'animate-pulse border border-border bg-muted/90',
+            'h-12 min-h-12 w-full rounded-md md:min-w-28 md:max-w-36',
+          )}
+          aria-hidden
+        />
       </div>
     </div>
   );
@@ -121,8 +197,12 @@ export default function LoadingSkeleton({ type = 'default' }: LoadingSkeletonPro
       return <ExcerptSkeleton />;
     case 'card':
       return <CardGridSkeleton />;
+    case 'form':
+      return <FormSkeleton />;
     case 'button':
       return <ButtonSkeleton />;
+    case 'icon-button':
+      return <IconButtonSkeleton />;
     default:
       return <DefaultSkeleton />;
   }
