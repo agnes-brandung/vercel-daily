@@ -1,6 +1,8 @@
 'use client';
 
-import { useActionState } from 'react';
+import {
+  useActionState,
+} from 'react';
 import { useFormStatus } from 'react-dom';
 
 import Button from '@/components/ui/Button';
@@ -10,25 +12,27 @@ import {
   unsubscribeAction,
   type SubscriptionActionState,
 } from '@/app/actions/subscription';
+import { GuardedServerActionForm } from '../GuardedServerActionForm';
+import { cn } from '@/lib/utils';
 
 type SubscriptionButtonProps = {
   isActive: boolean;
   hasToken: boolean;
   hideUnsubscribe?: boolean;
-}
+};
 
 /**
- * SubscriptionButton was built as form components with useActionState. No need for (zod) validation since we are only using a SubmitButton.
- * However, this allows an easy implementation of:
- * - Mutations on the server – Cookie reads/writes and calls like activateSubscription / deactivateSubscription stay in 'use server' code, so tokens and any backend secrets are not exposed to the client.
- * - Keep typed result state (SubscriptionActionState) and show InfoMessage from the last submission with useActionState + <form action={...}> – You k
- * - Returning errors instead of throwing for expected failures (“surface errors without leaking stack traces”)
- * - Displaying pending state on the button with useFormStatus + SubmitButton
- * 
- * subscribeAction / unsubscribeAction – 'use server' functions from @/app/actions/subscription. 
- * When the matching <form> is submitted, React runs that action on the server.
- * subscribeFormAction / unsubscribeFormAction – the function you pass to <form action={...}>. It submits the form and feeds the result back into the hook so the component can re-render (to to show InfoMessage when ok is false)
- * One hook per form: hooks run server actions on submit, and keep the last result in state for the UI.
+ * Subscription flows use `useActionState` + `<form action={…}>` (no Zod: submit-only).
+ *
+ * **A11y:** We avoid native `disabled` on submit during flight so the control stays in the tab order.
+ * - **`aria-busy`** — tells assistive tech an update is in progress (loading semantics).
+ * - **`aria-disabled`** — says the control is not operable *without* removing it from focus order; we still
+ *   must block activation in JS (button `onClick` in `Button` + form `onSubmit` here) per WAI-ARIA.
+ * Using both is intentional: busy = “working”, disabled = “don’t activate again”.
+ *
+ * **Guards:** `GuardedServerActionForm` debounces submits by `SUBMIT_DEBOUNCE_MS` and drops submits while
+ * `useFormStatus().pending` is true (ref-synced), so duplicate requests are unlikely without relying on
+ * `disabled`.
  */
 export function SubscriptionButton({ isActive, hasToken, hideUnsubscribe }: SubscriptionButtonProps) {
   const initialState: SubscriptionActionState = { ok: true };
@@ -41,49 +45,46 @@ export function SubscriptionButton({ isActive, hasToken, hideUnsubscribe }: Subs
   return (
     <div className="flex flex-col gap-3">
       {error ? <InfoMessage type="error" message={error} /> : null}
-      {hideUnsubscribe ? null : (
-        isActive ? (
-          <form action={unsubscribeFormAction}>
-            <SubmitButton
-              variant="secondary"
-              label="Unsubscribe"
-            />
-          </form>
-        ) : (
-          <form action={subscribeFormAction}>
-            <SubmitButton
-              attentionPulse
-              label={hasToken ? 'Activate subscription' : 'Subscribe'}
-            />
-          </form>
-        )
+      {hideUnsubscribe ? null : isActive ? (
+        <GuardedServerActionForm action={unsubscribeFormAction}> 
+          <SubmitButton variant="secondary" label="Unsubscribe" />
+        </GuardedServerActionForm>
+      ) : (
+        <GuardedServerActionForm action={subscribeFormAction}>
+          <SubmitButton attentionPulse label={hasToken ? 'Activate subscription' : 'Subscribe'} />
+        </GuardedServerActionForm>
       )}
     </div>
   );
 }
 
 /**
- * useFormStatus only works in components that are children of a <form>. That's why we extract the submit button into its own component. This pattern keeps loading state isolated and reusable.
+ * `useFormStatus` only works under `<form>`; keep submit UI in a child of the guarded form.
  */
 function SubmitButton({
   label,
-  variant,
-  attentionPulse,
+  variant = 'primary',
+  attentionPulse = true,
 }: {
   label: string;
   variant?: React.ComponentProps<typeof Button>['variant'];
   attentionPulse?: boolean;
 }) {
   const { pending } = useFormStatus();
+  const animationStyles = attentionPulse && !pending ? 'subscription-cta-attention' : undefined;
 
   return (
-    <Button
-      variant={variant}
-      type="submit"
-      label={label}
-      disabled={pending}
-      isLoading={pending}
-      className={attentionPulse && !pending ? 'subscription-cta-attention' : undefined}
-    />
+    <div className="w-52">
+      <Button
+        variant={variant}
+        type="submit"
+        label={label}
+        isLoading={pending}
+        ariaBusy={pending}
+        ariaDisabled={pending}
+        className={animationStyles}
+        fullWidth
+      />
+    </div>
   );
 }

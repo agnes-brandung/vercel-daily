@@ -1,5 +1,5 @@
 import { SEARCH_FIRST_RESULTS_MAX } from '@/components/Search/utils/filterArticlesBySearchParams';
-import { ArticlesGrid } from '../Articles/ArticlesGrid';
+import { ArticlesGridItems } from '../Articles/ArticlesGridItems';
 import { InfoMessage } from '@/ui/InfoMessage';
 import { Headline } from '@/ui/Typography';
 import { MoreResults } from './MoreResults';
@@ -11,7 +11,7 @@ type ResultsGridProps = {
   infoMessage?: string;
 };
 
-const articlesGridStyles = "w-full shrink-0 sm:w-[calc(50%-0.75rem)] lg:w-[calc((100%-3rem)/3)]";
+const ArticlesGridItemsStyles = "w-full shrink-0 sm:w-[calc(50%-0.75rem)] lg:w-[calc((100%-3rem)/3)]";
 
 export function ResultsGrid({ articles, headline, infoMessage }: ResultsGridProps) {
   const hasMoreThanFirstPage = articles.length > SEARCH_FIRST_RESULTS_MAX;
@@ -21,7 +21,7 @@ export function ResultsGrid({ articles, headline, infoMessage }: ResultsGridProp
 
   const Grid = (
     <ul className={gridUlClassName}>
-      <ArticlesGrid articles={articles} itemClassName={articlesGridStyles} />
+      <ArticlesGridItems articles={articles} loadFirstImagesEagerly itemClassName={ArticlesGridItemsStyles} />
     </ul>
   );
 

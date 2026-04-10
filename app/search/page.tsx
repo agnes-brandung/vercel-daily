@@ -113,7 +113,7 @@ async function SearchResults({ searchParams }: SearchPageProps) {
 /**
  * TODOS:
  * - Bonus: add breadcrumb?
- * - Only use Suspense for the Category Input, not whole component?
+ * Suspense for the SearchClient and for the categories fetching
  */
 export default function SearchPage({ searchParams }: SearchPageProps) {
   return (
@@ -121,7 +121,7 @@ export default function SearchPage({ searchParams }: SearchPageProps) {
       <Suspense
         fallback={
           <InfoMessage type="loading" message="Loading categories...">
-            <LoadingSkeleton type="card" />
+            <LoadingSkeleton type="form" />
           </InfoMessage>
         }
       >

@@ -7,7 +7,7 @@ import { cva } from 'class-variance-authority';
 
 import { cn } from '@/utils/cn';
 
-export const headlineStyles = (color?: HeadlineColor, size?: 'xs' | 'sm' | 'base' | 'lg') => cva('hyphens-auto', {
+export const headlineStyles = (color?: HeadlineColor, size?: HeadlineSize) => cva('hyphens-auto', {
   variants: {
     color: {
       blue: 'text-blue',
@@ -48,6 +48,8 @@ const headlineTagByIntent: Record<HeadlineIntent, ElementType> = {
   category: 'span',
 };
 
+export type HeadlineSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+
 export type HeadlineProps = {
   id?: string;
   /** Visual variant (typography, font). Defaults to `h1`. */
@@ -57,7 +59,7 @@ export type HeadlineProps = {
   /** All-caps display. `brand` and `category` styles are uppercase by default; use this for section labels (e.g. `h2`). */
   uppercase?: boolean;
   color?: HeadlineColor;
-  size?: 'xs' | 'sm' | 'base' | 'lg';
+  size?: HeadlineSize;
   /**
    * DOM tag override. Typography comes from `styleAs`, or from `type` if `styleAs` is omitted.
    * Does not by itself switch font when `styleAs` is set (e.g. `styleAs="h1" type="brand"` → still Inter/h1 styles, `span` tag).

@@ -8,8 +8,8 @@ const LoadingIcon = ({ className, ...props }: SVGProps<SVGSVGElement>) => (
     fill="none"
     viewBox="0 0 24 24"
     className={cn('animate-spin size-4 shrink-0', className)}
-    aria-hidden
     {...props}
+    aria-label="Loading"
   >
     <path
       fill="#E3E3DF"

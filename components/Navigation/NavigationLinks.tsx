@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { Headline } from '../ui/Typography';
-import { GlobeIcon } from '../ui/icons/globe';
+import { Headline, HeadlineSize } from '../ui/Typography';
+import { GlobeIcon } from '@/ui/icons/globe';
 
 /**
  * Link over anchor tags: <Link> provides soft navigation (client-side transitions) that preserves state, enables prefetching, and feels faster. 
@@ -22,7 +22,8 @@ export function HomeIconLink() {
   )
 }
 
-export function BrandLink({ size }: { size?: 'xs' | 'sm' | 'base' | 'lg' }) {
+export function BrandLink({ size }: { size?: HeadlineSize }) {
+  
   return (
     <Link href="/" className="group flex shrink-0 items-center" aria-label="Home">
       <Headline styleAs="brand" size={size}>

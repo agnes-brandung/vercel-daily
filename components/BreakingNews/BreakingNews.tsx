@@ -1,5 +1,5 @@
 import { InfoMessage } from '@/components/ui/InfoMessage';
-import PublishedDate from '@/components/PublishedDate';
+import { PublishedTime } from '@/components/PublishedDate';
 import {
   categoryCardBorderClassName,
   categoryFlashBackground,
@@ -12,25 +12,24 @@ import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import { Suspense } from 'react';
 import { getArticleById } from '@/lib/server-data/getArticleById';
-import { getBreakingNews } from '@/lib/server-data/getBreakingNews';
+import { BreakingNewsResult, getBreakingNews } from '@/lib/server-data/getBreakingNews';
 import { ReadArticleButton } from '@/components/ReadArticleButton';
 import {
   BreakingNewsCardImageBackdrop,
   BREAKING_NEWS_DESKTOP_TEXT_COLUMN_MAX,
 } from './BreakingNewsCardImageBackdrop';
 import { BreakingNewsTicker } from './BreakingNewsTicker';
-import { parseBreakingNews } from '@/utils/parseApiData';
+import { parseBreakingNews, ParsedBreakingNews } from '@/utils/parseApiData';
 
-// TODO: add next image
 // TODO check of parallel promiseAll is the best here https://vercel.com/academy/nextjs-foundations/query-performance-patterns
 export async function BreakingNews() {
-  const breakingNewsData = await getBreakingNews();
+  const breakingNewsData: BreakingNewsResult = await getBreakingNews();
 
   if (!breakingNewsData.ok) {
     return <InfoMessage type="error" message={"An error occurred while fetching the breaking news - try again later."} />;
   }
 
-  const parsedBreakingNews = parseBreakingNews(breakingNewsData.data);
+  const parsedBreakingNews: ParsedBreakingNews = parseBreakingNews(breakingNewsData.data);
   const { articleId, headline, summary, category, publishedAt, urgent, categoryLabel } = parsedBreakingNews;
 
   const [articleById] = await Promise.all([
@@ -88,7 +87,7 @@ export async function BreakingNews() {
           {categoryLabel}
         </Headline>
         <Suspense fallback={<Copy size="sm" color="lightGray">Loading date…</Copy>}>
-          <PublishedDate date={publishedAt} />
+          <PublishedTime date={publishedAt} />
         </Suspense>
       </div>
 

@@ -66,6 +66,10 @@
   animation-delay: 0.28s;
 }
 
+.staggered-card-list > .staggered-card-alive:nth-child(4) {
+  animation-delay: 0.42s;
+}
+
 /**
  * One-shot attention pulse on the subscribe CTA (runs ~2.5s, then stops).
  * Damped scale oscillation: bigger → smaller → bigger → smaller, then settles.

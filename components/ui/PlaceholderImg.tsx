@@ -15,12 +15,20 @@ export interface ImageWithFallbackProps extends Omit<ImageProps, 'onError' | 'sr
 /**
  * Next.js `Image` that swaps to the local placeholder when the primary `src` fails
  * (broken URL, 404, optimizer error, etc.).
+ *
+ * **`preload` / `loading` / `fetchPriority`:** Passed through explicitly (not only via `...rest`) so
+ * dev-time LCP detection in `getImgProps` always sees non-lazy, high-priority hero images — same values
+ * the underlying `Image` would read, but explicit ordering keeps `loading` immediately before `src`
+ * (Next.js recommendation for Safari).
  */
 export function ImageWithFallback({
   src,
   fallbackSrc = PLACEHOLDER_IMAGE_SRC,
   alt,
   className,
+  preload,
+  loading,
+  fetchPriority,
   ...rest
 }: ImageWithFallbackProps) {
   const [useFallback, setUseFallback] = useState(false);
@@ -33,8 +41,11 @@ export function ImageWithFallback({
   return (
     <Image
       {...rest}
+      preload={preload}
+      fetchPriority={fetchPriority}
+      loading={loading}
       src={effectiveSrc}
-      alt={useFallback ? '' : alt}
+      alt={useFallback ? 'Placeholder Vercel Logo' : alt}
       onError={handleError}
       className={cn(
         className,
@@ -50,31 +61,4 @@ export interface PlaceholderImgProps {
   fill?: boolean;
   sizes?: string;
   priority?: boolean;
-}
-
-/** Standalone Vercel logo for empty states or manual use beside {@link ImageWithFallback}. */
-export function PlaceholderImg({ className, fill, sizes = '200px', priority }: PlaceholderImgProps) {
-  if (fill) {
-    return (
-      <Image
-        src={PLACEHOLDER_IMAGE_SRC}
-        alt=""
-        fill
-        sizes={sizes}
-        priority={priority}
-        className={cn('object-contain object-center p-6', className)}
-      />
-    );
-  }
-
-  return (
-    <Image
-      src={PLACEHOLDER_IMAGE_SRC}
-      alt=""
-      width={262}
-      height={52}
-      priority={priority}
-      className={cn('h-auto w-full max-h-12 object-contain object-left', className)}
-    />
-  );
 }
