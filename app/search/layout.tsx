@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Copy, Headline } from '@/components/ui/Typography';
 
 export const metadata: Metadata = {
-  title: "Search - The Vercel Daily",
+  title: "Search through all Vercel Daily articles",
   description: "Find articles by keyword in Vercel Daily articles. Combine with one or more categories to narrow results.",
 };
 
@@ -14,7 +14,7 @@ export default function SearchLayout({
   return (
     <div className="section-base-space">
       <Headline styleAs="h1" uppercase>
-        Search
+        Search through all Vercel Daily articles
       </Headline>
       <Copy className="mb-6 max-w-prose">
         Find articles by keyword. Combine with one or more categories to narrow results.

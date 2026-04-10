@@ -11,7 +11,7 @@ type MoreResultsProps = {
 }
 
 /**
- * One server-rendered grid (`ArticlesGrid` with all items). Collapsed state hides list items after
+ * One server-rendered grid (`ArticlesGridItems` with all items). Collapsed state hides list items after
  * {@link SEARCH_FIRST_RESULTS_MAX} via scoped CSS; expand is client-only and sticky.
  */
 export function MoreResults({ children, reset }: MoreResultsProps) {

@@ -2,7 +2,7 @@ import { Headline } from '@/components/ui/Typography';
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Articles Catalog - The Vercel Daily",
+  title: "All developer news under one roof",
   description: "Read all articles from The Vercel Daily. Changelogs, engineering deep-dives, customer stories and community updates - all in one place.",
 };
 

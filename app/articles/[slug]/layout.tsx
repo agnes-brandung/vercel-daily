@@ -1,10 +1,3 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Article Page - The Vercel Daily",
-  description: "Read the latest articles from The Vercel Daily.",
-};
-
 export default function ArticleLayout({
   children,
 }: Readonly<{

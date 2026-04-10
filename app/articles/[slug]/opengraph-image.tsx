@@ -14,7 +14,6 @@ export const size = ogImageSize;
 
 export const contentType = ogImageContentType;
 
-// TODO: check if we should fetch here or pass it from the page component?
 export default async function Image({
   params,
 }: {
@@ -32,7 +31,7 @@ export default async function Image({
   }
 
   const article = result.data.allArticles.find((a) => a.slug === slug);
-  console.log('article', article);
+
   if (!article) {
     notFound();
   }

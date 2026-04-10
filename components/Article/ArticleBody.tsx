@@ -1,4 +1,4 @@
-import PublishedDate from '@/components/PublishedDate';
+import { PublishedDay } from '@/components/PublishedDate';
 import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
 import { InfoMessage } from '@/components/ui/InfoMessage';
 import {
@@ -18,31 +18,15 @@ import { ArticleSubscriptionGate } from './ArticleSubscriptionGate';
 import { getSubscriptionStatus } from '@/lib/server-data/getSubscriptionStatus';
 import { TrendingArticles } from '../TrendingArticles/TrendingArticles';
 import LoadingSkeleton from '../ui/LoadingSkeleton';
+import { ParsedArticle } from '@/utils/parseApiData';
 
 // TODO: handle promises together?
 /**
  * Route params and data loading run inside this async child so they stay within `<Suspense>`
  * and do not block the shell from streaming (see Next.js “blocking route” guidance).
  */
-export async function ArticleBody({ slug }: { slug: string }) {
-  const articlesResult = await getArticleMethods();
-  if (!articlesResult.ok) {
-    return <InfoMessage type="error" message="An error occurred while fetching the articles - try again later." />;
-  }
-  const { allArticles } = articlesResult.data;
-
-  if (allArticles.length === 0) {
-    return (
-      <InfoMessage type="info" message="No articles available yet." />
-    );
-  }
-
-  const article = allArticles.find((a) => a.slug === slug);
-  if (!article) {
-    notFound();
-  }
-
-  const { id, category, title, publishedAt, excerpt, image, author, categoryLabel } = article;
+export async function ArticleBody({ article }: { article: ParsedArticle }) {
+  const { id, category, title, content, publishedAt, excerpt, image, author, categoryLabel } = article;
 
   // Pages using isSubscribed (with cookies()) becomes dynamic (no prerendering)
   const { isActive, hasToken } = await getSubscriptionStatus();
@@ -75,9 +59,7 @@ export async function ArticleBody({ slug }: { slug: string }) {
               ) : null}
               <Copy weight="bold" className={categoryLabelClassName(category)}>{author.name}</Copy>
             </div>
-            <Suspense fallback={<Copy size="sm" color="lightGray">Loading date…</Copy>}>
-              <PublishedDate date={publishedAt} />
-            </Suspense>
+            <PublishedDay date={publishedAt} />
           </div>
           {excerpt ? (
             <Copy color="gray" size="lg" className="max-w-prose leading-relaxed">
@@ -94,10 +76,12 @@ export async function ArticleBody({ slug }: { slug: string }) {
         >
           <div className="relative aspect-16/10 w-full overflow-hidden">
             <ImageWithFallback
+              key={`image-article-${id}`}
               src={image}
               alt={title}
               fill
               preload
+              fetchPriority="high"
               loading="eager"
               sizes="(max-width: 768px) 100vw, min(896px, 92vw)"
               className="object-cover"
@@ -107,15 +91,13 @@ export async function ArticleBody({ slug }: { slug: string }) {
 
         <div className="article-content-divider" aria-hidden />
         <ArticleSubscriptionGate isActive={isActive} hasToken={hasToken} hideUnsubscribe>
-          <ArticleContentRte content={article.content} />
+          <ArticleContentRte content={content} />
         </ArticleSubscriptionGate>
       </div>
       <Suspense fallback={
-        <>
-          <InfoMessage type="loading" message="Loading trending articles…">
-            <LoadingSkeleton type="card" />
-          </InfoMessage>
-        </>
+        <InfoMessage type="loading" message="Loading trending articles…">
+          <LoadingSkeleton type="card" />
+        </InfoMessage>
       }>
         <TrendingArticles excludeArticleId={id} />
       </Suspense>

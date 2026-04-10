@@ -11,7 +11,7 @@ export function MobileNavigationDrawerHeader({ open }: MobileNavigationDrawerPro
   return (
     <div className="flex items-center justify-between">
       <HomeIconLink />
-      <BrandLink size="base" />
+      <BrandLink size="2xl" />
       <DrawerTrigger asChild>
         <IconButton
           aria-expanded={open}

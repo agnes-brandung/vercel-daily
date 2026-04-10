@@ -1,8 +1,7 @@
 import Link from 'next/link';
 
 import { ImageWithFallback } from '@/components/ui/PlaceholderImg';
-import { Suspense } from 'react';
-import PublishedDate from '@/components/PublishedDate';
+import { PublishedDay } from '@/components/PublishedDate';
 import { Copy, Headline } from '@/ui/Typography';
 import { categoryCardBorderClassName, categoryLabelClassName } from '@/utils/mapCategoryColor';
 import { cn } from '@/utils/cn';
@@ -58,9 +57,7 @@ export async function TrendingArticlesList({ excludeArticleId }: { excludeArticl
                   </Copy>
                 ) : null}
                 <div className="mt-auto pt-1">
-                  <Suspense fallback={<Copy size="xs" color="lightGray">…</Copy>}>
-                    <PublishedDate date={article.publishedAt} />
-                  </Suspense>
+                  <PublishedDay date={article.publishedAt} />
                 </div>
               </div>
             </Link>
