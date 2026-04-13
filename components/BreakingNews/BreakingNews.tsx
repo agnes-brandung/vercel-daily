@@ -69,6 +69,7 @@ export async function BreakingNews() {
 
   const textBlock = (
     <div
+      role="marquee"
       className={cn(
         'relative z-content space-y-4 p-6 sm:p-8',
         breakingNewsImage ? textBlockWithImageStyles : 'lg:flex-1 lg:min-w-0 lg:order-1',

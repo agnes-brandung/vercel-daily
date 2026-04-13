@@ -94,7 +94,8 @@ async function SearchResults({ searchParams }: SearchPageProps) {
 
   if (!hasFilteredResults) {
     return (
-      <ResultsGrid 
+      <ResultsGrid
+        aria-live="assertive"
         articles={allArticles}
         infoMessage="No articles found for selected search term and categories. Please search for another term or set/reset categories."
         headline="Here are some recent articles handpicked by us:"

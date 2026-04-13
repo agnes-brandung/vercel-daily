@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
+import type { AriaRole, ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
 import Link from 'next/link';
@@ -118,6 +118,7 @@ type CopyProps = {
   size?: 'xs' | 'sm' | 'base' | 'lg';
   weight?: 'normal' | 'bold';
   color?: 'blue' | 'red' | 'error' | 'loading' | 'green' | 'yellow' | 'offWhite' | 'gray' | 'lightGray';
+  role?: AriaRole;
   disabled?: boolean;
 };
 
@@ -127,9 +128,10 @@ export function Copy({
   weight = 'normal',
   disabled = false,
   color,
+  role,
   className,
 }: CopyProps): React.ReactNode {
-  return <p className={cn(copyStyles({ size, weight, color, disabled }), className)}>{children}</p>;
+  return <p role={role} className={cn(copyStyles({ size, weight, color, disabled }), className)}>{children}</p>;
 }
 
 /** Tertiary-style text link; hover / focus / active use `--text-link-hover` (lighter blue in light theme). */

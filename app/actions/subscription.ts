@@ -47,7 +47,11 @@ async function getOrCreateToken(): Promise<{ ok: true; token: string } | { ok: f
  */
 export async function subscribeAction(): Promise<SubscriptionActionState> {
   const tokenResponse = await getOrCreateToken();
+  console.log('tokenResponse', tokenResponse);
+  // Simulate an error
+  tokenResponse.ok = false;
   if (!tokenResponse.ok) {
+    console.error('Error getting or creating token:', tokenResponse.error);
     return errorState(tokenResponse.error);
   }
 
