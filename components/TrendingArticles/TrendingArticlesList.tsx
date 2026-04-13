@@ -14,7 +14,7 @@ const MAX_TRENDING = 4;
 export async function TrendingArticlesList({ excludeArticleId }: { excludeArticleId?: ApiArticle['id'] }) {
   const trendingResult = await getTrendingArticles({ excludeArticleId });
   if (!trendingResult.ok) {
-    return <InfoMessage type="error" message="An error occurred while fetching the trending articles — try again later." />;
+    return <InfoMessage type="error" message="An error occurred while fetching the trending articles — Please try again later." />;
   }
 
   if (trendingResult.data.length === 0) {

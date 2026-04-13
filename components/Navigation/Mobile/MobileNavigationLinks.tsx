@@ -44,12 +44,15 @@ export function MobileNavigationLinks({ setOpen }: { setOpen: (open: boolean) =>
       className="flex flex-col gap-y-6 p-6"
       aria-labelledby="mobile-navigation-links"
     >
-      <ul className="flex flex-col space-y-4">
+      <ul role="list" className="flex flex-col space-y-4">
         <MobileNavLink href="/" isActive={pathname === '/'}>
           Home
         </MobileNavLink>
         <MobileNavLink href="/search" isActive={pathname === '/search'}>
           Search
+        </MobileNavLink>
+        <MobileNavLink href="/subscription" isActive={pathname === '/subscription'}>
+          Subscription
         </MobileNavLink>
       </ul>
     </section>

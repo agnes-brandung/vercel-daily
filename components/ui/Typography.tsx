@@ -113,6 +113,7 @@ const copyStyles = cva('whitespace-break-spaces', {
 });
 
 type CopyProps = {
+  id?: string;
   children: ReactNode;
   className?: string;
   size?: 'xs' | 'sm' | 'base' | 'lg';
@@ -123,6 +124,7 @@ type CopyProps = {
 };
 
 export function Copy({
+  id,
   children,
   size = 'base',
   weight = 'normal',
@@ -131,12 +133,16 @@ export function Copy({
   role,
   className,
 }: CopyProps): React.ReactNode {
-  return <p role={role} className={cn(copyStyles({ size, weight, color, disabled }), className)}>{children}</p>;
+  return (
+    <p id={id} role={role} className={cn(copyStyles({ size, weight, color, disabled }), className)}>
+      {children}
+    </p>
+  );
 }
 
 /** Tertiary-style text link; hover / focus / active use `--text-link-hover` (lighter blue in light theme). */
 export const textLinkStyles = cva(
-  'block rounded-md border-none bg-[var(--button-tertiary)] px-1 py-2 text-lg text-[var(--button-tertiary-text)] transition-[color,text-decoration-color,background-color] hover:bg-[var(--button-tertiary-hover)] hover:text-[var(--text-link-hover)] focus-visible:bg-[var(--button-tertiary-hover)] focus-visible:text-[var(--text-link-hover)] focus-visible:outline-none active:bg-[var(--button-tertiary-hover)] active:text-[var(--text-link-hover)]',
+  'block rounded-md border-none bg-[var(--button-tertiary)] px-1 py-2 text-lg text-[var(--button-tertiary-text)] transition-[color,text-decoration-color,background-color] hover:bg-[var(--button-tertiary-hover)] hover:text-[var(--text-link-hover)] focus-visible:bg-[var(--button-tertiary-hover)] focus-visible:text-[var(--text-link-hover)] focus-visible:outline-none active:bg-[var(--button-tertiary-hover)] active:text-[var(--text-link-hover)] focus-ring',
   {
     variants: {
       underline: {

@@ -208,7 +208,7 @@ export function SearchClient({ categories }: SearchClientProps) {
           placeholder="Search articles..."
           autoComplete="off"
           aria-label="Search"
-          aria-describedby="Results will be filtered after you type at least 3 characters or insert the word AI."
+          aria-describedby="search-help-text"
           disabled={isResultsLoading}
           className="h-12 md:text-base"
         />

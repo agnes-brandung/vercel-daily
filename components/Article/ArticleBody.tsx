@@ -1,5 +1,4 @@
 import { PublishedDay } from '@/components/PublishedDate';
-import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
 import { InfoMessage } from '@/components/ui/InfoMessage';
 import {
   categoryFlashBackground,
@@ -8,16 +7,14 @@ import {
 } from '@/utils/mapCategoryColor';
 import { Copy, Headline } from '@/ui/Typography';
 import { cn } from '@/utils/cn';
-import { notFound } from 'next/navigation';
 
 import { ImageWithFallback } from '@/components/ui/PlaceholderImg';
 import type { CSSProperties } from 'react';
 import { Suspense } from 'react';
 import { ArticleContentRte } from './ArticleContentRte';
 import { ArticleSubscriptionGate } from './ArticleSubscriptionGate';
-import { getSubscriptionStatus } from '@/lib/server-data/getSubscriptionStatus';
-import { TrendingArticles } from '../TrendingArticles/TrendingArticles';
-import LoadingSkeleton from '../ui/LoadingSkeleton';
+import { TrendingArticles } from '@/components/TrendingArticles/TrendingArticles';
+import LoadingSkeleton from '@/ui/LoadingSkeleton';
 import { ParsedArticle } from '@/utils/parseApiData';
 
 // TODO: handle promises together?
@@ -27,10 +24,6 @@ import { ParsedArticle } from '@/utils/parseApiData';
  */
 export async function ArticleBody({ article }: { article: ParsedArticle }) {
   const { id, category, title, content, publishedAt, excerpt, image, author, categoryLabel } = article;
-
-  // Pages using isSubscribed (with cookies()) becomes dynamic (no prerendering)
-  const { isActive, hasToken } = await getSubscriptionStatus();
-
   const accentStyle = {
     '--article-accent': categoryFlashBackground(category),
   } as CSSProperties;
@@ -90,9 +83,12 @@ export async function ArticleBody({ article }: { article: ParsedArticle }) {
         </figure>
 
         <div className="article-content-divider" aria-hidden />
-        <ArticleSubscriptionGate isActive={isActive} hasToken={hasToken} hideUnsubscribe>
-          <ArticleContentRte content={content} />
-        </ArticleSubscriptionGate>
+        <Suspense fallback={<LoadingSkeleton type="article" />}>
+          <ArticleSubscriptionGate hideUnsubscribe>
+            <ArticleContentRte content={content} />
+          </ArticleSubscriptionGate>
+        </Suspense>
+        
       </div>
       <Suspense fallback={
         <InfoMessage type="loading" message="Loading trending articles…">

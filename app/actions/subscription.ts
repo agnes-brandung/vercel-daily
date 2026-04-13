@@ -29,6 +29,7 @@ async function getOrCreateToken(): Promise<{ ok: true; token: string } | { ok: f
   const cookieStore = await cookies();
   const existingCookie = cookieStore.get(SUBSCRIPTION_TOKEN_COOKIE)?.value?.trim();
   if (existingCookie) {
+    cookieStore.set(SUBSCRIPTION_TOKEN_COOKIE, existingCookie, subscriptionTokenCookieOptions());
     return { ok: true, token: existingCookie };
   }
 
@@ -47,15 +48,13 @@ async function getOrCreateToken(): Promise<{ ok: true; token: string } | { ok: f
  */
 export async function subscribeAction(): Promise<SubscriptionActionState> {
   const tokenResponse = await getOrCreateToken();
-  console.log('tokenResponse', tokenResponse);
   // Simulate an error
-  tokenResponse.ok = false;
+  // tokenResponse.ok = false;
+
   if (!tokenResponse.ok) {
-    console.error('Error getting or creating token:', tokenResponse.error);
     return errorState(tokenResponse.error);
   }
 
-  // TODO: when using activation, token was found but then nothing happens.
   const activated = await activateSubscription(tokenResponse.token);
   if (!activated.ok) {
     return errorState(activated.error);

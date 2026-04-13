@@ -26,7 +26,7 @@ export async function BreakingNews() {
   const breakingNewsData: BreakingNewsResult = await getBreakingNews();
 
   if (!breakingNewsData.ok) {
-    return <InfoMessage type="error" message={"An error occurred while fetching the breaking news - try again later."} />;
+    return <InfoMessage type="error" message={"An error occurred while fetching the breaking news - Please try again later."} />;
   }
 
   const parsedBreakingNews: ParsedBreakingNews = parseBreakingNews(breakingNewsData.data);
@@ -37,7 +37,7 @@ export async function BreakingNews() {
   ]);
 
   if (!articleById.ok) {
-    return <InfoMessage type="error" message={"An error occurred while fetching the breaking news - try again later."} />;
+    return <InfoMessage type="error" message={"An error occurred while fetching the breaking news - Please try again later."} />;
   }
 
   const breakingNewsSlug = articleById.data?.slug;

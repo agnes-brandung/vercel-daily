@@ -7,18 +7,17 @@ type MobileNavigationDrawerProps = {
   open: boolean
 }
 
+/**
+ * Mobile Navigation Drawer Header
+ * Home / brand sit outside the portaled drawer. Without `inert`, they stay in the tab order
+ * after open while Radix `hideOthers` may not remove them from keyboard focus in all cases.
+ * The menu trigger stays focusable (close on second activation / Escape via Radix).
+ */
 export function MobileNavigationDrawerHeader({ open }: MobileNavigationDrawerProps) {
   return (
-    <div className="flex items-center justify-between">
-      {/*
-        Home / brand sit outside the portaled drawer. Without `inert`, they stay in the tab order
-        after open while Radix `hideOthers` may not remove them from keyboard focus in all cases.
-        The menu trigger stays focusable (close on second activation / Escape via Radix).
-      */}
-      <div className="flex min-w-0 flex-1 items-center gap-4" inert={open ? true : undefined}>
-        <HomeIconLink />
-        <BrandLink size="2xl" />
-      </div>
+    <div className="flex items-center justify-between" inert={open ? true : undefined}>
+      <HomeIconLink />
+      <BrandLink size="2xl" />
       <DrawerTrigger asChild>
         <IconButton
           aria-expanded={open}
