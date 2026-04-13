@@ -5,6 +5,7 @@ import { cn } from '@/utils/cn';
 import Navigation from '@/components/Navigation/Navigation';
 import Footer from '@/components/Footer';
 import { ThemeProviders } from '@/components/Providers/ThemeProviders';
+import { ogFallbackArticleImageSrc } from '@/lib/og/siteOpenGraphImage';
 
 function metadataBaseUrl(): URL {
   const site = process.env.NEXT_PUBLIC_SITE_URL;
@@ -18,6 +19,19 @@ export const metadata: Metadata = {
   metadataBase: metadataBaseUrl(),
   title: "The Vercel Daily",
   description: "News and insights for modern web developers.",
+  openGraph: {
+    siteName: 'The Vercel Daily',
+    locale: 'en',
+    type: 'website',
+    images: [
+      {
+        url: ogFallbackArticleImageSrc,
+        width: 1200,
+        height: 630,
+        alt: 'The Vercel Daily',
+      },
+    ],
+  },
 };
 
 

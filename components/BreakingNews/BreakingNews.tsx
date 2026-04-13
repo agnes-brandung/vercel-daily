@@ -14,14 +14,10 @@ import { Suspense } from 'react';
 import { getArticleById } from '@/lib/server-data/getArticleById';
 import { BreakingNewsResult, getBreakingNews } from '@/lib/server-data/getBreakingNews';
 import { ReadArticleButton } from '@/components/ReadArticleButton';
-import {
-  BreakingNewsCardImageBackdrop,
-  BREAKING_NEWS_DESKTOP_TEXT_COLUMN_MAX,
-} from './BreakingNewsCardImageBackdrop';
 import { BreakingNewsTicker } from './BreakingNewsTicker';
 import { parseBreakingNews, ParsedBreakingNews } from '@/utils/parseApiData';
+import { ImageWithFallback } from '@/components/ui/PlaceholderImg';
 
-// TODO check of parallel promiseAll is the best here https://vercel.com/academy/nextjs-foundations/query-performance-patterns
 export async function BreakingNews() {
   const breakingNewsData: BreakingNewsResult = await getBreakingNews();
 
@@ -48,7 +44,7 @@ export async function BreakingNews() {
   }
 
   const breakingNewsCardContainerStyles = cn(
-    'breaking-news-card group block overflow-hidden rounded-xl border-2 border-border bg-card text-typography shadow-elevated transition-[border-color,box-shadow] focus-visible:outline-none',
+    'breaking-news-card group flex flex-col overflow-hidden rounded-xl border-2 border-border bg-card text-typography shadow-elevated transition-[border-color,box-shadow] focus-visible:outline-none',
     categoryCardBorderClassName(category),
     categoryLeftBorderClassName(category),
   );
@@ -59,28 +55,16 @@ export async function BreakingNews() {
 
   const urgentBadgeStyles = 'rounded-md bg-error px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-white';
 
-  /** With image: mobile = text in lower band under clear photo (vertical mirror of desktop); desktop unchanged. */
-  const textBlockWithImageStyles = cn(
-    'flex min-h-96 flex-col sm:min-h-104 lg:w-[80%]',
-    'max-lg:justify-start max-lg:pt-50',
-    `lg:${BREAKING_NEWS_DESKTOP_TEXT_COLUMN_MAX}`,
-    'lg:min-h-76 lg:flex-none lg:justify-center lg:pr-4 xl:pr-8',
-  );
-
-  const textBlock = (
+  const textColumn = (
     <div
-      role="marquee"
       className={cn(
-        'relative z-content space-y-4 p-6 sm:p-8',
-        breakingNewsImage ? textBlockWithImageStyles : 'lg:flex-1 lg:min-w-0 lg:order-1',
+        'relative z-content flex flex-col space-y-4 p-6 sm:p-8',
+        breakingNewsImage
+          ? 'order-2 min-h-0 lg:order-1 lg:w-[70%] lg:min-w-0 lg:justify-center'
+          : 'lg:min-w-0 lg:flex-1',
       )}
     >
-      <div
-        className={cn(
-          'flex flex-wrap items-center gap-3',
-          breakingNewsImage ? 'max-lg:pt-6' : null,
-        )}
-      >
+      <div className="flex flex-wrap items-center gap-3">
         {urgent ? (
           <span className={urgentBadgeStyles}>Urgent</span>
         ) : null}
@@ -92,11 +76,15 @@ export async function BreakingNews() {
         </Suspense>
       </div>
 
-      <Headline type="h3" styleAs="h1" className="text-balance leading-tight">
+      <Headline
+        type="h3"
+        styleAs="h1"
+        className="text-balance leading-tight text-2xl sm:text-3xl md:text-[3.5rem]"
+      >
         {headline}
       </Headline>
       {summary ? (
-        <Copy size="lg" color="gray" className="max-w-3xl leading-relaxed">
+        <Copy size="base" color="gray" className="max-w-3xl leading-relaxed text-base lg:text-lg">
           {summary}
         </Copy>
       ) : null}
@@ -111,11 +99,23 @@ export async function BreakingNews() {
       style={breakingNewsCardAnimationStyle}
     >
       {breakingNewsImage ? (
-        <BreakingNewsCardImageBackdrop imageSrc={breakingNewsImage} imageAlt={headline}>
-          {textBlock}
-        </BreakingNewsCardImageBackdrop>
+        <div className="flex min-h-0 flex-1 flex-col lg:flex-row lg:items-stretch">
+          <div className="relative order-1 aspect-16/10 w-full shrink-0 overflow-hidden bg-muted lg:order-2 lg:aspect-auto lg:w-[30%] lg:min-w-0 lg:max-w-[30%] lg:self-stretch lg:min-h-0">
+            <ImageWithFallback
+              src={breakingNewsImage}
+              alt={headline}
+              fill
+              preload
+              loading="eager"
+              fetchPriority="high"
+              sizes="(max-width: 1023px) 100vw, 30vw"
+              className="object-cover transition-transform duration-300 ease-out motion-safe:group-hover:scale-[1.02]"
+            />
+          </div>
+          {textColumn}
+        </div>
       ) : (
-        textBlock
+        textColumn
       )}
       {urgent ? <BreakingNewsTicker /> : null}
     </Link>
