@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { ImageWithFallback } from '@/components/ui/PlaceholderImg';
 import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
 
-function ArticleLink({ article }: { article: ParsedArticle }) {
+function ArticleLink({ article, imagePrefetch = false }: { article: ParsedArticle, imagePrefetch?: boolean }) {
   return (
     <Link
       href={`/articles/${article.slug}`}
@@ -30,6 +30,9 @@ function ArticleLink({ article }: { article: ParsedArticle }) {
           fill
           sizes="(max-width: 1024px) 100vw, 200px"
           className="object-cover"
+          preload={imagePrefetch}
+          fetchPriority={imagePrefetch ? 'high' : 'auto'}
+          loading={imagePrefetch ? 'eager' : 'lazy'}
         />
       </figure>
       <div className="order-2 flex min-w-0 flex-1 flex-col gap-2 lg:order-1">
@@ -59,9 +62,11 @@ const paddings = 'px-4 py-3 sm:px-5 sm:py-4';
 function ArticlesCatalogSection({
   section,
   articles,
+  categoryIndex,
 }: {
   section: ArticlesCatalogSectionCategory;
   articles: ParsedArticle[];
+  categoryIndex: number;
 }) {
   return (
     <section
@@ -84,9 +89,9 @@ function ArticlesCatalogSection({
       </header>
       {articles.length > 0 ? (
         <ul className="m-0 list-none divide-y divide-border p-0">
-          {articles.map((article) => (
+          {articles.map((article, index) => (
             <li key={`${article.id}-${section}`} className="transition-colors hover:bg-muted/40">
-              <ArticleLink article={article} />
+              <ArticleLink article={article} imagePrefetch={categoryIndex === 0 && index < 3} />
             </li>
           ))}
         </ul>
@@ -102,18 +107,18 @@ function ArticlesCatalogSection({
 export async function ArticlesCatalog() {
   const allArticles = await getArticleMethods();
   if (!allArticles.ok) {
-    return <InfoMessage type="error" message="An error occurred while fetching the articles - try again later." />;
+    return <InfoMessage type="error" message="An error occurred while fetching the articles - Please try again later." />;
   }
   const { articlesByCategory, mostRecentArticles } = allArticles.data;
 
   return (
     <div className="flex flex-col gap-10 sm:gap-12">
       {articlesByCategory.length > 0 ? (
-        articlesByCategory.map(({ category, articles }) => (
-          <ArticlesCatalogSection key={category} section={category} articles={articles} />
+        articlesByCategory.map(({ category, articles }, index) => (
+          <ArticlesCatalogSection key={category} categoryIndex={index} section={category} articles={articles} />
         ))
       ) : (
-        <ArticlesCatalogSection section="most-recent" articles={mostRecentArticles} />
+        <ArticlesCatalogSection categoryIndex={0} section="most-recent" articles={mostRecentArticles} />
       )}
     </div>
   );

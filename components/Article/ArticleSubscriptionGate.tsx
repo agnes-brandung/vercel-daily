@@ -1,10 +1,10 @@
 import { cn } from '@/utils/cn';
 import { Copy, TextLink } from '@/ui/Typography';
 import { SubscriptionButton } from '../Subscription/SubscriptionButton';
+import { getSubscriptionStatus } from '@/lib/server-data/getSubscriptionStatus';
+import { InfoMessage } from '../ui/InfoMessage';
 
 interface ArticleSubscriptionGateProps {
-  isActive: boolean;
-  hasToken: boolean;
   children: React.ReactNode;
   hideUnsubscribe?: boolean;
 }
@@ -16,7 +16,13 @@ const subscriptionGateGradientBgStyles = 'after:pointer-events-none after:absolu
  * When `isActive` is false, shows a preview of article body with a gradient + CTA overlay.
  * When true, renders children unchanged.
  */
-export function ArticleSubscriptionGate({ isActive, hasToken, children, hideUnsubscribe }: ArticleSubscriptionGateProps) {
+export async function ArticleSubscriptionGate({ children, hideUnsubscribe }: ArticleSubscriptionGateProps) {
+  const { isActive, hasToken, error } = await getSubscriptionStatus();
+
+  if (error) {
+    return <InfoMessage type="error" message={error} />;
+  }
+
   if (isActive && hasToken) {
     return (
       <>

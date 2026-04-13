@@ -9,6 +9,7 @@ type SubscriptionStatus = {
   isActive: boolean;
   /** `subscription_token` cookie is present (may be inactive until activated). */
   hasToken: boolean;
+  error?: string;
 }
 
 async function readSubscriptionTokenFromCookie(): Promise<string | null> {
@@ -23,7 +24,7 @@ async function getSubscriptionStatusByToken(token: string): Promise<Subscription
 
   const result = await fetchSubscriptionStatus(token);
   if (!result.ok) {
-    return { isActive: false, hasToken: true };
+    return { isActive: false, hasToken: true, error: result.error };
   }
 
   return { isActive: result.data.status === 'active', hasToken: true };
@@ -35,8 +36,10 @@ async function getSubscriptionStatusByToken(token: string): Promise<Subscription
  */
 export async function getSubscriptionStatus(): Promise<SubscriptionStatus> {
   const token = await readSubscriptionTokenFromCookie();
+
   if (!token) {
     return { isActive: false, hasToken: false };
   }
+
   return getSubscriptionStatusByToken(token);
 }

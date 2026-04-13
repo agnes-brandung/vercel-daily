@@ -208,6 +208,7 @@ export function SearchClient({ categories }: SearchClientProps) {
           placeholder="Search articles..."
           autoComplete="off"
           aria-label="Search"
+          aria-describedby="search-help-text"
           disabled={isResultsLoading}
           className="h-12 md:text-base"
         />

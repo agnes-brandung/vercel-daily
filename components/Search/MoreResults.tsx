@@ -7,22 +7,16 @@ import { SEARCH_FIRST_RESULTS_MAX } from '@/components/Search/utils/filterArticl
 
 type MoreResultsProps = {
   children: ReactNode;
-  reset?: () => void;
 }
 
 /**
  * One server-rendered grid (`ArticlesGridItems` with all items). Collapsed state hides list items after
  * {@link SEARCH_FIRST_RESULTS_MAX} via scoped CSS; expand is client-only and sticky.
  */
-export function MoreResults({ children, reset }: MoreResultsProps) {
+export function MoreResults({ children }: MoreResultsProps) {
   const [showRest, setShowRest] = useState(false);
   const scopeClass = `more-results-scope-${useId().replace(/:/g, '')}`;
   const nthStart = SEARCH_FIRST_RESULTS_MAX + 1;
-
-  function handleReset() {
-    setShowRest(false);
-    reset?.();
-  }
 
   return (
     <div className="space-y-4">

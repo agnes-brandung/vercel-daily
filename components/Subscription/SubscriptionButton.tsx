@@ -13,7 +13,6 @@ import {
   type SubscriptionActionState,
 } from '@/app/actions/subscription';
 import { GuardedServerActionForm } from '../GuardedServerActionForm';
-import { cn } from '@/lib/utils';
 
 type SubscriptionButtonProps = {
   isActive: boolean;
@@ -74,7 +73,7 @@ function SubmitButton({
   const animationStyles = attentionPulse && !pending ? 'subscription-cta-attention' : undefined;
 
   return (
-    <div className="w-52">
+    <div className="w-56">
       <Button
         variant={variant}
         type="submit"
@@ -84,6 +83,7 @@ function SubmitButton({
         ariaDisabled={pending}
         className={animationStyles}
         fullWidth
+        truncateLabel={true}
       />
     </div>
   );
