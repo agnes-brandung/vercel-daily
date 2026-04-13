@@ -4,7 +4,7 @@ export default function ArticleLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <article className="mx-auto max-w-6xl py-block space-y-12">
+    <article className="mx-auto max-w-7xl py-block space-y-12">
       {children}
     </article>
   );

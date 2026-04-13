@@ -32,7 +32,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  /* Above hero image (z-base) + scrims (z-raised); below body copy (z-content). */
+  /* Below body copy (z-content); subtle wash over card + image. */
   z-index: var(--z-overlay);
   border-radius: inherit;
   background-color: var(--breaking-flash-color, transparent);

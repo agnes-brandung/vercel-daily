@@ -6,14 +6,9 @@ import { Suspense } from 'react';
 import { FeaturedArticlesGrid } from './FeaturedArticlesGrid';
 import LoadingSkeleton from '@/ui/LoadingSkeleton';
 
-/**
- * TODO check if suspense is placed correctly
- * PPR: Place Suspense Close to Dynamic Content
- * PPR (Partial Prerendering) maximizes the static shell by placing Suspense boundaries close to dynamic content
- */
 export function FeaturedArticles() {
   return (
-    <section className="section-base-space">
+    <section role="region" aria-label="Featured articles" className="section-base-space">
       <header className="space-y-1">
         <Headline styleAs="h2" uppercase>
           Featured Articles

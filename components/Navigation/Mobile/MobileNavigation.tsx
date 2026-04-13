@@ -21,7 +21,7 @@ export default function NavigationMobile({ children }: NavigationMobileProps) {
   const [open, setOpen] = useState(false)
 
   return (
-    <nav className={cn(navStickyContainerStyles, 'block py-4 lg:hidden')} aria-labelledby="mobile-navigation">
+    <nav className={cn(navStickyContainerStyles, 'block py-4 xl:hidden')} aria-labelledby="mobile-navigation">
       <Drawer
         open={open}
         onOpenChange={setOpen}

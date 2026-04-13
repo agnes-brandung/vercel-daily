@@ -106,9 +106,11 @@ function ArticlesCatalogSection({
 
 export async function ArticlesCatalog() {
   const allArticles = await getArticleMethods();
+  
   if (!allArticles.ok) {
     return <InfoMessage type="error" message="An error occurred while fetching the articles - Please try again later." />;
   }
+
   const { articlesByCategory, mostRecentArticles } = allArticles.data;
 
   return (

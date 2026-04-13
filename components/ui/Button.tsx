@@ -16,8 +16,12 @@ import { isInternalUrl } from '@/utils/isInternalUrl';
 
 const baseButtonClasses =
   'flex h-min w-full flex-nowrap items-center justify-center rounded-md border px-2 py-4 uppercase whitespace-nowrap md:w-fit cursor-pointer focus-ring';
-const loadingClasses =
-  'cursor-not-allowed border-gray-300 bg-gray-300 text-white hover:border-gray-300 hover:bg-gray-300 active:border-gray-300 active:bg-gray-300 focus-visible:border-gray-300 focus-visible:bg-gray-300 focus-visible:ring-0 cursor-not-allowed';
+/** Solid disabled chrome for primary / secondary / iconOnly while in-flight. */
+const nonTertiaryLoadingClasses =
+  'cursor-not-allowed border-gray-300 bg-gray-300 text-white hover:border-gray-300 hover:bg-gray-300 active:border-gray-300 active:bg-gray-300 focus-visible:border-gray-300 focus-visible:bg-gray-300 focus-visible:ring-0';
+/** Tertiary stays link-shaped: blue label + spinner, no hover wash. */
+const tertiaryLoadingClasses =
+  'cursor-not-allowed justify-center gap-2 border-none bg-[var(--button-tertiary)] px-1 py-2 text-lg normal-case text-[var(--text-link-hover)] underline decoration-from-font underline-offset-4 decoration-[var(--text-link-hover)] transition-[color,text-decoration-color,background-color] hover:border-none hover:bg-[var(--button-tertiary)] hover:text-[var(--text-link-hover)] hover:decoration-[var(--text-link-hover)] focus-visible:border-none focus-visible:bg-[var(--button-tertiary)] focus-visible:text-[var(--text-link-hover)] focus-visible:outline-none focus-visible:decoration-[var(--text-link-hover)] active:border-none active:bg-[var(--button-tertiary)] active:text-[var(--text-link-hover)] active:decoration-[var(--text-link-hover)]';
 
 export type ButtonStylesProps = {
   variant: 'primary' | 'secondary' | 'tertiary' | 'iconOnly';
@@ -36,7 +40,7 @@ export const buttonStyles: (props: ButtonStylesProps) => string = cva(baseButton
       secondary:
         'border-[var(--button-secondary-border)] bg-[var(--button-secondary)] text-[var(--button-secondary-text)] hover:border-[var(--button-secondary-hover-border)] hover:bg-[var(--button-secondary-hover)] hover:text-[var(--button-secondary-hover-text)] active:border-[var(--button-secondary-hover-border)] active:bg-[var(--button-secondary-hover)] active:text-[var(--button-secondary-hover-text)] focus-visible:border-[var(--button-secondary-hover-border)] focus-visible:bg-[var(--button-secondary-hover)] focus-visible:text-[var(--button-secondary-hover-text)]',
       tertiary:
-        'border-none underline bg-[var(--button-tertiary)] text-[var(--button-tertiary-text)] hover:bg-[var(--button-tertiary-hover)] hover:text-[var(--button-tertiary-hover-text)] active:bg-[var(--button-tertiary-hover)] active:text-[var(--button-tertiary-hover-text)] focus-visible:bg-[var(--button-tertiary-hover)] focus-visible:text-[var(--button-tertiary-hover-text)]',
+        'border-none bg-[var(--button-tertiary)] text-lg text-[var(--button-tertiary-text)] transition-[color,text-decoration-color,background-color] hover:bg-[var(--button-tertiary-hover)] hover:text-[var(--text-link-hover)] focus-visible:bg-[var(--button-tertiary-hover)] focus-visible:text-[var(--text-link-hover)] focus-visible:outline-none active:bg-[var(--button-tertiary-hover)] active:text-[var(--text-link-hover)] underline decoration-from-font underline-offset-4 decoration-[var(--button-tertiary-text)] hover:decoration-[var(--text-link-hover)] focus-visible:decoration-[var(--text-link-hover)] active:decoration-[var(--text-link-hover)]',
       iconOnly: 'border-none'
     },
     layout: {
@@ -52,21 +56,36 @@ export const buttonStyles: (props: ButtonStylesProps) => string = cva(baseButton
       true: 'md:w-full',
     },
     isLoading: {
-      true: loadingClasses,
+      true: '',
       false: '',
     },
   },
   compoundVariants: [
     {
-      variant: ['primary', 'secondary', 'tertiary', 'iconOnly'],
+      variant: ['primary', 'secondary'],
       isLoading: true,
-      class: loadingClasses,
+      class: nonTertiaryLoadingClasses,
+    },
+    {
+      variant: 'iconOnly',
+      isLoading: true,
+      class: nonTertiaryLoadingClasses,
+    },
+    {
+      variant: 'tertiary',
+      isLoading: true,
+      class: tertiaryLoadingClasses,
     },
     /** Full-width rows: `labelWithIcon` alone uses space-between; with alignleft, keep icon beside the label. */
     {
       layout: 'labelWithIcon',
       alignleft: true,
       class: 'justify-start',
+    },
+    /** Match `textLinkStyles` in Typography: padding, casing, and no chunky button chrome. */
+    {
+      variant: 'tertiary',
+      class: 'px-1 py-2 normal-case',
     },
   ],
   defaultVariants: {
@@ -155,7 +174,11 @@ function Button({
           {label}
         </span>
       )}
-      {usedIcon && <span data-testid="icon">{usedIcon}</span>}
+      {usedIcon ? (
+        <span>
+          {usedIcon}
+        </span>
+      ) : null}
     </>
   );
 
