@@ -13,6 +13,10 @@ type NavigationMobileProps = {
   children: ReactNode
 }
 
+/**
+ * Mobile Navigation Bar with Burger Menu Icon to open the navigation drawer on the left side of the screen.
+ * To activate keyboard navigation, the drawer is set to modal and autoFocus.
+ */
 export default function NavigationMobile({ children }: NavigationMobileProps) {
   const [open, setOpen] = useState(false)
 

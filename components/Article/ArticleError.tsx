@@ -8,7 +8,7 @@ type ArticleErrorProps = {
   reset?: () => void;
 };
 
-/** Shown when not found oran error occurs while loading an article. */
+/** Shown when not found or an error occurs while loading an article. */
 export default function ArticleError({ headline, subline, description, reset }: ArticleErrorProps) {
   return (
     <section className="section-base-space">

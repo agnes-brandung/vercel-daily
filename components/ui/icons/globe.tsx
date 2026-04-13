@@ -46,7 +46,7 @@ const dMono = `M32,0C14.328,0,0,14.328,0,32s14.328,32,32,32s32-14.328,32-32S49.6
  * Pairs with next-themes + Tailwind `dark:` on `html`
  */
 export function GlobeIcon({ className }: { className?: string }) {
-  const sizeClass = cn('h-10 w-10 shrink-0', className);
+  const sizeClass = cn('h-11 w-11 shrink-0', className);
 
   return (
     <>

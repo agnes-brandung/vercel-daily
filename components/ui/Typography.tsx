@@ -7,6 +7,8 @@ import { cva } from 'class-variance-authority';
 
 import { cn } from '@/utils/cn';
 
+export type HeadlineSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+
 export const headlineStyles = (color?: HeadlineColor, size?: HeadlineSize) => cva('hyphens-auto', {
   variants: {
     color: {
@@ -47,8 +49,6 @@ const headlineTagByIntent: Record<HeadlineIntent, ElementType> = {
   brand: 'span',
   category: 'span',
 };
-
-export type HeadlineSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 
 export type HeadlineProps = {
   id?: string;

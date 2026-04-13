@@ -40,7 +40,10 @@ export function MobileNavigationLinks({ setOpen }: { setOpen: (open: boolean) =>
   }
 
   return (
-    <section role="navigation" className="flex flex-col gap-y-6 p-6" aria-label="Mobile navigation">
+    <section
+      className="flex flex-col gap-y-6 p-6"
+      aria-labelledby="mobile-navigation-links"
+    >
       <ul className="flex flex-col space-y-4">
         <MobileNavLink href="/" isActive={pathname === '/'}>
           Home

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Headline, HeadlineSize } from '../ui/Typography';
+import { Headline, HeadlineSize } from '@/ui/Typography';
 import { GlobeIcon } from '@/ui/icons/globe';
 
 /**
@@ -23,7 +23,6 @@ export function HomeIconLink() {
 }
 
 export function BrandLink({ size }: { size?: HeadlineSize }) {
-  
   return (
     <Link href="/" className="group flex shrink-0 items-center" aria-label="Home">
       <Headline type="h1" styleAs="brand" size={size}>

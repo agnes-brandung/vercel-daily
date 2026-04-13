@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode, RefObject, useEffect, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 

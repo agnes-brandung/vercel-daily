@@ -1,3 +1,7 @@
+/**
+ * This component uses client-side logic to be able to call the buttonStyles function. 
+ * Otherwise server-client clash when calling buttonStyles function.
+ */
 'use client';
 
 import { ArrowRightIcon } from '@/ui/icons/arrow-right';

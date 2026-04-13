@@ -59,16 +59,20 @@ export async function createSubscription(): Promise<CreateSubscriptionResult> {
       method: 'POST',
       headers: subscriptionApiHeaders(),
     });
+
     const token = res.headers.get('x-subscription-token');
+
     if (!res.ok) {
       return {
         ok: false,
         error: getErrorMessage('CREATE'),
       };
     }
+
     if (!token?.trim()) {
       return { ok: false, error: 'Missing x-subscription-token response header' };
     }
+    
     return { ok: true, token: token.trim() };
   } catch (e) {
     const message = e instanceof Error ? e.message : getErrorMessage('CREATE');
