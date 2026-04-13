@@ -22,7 +22,7 @@ type SearchPageProps = {
 async function SearchBar() {
   const categoriesResult = await getCategories();
   if (!categoriesResult.ok) {
-    return <InfoMessage type="error" message="An error occurred while fetching the categories - try again later." />;
+    return <InfoMessage type="error" message="An error occurred while fetching the categories - Please try again later." />;
   }
 
   const categories = categoriesResult.data;
@@ -34,8 +34,9 @@ async function SearchBar() {
   return (
     <div className="flex w-full flex-col space-y-4">
       <SearchClient categories={categories} />
-      <Copy size="sm" color="lightGray">
-        Press Enter or use Search to run with {MIN_SEARCH_TERM_LENGTH}+ characters. Results update shortly after you stop typing or change categories.
+      <Copy id="search-help-text" size="sm" color="lightGray">
+        Press Enter or use Search to run with {MIN_SEARCH_TERM_LENGTH}+ characters (query for “AI” also
+        counts). Results update shortly after you stop typing or change categories.
       </Copy>
     </div>
   )
@@ -45,7 +46,7 @@ async function SearchResults({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   const allArticlesResult = await getArticleMethods();
   if (!allArticlesResult.ok) {
-    return <InfoMessage type="error" message="An error occurred while fetching the articles - try again later." />;
+    return <InfoMessage type="error" message="An error occurred while fetching the articles - Please try again later." />;
   }
 
   const allArticles = allArticlesResult.data.allArticles;
@@ -94,7 +95,8 @@ async function SearchResults({ searchParams }: SearchPageProps) {
 
   if (!hasFilteredResults) {
     return (
-      <ResultsGrid 
+      <ResultsGrid
+        aria-live="assertive"
         articles={allArticles}
         infoMessage="No articles found for selected search term and categories. Please search for another term or set/reset categories."
         headline="Here are some recent articles handpicked by us:"

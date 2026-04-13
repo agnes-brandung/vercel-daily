@@ -7,9 +7,6 @@ import Footer from '@/components/Footer';
 import { ThemeProviders } from '@/components/Providers/ThemeProviders';
 
 function metadataBaseUrl(): URL {
-  if (process.env.VERCEL_URL) {
-    return new URL(`https://${process.env.VERCEL_URL}`);
-  }
   const site = process.env.NEXT_PUBLIC_SITE_URL;
   if (site) {
     return new URL(site);

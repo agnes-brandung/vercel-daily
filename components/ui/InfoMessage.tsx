@@ -24,7 +24,7 @@ export function InfoMessage({ message, type, children }: InfoMessageProps) {
   const { border, copyColor } = typeStyles[type];
   return (
     <div className={cn('w-full rounded-md border-2 p-4 space-y-2', border)}>
-      <Copy color={copyColor}>{message}</Copy>
+      <Copy role={type === "error" ? "alert" : "status"} color={copyColor}>{message}</Copy>
       {children ? children : null}
     </div>
   );

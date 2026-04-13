@@ -3,7 +3,7 @@ import { navStickyContainerStyles } from '../navStickyStyles';
 import { cn } from '@/lib/utils';
 import { BrandLink, HomeIconLink } from '../NavigationLinks';
 
-export function NavigationSkeleton() {
+export function MobileNavigationSkeleton() {
   return (
     <div className={cn(navStickyContainerStyles, "flex items-center justify-between py-6")}>
       <HomeIconLink />

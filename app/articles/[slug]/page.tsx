@@ -10,6 +10,9 @@ type ArticlePageProps = {
   params: Promise<{ slug: string }>;
 }
 
+/**
+ * For Accessibility, we update the metadata for the Article page if an error occurs while fetching the articles.
+ */
 export async function generateMetadata(
   { params }: ArticlePageProps,
 ): Promise<Metadata> {
@@ -19,7 +22,7 @@ export async function generateMetadata(
   if (!articlesResult.ok) {
     return {
       title: 'Error article Page - The Vercel Daily',
-      description: 'An error occurred while fetching the articles - try again later.',
+      description: 'An error occurred while fetching the articles - Please try again later.',
     }  
   }
   const { allArticles } = articlesResult.data;
@@ -58,7 +61,7 @@ async function ArticlePageInner({ params }: ArticlePageProps) {
   // throw new Error('Simulated error');
   const articlesResult = await getArticleMethods();
   if (!articlesResult.ok) {
-    return <InfoMessage type="error" message="An error occurred while fetching the articles - try again later." />;
+    return <InfoMessage type="error" message="An error occurred while fetching the articles - Please try again later." />;
   }
   const { allArticles } = articlesResult.data;
 

@@ -5,7 +5,7 @@ import { ArticlesGridItems } from './ArticlesGridItems';
 export async function FeaturedArticlesGrid() {
   const articlesResult = await getArticleMethods();
   if (!articlesResult.ok) {
-    return <InfoMessage type="error" message="An error occurred while fetching the featured articles - try again later." />;
+    return <InfoMessage type="error" message="An error occurred while fetching the featured articles - Please try again later." />;
   }
   const { featuredArticles } = articlesResult.data;
 

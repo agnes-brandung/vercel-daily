@@ -16,7 +16,7 @@ export default function Error({
   return (
     <ArticleError
       headline="Something went wrong while loading this article..."
-      description="An unexpected error occurred while loading this article. Please try again later."
+      description="An unexpected error occurred while loading this article. Please Please try again later."
       reset={() => {
         window.location.reload();
       }}

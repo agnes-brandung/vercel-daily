@@ -3,16 +3,32 @@ import type { Metadata } from "next";
 import { Copy, Headline } from '@/components/ui/Typography';
 import { cn } from '@/utils/cn';
 import { HeroGradient } from '@/components/ui/HeroGradient';
-
-export const metadata: Metadata = {
-  title: "Subscribe to the Vercel Daily",
-  description: "Subscribe to the Vercel Daily to get the latest news and insights for modern web developers.",
-};
+import { getSubscriptionStatus } from '@/lib/server-data/getSubscriptionStatus';
 
 type SubscriptionPerkProps = {
   title: string;
   description: string;
   accentClassName?: string;
+}
+
+/**
+ * For Accessibility, we update the metadata for the Subscription page if an error occurs while fetching the subscription.
+ */
+export async function generateMetadata(
+): Promise<Metadata> {
+  const { error } = await getSubscriptionStatus();
+  
+  if (error) {
+    return {
+      title: 'Error Subscription Page - The Vercel Daily',
+      description: 'An error occurred while fetching your subscription status - Please try again later.',
+    }  
+  }
+
+  return {
+    title: 'Subscribe to the Vercel Daily',
+    description: "Full access at no cost—platform updates, engineering stories, and ideas you can ship on your next deploy.",
+  }
 }
 
 function SubscriptionPerk({ title, description, accentClassName }: SubscriptionPerkProps) {
@@ -39,7 +55,7 @@ export default function SubscriptionLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <section className="section-base-space">
+    <section role="region" aria-label="Subscription perks with The Vercel Daily" className="section-base-space">
       <HeroGradient>
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
           <Headline styleAs="category" className="text-emerald mb-0">
@@ -60,7 +76,7 @@ export default function SubscriptionLayout({
           </Headline>
         </div>
 
-        <ul className="staggered-card-list grid list-none gap-4 p-0 sm:grid-cols-3">
+        <ul role="list" className="staggered-card-list grid list-none gap-4 p-0 sm:grid-cols-3">
           <SubscriptionPerk
             accentClassName="border-l-cyan"
             title="Everything unlocked"

@@ -19,7 +19,16 @@ const baseButtonClasses =
 const loadingClasses =
   'cursor-not-allowed border-gray-300 bg-gray-300 text-white hover:border-gray-300 hover:bg-gray-300 active:border-gray-300 active:bg-gray-300 focus-visible:border-gray-300 focus-visible:bg-gray-300 focus-visible:ring-0 cursor-not-allowed';
 
-export const buttonStyles = cva(baseButtonClasses, {
+export type ButtonStylesProps = {
+  variant: 'primary' | 'secondary' | 'tertiary' | 'iconOnly';
+  layout?: 'labelOnly' | 'labelWithIcon' | 'iconOnly';
+  disabled?: boolean;
+  alignleft?: boolean;
+  fullWidth?: boolean;
+  isLoading?: boolean;
+}
+
+export const buttonStyles: (props: ButtonStylesProps) => string = cva(baseButtonClasses, {
   variants: {
     variant: {
       primary:

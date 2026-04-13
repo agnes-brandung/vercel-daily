@@ -41,7 +41,6 @@ function ArticleSkeleton() {
   );
 }
 
-// TODO: fix position of thumbnail
 function ExcerptSkeleton() {
   return (
     <div className="w-full max-w-2xl animate-pulse">

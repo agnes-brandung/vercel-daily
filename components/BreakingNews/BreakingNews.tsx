@@ -26,7 +26,7 @@ export async function BreakingNews() {
   const breakingNewsData: BreakingNewsResult = await getBreakingNews();
 
   if (!breakingNewsData.ok) {
-    return <InfoMessage type="error" message={"An error occurred while fetching the breaking news - try again later."} />;
+    return <InfoMessage type="error" message={"An error occurred while fetching the breaking news - Please try again later."} />;
   }
 
   const parsedBreakingNews: ParsedBreakingNews = parseBreakingNews(breakingNewsData.data);
@@ -37,7 +37,7 @@ export async function BreakingNews() {
   ]);
 
   if (!articleById.ok) {
-    return <InfoMessage type="error" message={"An error occurred while fetching the breaking news - try again later."} />;
+    return <InfoMessage type="error" message={"An error occurred while fetching the breaking news - Please try again later."} />;
   }
 
   const breakingNewsSlug = articleById.data?.slug;
@@ -69,6 +69,7 @@ export async function BreakingNews() {
 
   const textBlock = (
     <div
+      role="marquee"
       className={cn(
         'relative z-content space-y-4 p-6 sm:p-8',
         breakingNewsImage ? textBlockWithImageStyles : 'lg:flex-1 lg:min-w-0 lg:order-1',

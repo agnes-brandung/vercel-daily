@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
+import type { AriaRole, ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
 import { forwardRef } from 'react';
 
 import Link from 'next/link';
@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '@/utils/cn';
+
+export type HeadlineSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 
 export const headlineStyles = (color?: HeadlineColor, size?: HeadlineSize) => cva('hyphens-auto', {
   variants: {
@@ -47,8 +49,6 @@ const headlineTagByIntent: Record<HeadlineIntent, ElementType> = {
   brand: 'span',
   category: 'span',
 };
-
-export type HeadlineSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 
 export type HeadlineProps = {
   id?: string;
@@ -113,28 +113,36 @@ const copyStyles = cva('whitespace-break-spaces', {
 });
 
 type CopyProps = {
+  id?: string;
   children: ReactNode;
   className?: string;
   size?: 'xs' | 'sm' | 'base' | 'lg';
   weight?: 'normal' | 'bold';
   color?: 'blue' | 'red' | 'error' | 'loading' | 'green' | 'yellow' | 'offWhite' | 'gray' | 'lightGray';
+  role?: AriaRole;
   disabled?: boolean;
 };
 
 export function Copy({
+  id,
   children,
   size = 'base',
   weight = 'normal',
   disabled = false,
   color,
+  role,
   className,
 }: CopyProps): React.ReactNode {
-  return <p className={cn(copyStyles({ size, weight, color, disabled }), className)}>{children}</p>;
+  return (
+    <p id={id} role={role} className={cn(copyStyles({ size, weight, color, disabled }), className)}>
+      {children}
+    </p>
+  );
 }
 
 /** Tertiary-style text link; hover / focus / active use `--text-link-hover` (lighter blue in light theme). */
 export const textLinkStyles = cva(
-  'block rounded-md border-none bg-[var(--button-tertiary)] px-1 py-2 text-lg text-[var(--button-tertiary-text)] transition-[color,text-decoration-color,background-color] hover:bg-[var(--button-tertiary-hover)] hover:text-[var(--text-link-hover)] focus-visible:bg-[var(--button-tertiary-hover)] focus-visible:text-[var(--text-link-hover)] focus-visible:outline-none active:bg-[var(--button-tertiary-hover)] active:text-[var(--text-link-hover)]',
+  'block rounded-md border-none bg-[var(--button-tertiary)] px-1 py-2 text-lg text-[var(--button-tertiary-text)] transition-[color,text-decoration-color,background-color] hover:bg-[var(--button-tertiary-hover)] hover:text-[var(--text-link-hover)] focus-visible:bg-[var(--button-tertiary-hover)] focus-visible:text-[var(--text-link-hover)] focus-visible:outline-none active:bg-[var(--button-tertiary-hover)] active:text-[var(--text-link-hover)] focus-ring',
   {
     variants: {
       underline: {

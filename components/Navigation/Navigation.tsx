@@ -3,7 +3,7 @@ import NavigationDesktop from './Desktop';
 import NavigationMobile from './Mobile/MobileNavigation';
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 import Subscription from '@/components/Subscription/Subscription';
-import { NavigationSkeleton } from './Mobile/MobileNavigationSkeleton';
+import { MobileNavigationSkeleton } from './Mobile/MobileNavigationSkeleton';
 
 /**
  * SubscriptionButton: async server fetch + client `SubscriptionButton` is wrapped in Suspense here
@@ -20,7 +20,7 @@ export default function Navigation() {
           <Subscription />
         </Suspense>
       </NavigationDesktop>
-      <Suspense fallback={<NavigationSkeleton />}>
+      <Suspense fallback={<MobileNavigationSkeleton />}>
         <NavigationMobile>
           <Subscription />
         </NavigationMobile>
