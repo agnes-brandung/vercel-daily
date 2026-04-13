@@ -46,7 +46,7 @@ export function SubscriptionButton({ isActive, hasToken, hideUnsubscribe }: Subs
       {error ? <InfoMessage type="error" message={error} /> : null}
       {hideUnsubscribe ? null : isActive ? (
         <GuardedServerActionForm action={unsubscribeFormAction}> 
-          <SubmitButton variant="secondary" label="Unsubscribe" />
+          <SubmitButton variant="tertiary" label="Unsubscribe" />
         </GuardedServerActionForm>
       ) : (
         <GuardedServerActionForm action={subscribeFormAction}>
@@ -63,7 +63,7 @@ export function SubscriptionButton({ isActive, hasToken, hideUnsubscribe }: Subs
 function SubmitButton({
   label,
   variant = 'primary',
-  attentionPulse = true,
+  attentionPulse = false,
 }: {
   label: string;
   variant?: React.ComponentProps<typeof Button>['variant'];

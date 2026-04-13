@@ -30,7 +30,7 @@ export async function ArticleBody({ article }: { article: ParsedArticle }) {
 
   return (
     <>
-      <div className="article-page-frame relative overflow-hidden p-6 sm:p-8 md:p-10" style={accentStyle}>
+      <section role="region" aria-label="Article body" className="article-page-frame relative overflow-hidden p-6 sm:p-8 md:p-10" style={accentStyle}>
         <header className="space-y-4">
           <Headline styleAs="category" className={categoryLabelClassName(category)}>
             {categoryLabel}
@@ -89,14 +89,16 @@ export async function ArticleBody({ article }: { article: ParsedArticle }) {
           </ArticleSubscriptionGate>
         </Suspense>
         
-      </div>
-      <Suspense fallback={
-        <InfoMessage type="loading" message="Loading trending articles…">
-          <LoadingSkeleton type="card" />
-        </InfoMessage>
-      }>
-        <TrendingArticles excludeArticleId={id} />
-      </Suspense>
+      </section>
+      <section role="region" aria-label="Trending articles" className="section-base-space">
+        <Suspense fallback={
+          <InfoMessage type="loading" message="Loading trending articles…">
+            <LoadingSkeleton type="card" />
+          </InfoMessage>
+        }>
+          <TrendingArticles excludeArticleId={id} />
+        </Suspense>
+      </section>
     </>
   );
 }

@@ -11,6 +11,7 @@ import {
 import {
   SUBSCRIPTION_TOKEN_COOKIE,
   subscriptionTag,
+  subscriptionTokenCookieDeleteOptions,
   subscriptionTokenCookieOptions,
 } from '@/lib/api/subscription/utils';
 
@@ -77,7 +78,7 @@ export async function unsubscribeAction(): Promise<SubscriptionActionState> {
     return errorState(deactivated.error);
   }
 
-  cookieStore.delete(SUBSCRIPTION_TOKEN_COOKIE);
+  cookieStore.delete(subscriptionTokenCookieDeleteOptions());
 
   // use 'max' for stale-while-revalidate semantics
   revalidateTag(subscriptionTag(token), 'max');

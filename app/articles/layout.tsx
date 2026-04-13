@@ -1,10 +1,4 @@
-import { Headline } from '@/components/ui/Typography';
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "All developer news under one roof",
-  description: "Read all articles from The Vercel Daily. Changelogs, engineering deep-dives, customer stories and community updates - all in one place.",
-};
+import { Headline, TextLink } from '@/components/ui/Typography';
 
 export default function ArticlesLayout({
   children,
@@ -13,6 +7,7 @@ export default function ArticlesLayout({
 }>) {
   return (
     <section role="region" aria-label="Articles catalog" className="section-base-space">
+      <TextLink href="/articles">Back to all articles</TextLink>
       <header className="space-y-1">
         <Headline styleAs="h1">All developer news under one roof</Headline>
         <Headline styleAs="h4">

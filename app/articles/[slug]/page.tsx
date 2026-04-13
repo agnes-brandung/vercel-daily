@@ -4,6 +4,7 @@ import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 import { ArticleBody } from '@/components/Article/ArticleBody';
 import { Metadata } from 'next';
 import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
+import { ogFallbackArticleImageSrc, ogImageSize } from '@/lib/og/siteOpenGraphImage';
 import { notFound } from 'next/navigation';
 
 type ArticlePageProps = {
@@ -33,12 +34,30 @@ export async function generateMetadata(
     return {
       title: 'Article not found - The Vercel Daily',
       description: 'Article not found.',
+      openGraph: {
+        images: [
+          {
+            url: ogFallbackArticleImageSrc,
+            ...ogImageSize,
+            alt: 'Article not found — The Vercel Daily',
+          },
+        ],
+      },
     }
   }
 
   return {
     title: `${article.title} - The Vercel Daily`,
     description: article.excerpt,
+    openGraph: {
+      images: [
+        {
+          url: article.image,
+          ...ogImageSize,
+          alt: article.title,
+        },
+      ],
+    },
   }
 }
  

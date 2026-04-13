@@ -1,19 +1,69 @@
 import { ArticlesCatalog } from '@/components/Articles/ArticlesCatalog';
 import { InfoMessage } from '@/components/ui/InfoMessage';
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
+import { ogFallbackArticleImageSrc, ogImageSize } from '@/lib/og/siteOpenGraphImage';
+import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
+import { Metadata } from 'next';
 import { Suspense } from 'react';
 
 /**
- * TODOS
- * - Use Promise.all to load the articles and the trending articles in parallel?
- * - For Catalog: add image as thumbnail
- * - Avoid Spinner Soup
- * Too many nested Suspense boundaries create confusing loading states. Keep boundaries shallow and strategic:
- * ✅ 2-3 boundaries for independent slow sections
- * ❌ Suspense around every component - creates "spinner soup"
- * ✅ Fallbacks match content shape (skeleton loaders)
- * ❌ Generic spinners everywhere
+ * For Accessibility, we update the metadata for the Articles Catalog page if an error occurs while fetching the articles.
  */
+export async function generateMetadata(
+): Promise<Metadata> {
+  const allArticles = await getArticleMethods();
+  
+  if (!allArticles.ok) {
+    return {
+      title: "Articles Catalog - The Vercel Daily",
+      description: "An error occurred while fetching the articles - Please try again later.",
+      openGraph: {
+        images: [
+          {
+            url: ogFallbackArticleImageSrc,
+            ...ogImageSize,
+            alt: 'Article not found — The Vercel Daily',
+          },
+        ],
+      },
+    }
+  }
+
+  const { articlesByCategory, mostRecentArticles } = allArticles.data;
+
+  if (articlesByCategory.length === 0 && mostRecentArticles.length === 0) {
+    return {
+      title: "All developer news under one roof - The Vercel Daily",
+      description: "No articles available yet.",
+      openGraph: {
+        images: [
+          {
+            url: ogFallbackArticleImageSrc,
+            ...ogImageSize,
+            alt: 'No articles available yet.',
+          },
+        ],
+      },
+    }
+  }
+
+  const firstArticle = articlesByCategory.length > 0 ? articlesByCategory[0].articles[0] : mostRecentArticles[0];
+
+  return {
+    title: `${firstArticle.title} - The Vercel Daily`,
+    description: firstArticle.excerpt,
+    openGraph: {
+      images: [
+        {
+          url: firstArticle.image,
+          ...ogImageSize,
+          alt: firstArticle.title,
+        },
+      ],
+    },
+  }
+}
+
 export default function ArticlesPage() {
   return (
     <Suspense fallback={
