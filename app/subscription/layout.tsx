@@ -4,6 +4,7 @@ import { Copy, Headline } from '@/components/ui/Typography';
 import { cn } from '@/utils/cn';
 import { HeroGradient } from '@/components/ui/HeroGradient';
 import { getSubscriptionStatus } from '@/lib/server-data/getSubscriptionStatus';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 
 type SubscriptionPerkProps = {
   title: string;
@@ -54,8 +55,10 @@ export default function SubscriptionLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <section role="region" aria-label="Subscription perks with The Vercel Daily" className="section-base-space">
+      <Breadcrumb items={[{ label: 'Home', href: '/' }]} current="Subscription" />
       <HeroGradient>
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
           <Headline styleAs="category" className="text-emerald mb-0">

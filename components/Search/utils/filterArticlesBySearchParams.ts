@@ -8,12 +8,12 @@ export const MIN_SEARCH_TERM_LENGTH = 3;
 /** User query: exact letters `ai` only (any case). Lets 2-char searches run despite {@link MIN_SEARCH_TERM_LENGTH}. */
 const SPECIAL_AI_USER_QUERY = /^ai$/i;
 
-/** Article search: only searches for whole-word, capitalised ` AI ` only. Substrings like `ai` inside "plain text" must not match, even if the user typed `ai`.*/
-const WHOLE_WORD_CAPITAL_AI_IN_TEXT = /\bAI\b/;
+/** Whole-word capitalised `AI` only (ASCII word boundaries). Lowercase `ai` in text does not match. */
+const WHOLE_WORD_CAPITAL_AI = /\bAI\b/;
 
 /** True when the search box / URL carries the special 2-letter AI query (any casing). */
-export function isSpecialShortSearchTerm(trimmedQuery: string): boolean {
-  return SPECIAL_AI_USER_QUERY.test(trimmedQuery);
+export function isSpecialShortSearchTerm(query: string): boolean {
+  return SPECIAL_AI_USER_QUERY.test(query.trim());
 }
 
 /** Case-insensitive substring; not used for the special `ai` query (see {@link articleMatchesSearchTerm}). */
@@ -21,55 +21,26 @@ function textIncludes(haystack: string, needle: string): boolean {
   return haystack.toLowerCase().includes(needle.toLowerCase());
 }
 
-// TODO remove test - only search in title for now
-function articleMatchesSearchTerm(article: ParsedArticle, searchTerm: string): boolean {
-  const bodyText = articleContentToSearchableText(article.content);
-
-  if (SPECIAL_AI_USER_QUERY.test(searchTerm)) {
-    return article.title.includes(searchTerm);
-    return (
-      WHOLE_WORD_CAPITAL_AI_IN_TEXT.test(article.title) ||
-      WHOLE_WORD_CAPITAL_AI_IN_TEXT.test(article.excerpt) ||
-      WHOLE_WORD_CAPITAL_AI_IN_TEXT.test(bodyText) ||
-      article.tags.some((tag) => WHOLE_WORD_CAPITAL_AI_IN_TEXT.test(tag))
-    );
+function articleHasCapitalAiWholeWord(article: ParsedArticle): boolean {
+  if (WHOLE_WORD_CAPITAL_AI.test(article.title) || WHOLE_WORD_CAPITAL_AI.test(article.excerpt)) {
+    return true;
   }
-
-  return textIncludes(article.title, searchTerm);
-  // Case-insensitive everywhere; AI branch above stays the exception (whole-word `AI`, test stub).
-  return (
-    textIncludes(article.title, searchTerm) ||
-    textIncludes(article.excerpt, searchTerm) ||
-    textIncludes(bodyText, searchTerm) ||
-    article.tags.some((tag) => textIncludes(tag, searchTerm))
-  );
+  return article.tags.some((tag) => WHOLE_WORD_CAPITAL_AI.test(tag));
 }
 
-/** Flatten rich blocks or plain-text body into one string for substring search. */
-export function articleContentToSearchableText(content: ParsedArticle['content']): string {
-  if (Array.isArray(content)) {
-    return content
-      .map((block) => {
-        switch (block.type) {
-          case 'paragraph':
-          case 'heading':
-          case 'blockquote':
-            return block.text;
-          case 'unordered-list':
-          case 'ordered-list':
-            return block.items.join(' ');
-          case 'image':
-            return `${block.alt} ${block.caption ?? ''}`.trim();
-          default: {
-            const _exhaustive: never = block;
-            void _exhaustive;
-            return '';
-          }
-        }
-      })
-      .join(' ');
+/**
+ * Title + excerpt (normal query); special `ai` query: only whole-word capitalised `AI` in title, excerpt, or tags.
+ */
+function articleMatchesSearchTerm(article: ParsedArticle, searchTerm: string): boolean {
+  const trimmed = searchTerm.trim();
+  if (SPECIAL_AI_USER_QUERY.test(trimmed)) {
+    return articleHasCapitalAiWholeWord(article);
   }
-  return content.text;
+
+  return (
+    textIncludes(article.title, trimmed) ||
+    textIncludes(article.excerpt, trimmed)
+  );
 }
 
 /**
@@ -143,11 +114,18 @@ type FilterProps = {
   selectedCategories: string[];
 }
 
-/** Empty search term → full list; else substring match on title, excerpt, body text, tags. */
+/**
+ * Empty search + no categories → full list (landing only).
+ * Category: URL slugs must match `article.category`; **0 selected → no article passes** the category step (empty list).
+ * All categories selected in the UI → all slugs in the URL → every article matches one slug.
+ * Text: ≥3 chars or special `ai` query; else only the category-narrowed list applies (no substring filter).
+ */
 export function filterArticlesBySearchTermAndCategories(
   { allArticles, searchTerm, selectedCategories }: FilterProps,
 ): ParsedArticle[] {
-  if (searchTerm.length === 0 && selectedCategories.length === 0) {
+  const term = searchTerm.trim();
+
+  if (term.length === 0 && selectedCategories.length === 0) {
     return allArticles;
   }
 
@@ -155,15 +133,12 @@ export function filterArticlesBySearchTermAndCategories(
     selectedCategories.includes(article.category),
   );
 
-  let finalFilteredArticles: ParsedArticle[] = [];
+  const applyTextFilter =
+    term.length >= MIN_SEARCH_TERM_LENGTH || isSpecialShortSearchTerm(term);
 
-  if (searchTerm.length >= MIN_SEARCH_TERM_LENGTH) {
-    finalFilteredArticles = filteredByCategories.filter((article) =>
-      articleMatchesSearchTerm(article, searchTerm),
-    );
-  } else {
-    finalFilteredArticles = filteredByCategories;
+  if (!applyTextFilter) {
+    return filteredByCategories;
   }
 
-  return finalFilteredArticles;
+  return filteredByCategories.filter((article) => articleMatchesSearchTerm(article, term));
 }

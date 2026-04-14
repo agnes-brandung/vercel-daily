@@ -1,4 +1,5 @@
 import { ArticlesCatalog } from '@/components/Articles/ArticlesCatalog';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { InfoMessage } from '@/components/ui/InfoMessage';
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 import { ogFallbackArticleImageSrc, ogImageSize } from '@/lib/og/siteOpenGraphImage';
@@ -58,6 +59,7 @@ export async function generateMetadata(
           url: firstArticle.image,
           ...ogImageSize,
           alt: firstArticle.title,
+          type: 'article',
         },
       ],
     },
@@ -66,12 +68,15 @@ export async function generateMetadata(
 
 export default function ArticlesPage() {
   return (
-    <Suspense fallback={
-      <InfoMessage type="loading" message="Loading articles…">
-        <LoadingSkeleton type="default" />
-      </InfoMessage>
-    }>
-      <ArticlesCatalog />
-    </Suspense>
+    <>  
+      <Breadcrumb items={[{ label: 'Home', href: '/' }]} current="Articles" />
+      <Suspense fallback={
+        <InfoMessage type="loading" message="Loading articles…">
+          <LoadingSkeleton type="list" />
+        </InfoMessage>
+      }>
+        <ArticlesCatalog />
+      </Suspense>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Copy, Headline } from '@/components/ui/Typography';
 import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 
 /**
  * For Accessibility, we update the metadata for the Search page if an error occurs while fetching the articles.
@@ -31,6 +32,7 @@ export default async function SearchLayout({
 }>) {
   return (
     <section role="region" aria-label="Search through all Vercel Daily articles" className="section-base-space">
+      <Breadcrumb items={[{ label: 'Home', href: '/' }]} current="Search" />
       <Headline styleAs="h1" uppercase>
         Search through all Vercel Daily articles
       </Headline>

@@ -59,7 +59,7 @@ export function CategoryDropdown({ categories, SelectAllCheckbox, CategoryCheckb
           <>
             <label className={cn(categoryFilterSelectLabelStyles, 'border-b border-border')}>
               {SelectAllCheckbox()}
-              <span className="text-sm font-medium leading-none">Select all</span>
+              <Copy size="sm" className="font-medium leading-none">Select all</Copy>
             </label>
             <div className="flex flex-col gap-0.5 pt-0.5">
               {categories.map((category) => {
@@ -69,7 +69,7 @@ export function CategoryDropdown({ categories, SelectAllCheckbox, CategoryCheckb
                     className={categoryFilterSelectLabelStyles}
                   >
                     {CategoryCheckbox(category)}
-                    <span className="text-sm leading-none">{category.name}</span>
+                    <Copy size="sm" className="leading-none">{category.name}</Copy>
                   </label>
                 );
               })}

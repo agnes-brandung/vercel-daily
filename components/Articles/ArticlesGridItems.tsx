@@ -28,6 +28,7 @@ export function ArticlesGridItems({
     articles.map((article, index) => {
       const { id, slug, category, categoryLabel, title, publishedAt, image } = article;
       const loadEagerly = loadFirstImagesEagerly && index < 3;
+      
       return (
         <li key={id} className={itemClassName}>
           <Link

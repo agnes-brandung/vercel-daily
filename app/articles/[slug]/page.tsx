@@ -1,11 +1,12 @@
 import { InfoMessage } from '@/components/ui/InfoMessage';
 import { Suspense } from 'react';
-import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
+import LoadingSkeleton from '@/ui/LoadingSkeleton';
 import { ArticleBody } from '@/components/Article/ArticleBody';
 import { Metadata } from 'next';
 import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
 import { ogFallbackArticleImageSrc, ogImageSize } from '@/lib/og/siteOpenGraphImage';
 import { notFound } from 'next/navigation';
+import { Breadcrumb } from '@/ui/Breadcrumb';
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
@@ -30,7 +31,10 @@ export async function generateMetadata(
 
   const article = allArticles.find((a) => a.slug === slug);
 
-  if (allArticles.length === 0 || !article) {
+  // TODO remove - DEBUGGING
+  console.log('article in generateMetadata for slug:', slug, article);
+
+  if (!article) {
     return {
       title: 'Article not found - The Vercel Daily',
       description: 'Article not found.',
@@ -40,6 +44,7 @@ export async function generateMetadata(
             url: ogFallbackArticleImageSrc,
             ...ogImageSize,
             alt: 'Article not found — The Vercel Daily',
+            type: 'article',
           },
         ],
       },
@@ -49,7 +54,14 @@ export async function generateMetadata(
   return {
     title: `${article.title} - The Vercel Daily`,
     description: article.excerpt,
+    keywords: article.tags.join(', '),
+    authors: [{ name: article.author.name }],
+    alternates: {
+      canonical: `/${slug}`, // metadataBase resolves to absolute URL
+    },
     openGraph: {
+      title: article.title,
+      description: article.excerpt,
       images: [
         {
           url: article.image,
@@ -57,6 +69,8 @@ export async function generateMetadata(
           alt: article.title,
         },
       ],
+      type: 'article',
+      authors: [article.author.name],
     },
   }
 }
@@ -76,8 +90,9 @@ export default function ArticlePage({ params }: ArticlePageProps) {
 async function ArticlePageInner({ params }: ArticlePageProps) {
   const { slug } = await params;
 
-  // Simulate an error
+  // Simulate an error in DEV
   // throw new Error('Simulated error');
+
   const articlesResult = await getArticleMethods();
   if (!articlesResult.ok) {
     return <InfoMessage type="error" message="An error occurred while fetching the articles - Please try again later." />;
@@ -96,5 +111,15 @@ async function ArticlePageInner({ params }: ArticlePageProps) {
     notFound();
   }
 
-  return <ArticleBody article={article} />;
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Articles', href: '/articles' },
+  ];
+
+  return (
+    <> 
+      <Breadcrumb items={breadcrumbItems} current={article.title} /> 
+      <ArticleBody article={article} />
+    </>
+  );
 }
