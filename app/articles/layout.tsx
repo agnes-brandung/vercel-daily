@@ -1,4 +1,4 @@
-import { Headline, TextLink } from '@/components/ui/Typography';
+import { Headline } from '@/components/ui/Typography';
 
 export default function ArticlesLayout({
   children,
@@ -7,7 +7,6 @@ export default function ArticlesLayout({
 }>) {
   return (
     <section role="region" aria-label="Articles catalog" className="section-base-space">
-      <TextLink href="/articles">Back to all articles</TextLink>
       <header className="space-y-1">
         <Headline styleAs="h1">All developer news under one roof</Headline>
         <Headline styleAs="h4">

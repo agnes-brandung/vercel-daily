@@ -27,6 +27,7 @@ import {
   SEARCH_TERM_QUERY_KEY,
 } from '@/components/Search/utils/filterArticlesBySearchParams';
 import { CloseIcon } from '@/ui/icons/close';
+import LoadingIcon from '@/ui/icons/loading';
 
 const AUTO_SEARCH_DEBOUNCE_MS = 600;
 
@@ -88,6 +89,7 @@ export function SearchClient({ categories }: SearchClientProps) {
         }
         return nextQueryFromUrl;
       });
+
       setSelectedSlugs(nextCategories);
       selectedSlugsRef.current = nextCategories;
       if (debounceTimerRef.current) {
@@ -98,6 +100,15 @@ export function SearchClient({ categories }: SearchClientProps) {
     });
   }, [searchParams]);
 
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
+    };
+  }, []);
+
   const commitSearch = useCallback(
     (nextQuery: string, slugs: string[]) => {
       // Normalised search term for the URL only; `query` state keeps spaces as typed.
@@ -105,53 +116,63 @@ export function SearchClient({ categories }: SearchClientProps) {
       const queryString = buildSearchQueryString(trimmed, slugs);
       const nextSerialized = serializeSearchUrlState(trimmed, slugs);
       const currentSerialized = serializeSearchParamsRecord(searchParams);
+      
       if (nextSerialized !== currentSerialized) {
         setIsResultsLoading(true);
+      } else {
+        // Same URL (e.g. manual Search with unchanged params): avoid stuck loading from `runManualSearch`.
+        setIsResultsLoading(false);
       }
+
       router.replace(queryString ? `/search?${queryString}` : '/search', { scroll: false });
     },
     [router, searchParams],
   );
 
+  /** Same debounced commit as typing: repeated clicks / Enter only reset the timer (one navigation). */
+  const scheduleDebouncedCommit = useCallback(
+    (value: string) => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
+
+      debounceTimerRef.current = setTimeout(() => {
+        debounceTimerRef.current = null;
+        commitSearch(value, selectedSlugsRef.current);
+      }, AUTO_SEARCH_DEBOUNCE_MS);
+    },
+    [commitSearch],
+  );
+
   const runManualSearch = useCallback(() => {
-    commitSearch(query, selectedSlugs);
-  }, [commitSearch, query, selectedSlugs]);
+    setIsResultsLoading(true);
+    scheduleDebouncedCommit(query);
+  }, [query, scheduleDebouncedCommit]);
 
   function handleQueryChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     setQuery(value);
-
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-      debounceTimerRef.current = null;
-    }
-
-    debounceTimerRef.current = setTimeout(() => {
-      debounceTimerRef.current = null;
-      commitSearch(value, selectedSlugsRef.current);
-    }, AUTO_SEARCH_DEBOUNCE_MS);
+    scheduleDebouncedCommit(value);
   }
 
   function applyCategorySelection(next: string[]) {
-    setSelectedSlugs(() => {
-      selectedSlugsRef.current = next;
-      queueMicrotask(() => commitSearch(query, next));
-      return next;
-    });
+    selectedSlugsRef.current = next;
+    setSelectedSlugs(next);
+    queueMicrotask(() => commitSearch(query, next));
     scheduleCloseCategoryPopover();
   }
 
   function toggleCategory(slug: string, checked: boolean) {
-    setSelectedSlugs((prev) => {
-      const next = checked
-        ? prev.includes(slug)
-          ? prev
-          : [...prev, slug]
-        : prev.filter((categorySlug) => categorySlug !== slug);
-      selectedSlugsRef.current = next;
-      queueMicrotask(() => commitSearch(query, next));
-      return next;
-    });
+    const prev = selectedSlugsRef.current;
+    const next = checked
+      ? prev.includes(slug)
+        ? prev
+        : [...prev, slug]
+      : prev.filter((categorySlug) => categorySlug !== slug);
+    selectedSlugsRef.current = next;
+    setSelectedSlugs(next);
+    queueMicrotask(() => commitSearch(query, next));
     scheduleCloseCategoryPopover();
   }
 
@@ -234,7 +255,7 @@ export function SearchClient({ categories }: SearchClientProps) {
       <Button
         type="button"
         label="Search"
-        icon={<SearchIcon />}
+        icon={isResultsLoading ? <LoadingIcon /> : <SearchIcon />}
         onClick={runManualSearch}
         isLoading={isResultsLoading}
         ariaDisabled={isResultsLoading}
@@ -248,6 +269,10 @@ export function SearchClient({ categories }: SearchClientProps) {
         label="Reset"
         icon={<CloseIcon className="size-4" />}
         onClick={() => {
+          if (debounceTimerRef.current) {
+            clearTimeout(debounceTimerRef.current);
+            debounceTimerRef.current = null;
+          }
           setQuery('');
           setSelectedSlugs([]);
           commitSearch('', []);

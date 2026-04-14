@@ -6,6 +6,8 @@ import Navigation from '@/components/Navigation/Navigation';
 import Footer from '@/components/Footer';
 import { ThemeProviders } from '@/components/Providers/ThemeProviders';
 import { ogFallbackArticleImageSrc } from '@/lib/og/siteOpenGraphImage';
+import { ScrollRestoration } from '@/components/ScrollRestoration';
+import { Suspense } from 'react';
 
 function metadataBaseUrl(): URL {
   const site = process.env.NEXT_PUBLIC_SITE_URL;
@@ -23,6 +25,7 @@ export const metadata: Metadata = {
     siteName: 'The Vercel Daily',
     locale: 'en',
     type: 'website',
+    url: 'https://vercel-daily-agnes.vercel.app',
     images: [
       {
         url: ogFallbackArticleImageSrc,
@@ -52,6 +55,9 @@ export default function RootLayout({
             <Navigation />
             <main className="relative z-base flex flex-1 flex-col bg-body text-typography">
               {children}
+              <Suspense fallback={null}>
+                <ScrollRestoration />
+              </Suspense>
             </main>
             <Footer />
           </div>

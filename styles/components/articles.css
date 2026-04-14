@@ -1,0 +1,50 @@
+/**
+ * List loading skeleton (`LoadingSkeleton` type `list`): rows appear one after another,
+ * like a feed filling in — same stagger idea as `staggered-card-alive`, different motion (slide + wipe, not bounce).
+ */
+ @keyframes list-feed-row-reveal {
+  0% {
+    transform: translateX(-14px);
+    clip-path: inset(0 100% 0 0);
+  }
+  70% {
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+  82% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.list-skeleton-feed > .list-feed-row {
+  transform-origin: left center;
+  animation: list-feed-row-reveal 1.35s cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+
+.list-skeleton-feed > .list-feed-row:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.list-skeleton-feed > .list-feed-row:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.list-skeleton-feed > .list-feed-row:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.list-skeleton-feed > .list-feed-row:nth-child(4) {
+  animation-delay: 0.6s;
+}
+
+.list-skeleton-feed > .list-feed-row:nth-child(5) {
+  animation-delay: 0.8s;
+}
+
+.list-skeleton-feed > .list-feed-row:nth-child(6) {
+  animation-delay: 1s;
+}

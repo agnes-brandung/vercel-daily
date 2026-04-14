@@ -23,7 +23,7 @@ import { ParsedArticle } from '@/utils/parseApiData';
  * and do not block the shell from streaming (see Next.js “blocking route” guidance).
  */
 export async function ArticleBody({ article }: { article: ParsedArticle }) {
-  const { id, category, title, content, publishedAt, excerpt, image, author, categoryLabel } = article;
+  const { id, category, title, content, publishedAt, excerpt, image, author, categoryLabel, tags } = article;
   const accentStyle = {
     '--article-accent': categoryFlashBackground(category),
   } as CSSProperties;
@@ -34,6 +34,14 @@ export async function ArticleBody({ article }: { article: ParsedArticle }) {
         <header className="space-y-4">
           <Headline styleAs="category" className={categoryLabelClassName(category)}>
             {categoryLabel}
+            {tags.length > 0 && (
+              <span className="flex flex-wrap items-center gap-2">
+                <Copy size="sm" color='gray'>Tags:</Copy>
+                {tags.map((tag) => (
+                  <Copy key={tag} size="sm" className={categoryLabelClassName(category)} weight="bold">{tag}</Copy>
+                ))}
+              </span>
+            )}
           </Headline>
           <Headline styleAs="h1" className="article-title-accent text-balance leading-tight">
             {title}
@@ -54,6 +62,7 @@ export async function ArticleBody({ article }: { article: ParsedArticle }) {
             </div>
             <PublishedDay date={publishedAt} />
           </div>
+         
           {excerpt ? (
             <Copy color="gray" size="lg" className="max-w-prose leading-relaxed">
               {excerpt}

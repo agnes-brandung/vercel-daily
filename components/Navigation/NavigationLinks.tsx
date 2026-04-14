@@ -7,15 +7,13 @@ import { GlobeIcon } from '@/ui/icons/globe';
  * Plain <a> tags trigger hard navigation with full page reloads.
  */
 export function HomeIconLink() {
-  const globeIconAnimation = "inline-flex origin-center motion-reduce:group-hover:animate-none group-hover:animate-[spin_4s_linear_infinite]";
-
   return (
     <Link
       href="/"
       className='group flex shrink-0 items-center rounded-md focus-ring'
       aria-label="Home"
     >
-      <span className={globeIconAnimation}>
+      <span className="nav-home-globe">
         <GlobeIcon />
       </span>
     </Link>

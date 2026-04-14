@@ -3,7 +3,9 @@
 @import "shadcn/tailwind.css";
 @import "../styles/components/breaking-news.css";
 @import "../styles/components/article.css";
+@import "../styles/components/articles.css";
 @import "../styles/components/hero.css";
+@import "../styles/components/navigation.css";
 @import "../styles/components/subscription.css";
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -239,7 +241,7 @@
 
 /** Vertical rhythm for page sections (top offset + stack gap between direct children). */
 @utility section-base-space {
-  @apply space-y-12;
+  @apply space-y-6 lg:space-y-12;
 }
 
 /** Stacking: nav (40) &lt; drawer overlay (50) &lt; drawer panel (51). Main/footer stay at z-base so scroll content does not paint over sticky nav. */
@@ -286,6 +288,24 @@
 @media (prefers-color-scheme: dark) {
   html:not(.light):not(.dark) .shadow-elevated {
     box-shadow: 0 10px 28px -10px rgb(255 255 255 / 0.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .staggered-card-alive {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .list-skeleton-feed > .list-feed-row {
+    animation: none;
+    transform: none;
+    clip-path: none;
+  }
+
+  .subscription-cta-attention {
+    animation: none;
   }
 }
 

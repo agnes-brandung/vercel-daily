@@ -131,15 +131,3 @@
   /* After staggered cards finish (max delay 0.28s + 4.5s animation). */
   animation: subscription-cta-attention 2.5s cubic-bezier(0.4, 0, 0.2, 1) 4.85s forwards;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .staggered-card-alive {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
-
-  .subscription-cta-attention {
-    animation: none;
-  }
-}
