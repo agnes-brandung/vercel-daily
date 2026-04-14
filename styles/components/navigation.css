@@ -1,0 +1,23 @@
+/** Home nav globe: spin while link is hovered; pause (freeze angle) when hover ends — no snap back to 0°. */
+@keyframes nav-home-globe-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.nav-home-globe {
+  display: inline-flex;
+  transform-origin: center;
+  animation: nav-home-globe-spin 4s linear infinite;
+  animation-play-state: paused;
+}
+
+.group:hover .nav-home-globe {
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-home-globe {
+    animation: none;
+  }
+}

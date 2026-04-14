@@ -35,8 +35,8 @@ async function SearchBar() {
     <div className="flex w-full flex-col space-y-4">
       <SearchClient categories={categories} />
       <Copy id="search-help-text" size="sm" color="lightGray">
-        Press Enter or use Search to run with {MIN_SEARCH_TERM_LENGTH}+ characters (query for “AI” also
-        counts). Results update shortly after you stop typing or change categories.
+        Press Enter or use Search to run with {MIN_SEARCH_TERM_LENGTH}+ characters (exception: query for “AI” also
+        counts). Title, excerpt and tags are searched for. Results update shortly after you stop typing or change categories.
       </Copy>
     </div>
   )
@@ -112,11 +112,6 @@ async function SearchResults({ searchParams }: SearchPageProps) {
   );
 }
 
-/**
- * TODOS:
- * - Bonus: add breadcrumb?
- * Suspense for the SearchClient and for the categories fetching
- */
 export default function SearchPage({ searchParams }: SearchPageProps) {
   return (
     <>
