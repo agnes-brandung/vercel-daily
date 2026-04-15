@@ -9,7 +9,7 @@ const innerContainerStyles = "mx-auto flex h-full w-full max-w-full items-center
 
 export default function NavigationDesktop({ children }: { children: ReactNode }) {
   return (
-    <nav className={cn(navStickyContainerStyles, navContainerStyles)} aria-labelledby="navigation">
+    <nav className={cn(navStickyContainerStyles, navContainerStyles)}>
       <div className={innerContainerStyles}>
         <HomeIconLink />
 

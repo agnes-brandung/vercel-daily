@@ -73,7 +73,6 @@ export async function getArticleMethods(): Promise<ArticlesResult> {
 
   const parsedArticles = allArticles.data.map((article) => parseArticle(article));
 
-  console.log('parsedArticles in getArticleMethods:', parsedArticles);
   return { ok: true, data: {
     allArticles: parsedArticles,
     articlesByCategory: groupArticlesByCategory(parsedArticles),

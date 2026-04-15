@@ -104,8 +104,6 @@ async function ArticlePageInner({ params }: ArticlePageProps) {
     );
   }
 
-  console.log('allArticles in ArticlePageInner:', allArticles);
-
   const article = allArticles.find((a) => a.slug === slug);
 
   console.log('article in ArticlePageInner:', article);

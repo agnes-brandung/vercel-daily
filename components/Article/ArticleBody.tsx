@@ -23,7 +23,7 @@ export function ArticleBody({ article }: { article: ParsedArticle }) {
 
   return (
     <>
-      <section role="region" aria-label="Article body" className="article-page-frame relative overflow-hidden p-6 sm:p-8 md:p-10" style={accentStyle}>
+      <section className="article-page-frame relative overflow-hidden p-6 sm:p-8 md:p-10" style={accentStyle}>
         <header className="space-y-4">
           <Headline styleAs="category" className={categoryLabelClassName(category)}>
             {categoryLabel}
