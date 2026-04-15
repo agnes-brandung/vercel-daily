@@ -31,7 +31,7 @@ export default async function SearchLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <section role="region" aria-label="Search through all Vercel Daily articles" className="section-base-space">
+    <section className="section-base-space">
       <Breadcrumb items={[{ label: 'Home', href: '/' }]} current="Search" />
       <Headline styleAs="h1" uppercase>
         Search through all Vercel Daily articles

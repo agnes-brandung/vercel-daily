@@ -8,7 +8,7 @@ import LoadingSkeleton from '@/ui/LoadingSkeleton';
 
 export function FeaturedArticles() {
   return (
-    <section role="region" aria-label="Featured articles" className="section-base-space">
+    <section className="section-base-space">
       <header className="space-y-1">
         <Headline styleAs="h2" uppercase>
           Featured Articles

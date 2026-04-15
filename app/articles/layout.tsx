@@ -6,7 +6,7 @@ export default function ArticlesLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <section role="region" aria-label="Articles catalog" className="section-base-space">
+    <section className="section-base-space">
       <header className="space-y-1">
         <Headline styleAs="h1">All developer news under one roof</Headline>
         <Headline styleAs="h4">

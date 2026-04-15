@@ -51,7 +51,6 @@ function ButtonSkeleton() {
           className={cn(
             'animate-pulse flex h-min w-full flex-nowrap items-center justify-center rounded-md border border-border bg-muted px-8 py-4 md:w-fit',
           )}
-          aria-busy
         >
           <span className="sr-only">Loading</span>
           <div
@@ -125,8 +124,6 @@ function FormSkeleton() {
   return (
     <div
       className={cn('staggered-card-list', searchInnerContainerStyles)}
-      aria-busy
-      aria-label="Loading search form"
     >
       <div className="staggered-card-alive relative min-w-0 flex-1">
         <div
@@ -174,11 +171,7 @@ function FormSkeleton() {
 /** Same footprint as `IconButton` default: `size-10`, round, bordered (mobile nav menu trigger). */
 function IconButtonSkeleton() {
   return (
-    <div
-      className="size-10 shrink-0 animate-pulse rounded-sm border border-border bg-muted"
-      aria-busy
-      aria-label="Loading"
-    >
+    <div className="size-10 shrink-0 animate-pulse rounded-sm border border-border bg-muted">
       <span className="sr-only">Loading</span>
     </div>
   );
@@ -186,7 +179,7 @@ function IconButtonSkeleton() {
 
 function ListSkeleton() {
   return (
-    <div className="list-skeleton-feed flex w-full max-w-2xl flex-col gap-8" aria-busy aria-label="Loading article list">
+    <div className="list-skeleton-feed flex w-full max-w-2xl flex-col gap-8">
       {[0, 1, 2].map((i) => (
         <div key={i} className="list-feed-row min-w-0 overflow-hidden rounded-lg">
           <div className="animate-pulse">
