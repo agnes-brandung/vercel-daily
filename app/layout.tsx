@@ -5,35 +5,29 @@ import { cn } from '@/utils/cn';
 import Navigation from '@/components/Navigation/Navigation';
 import Footer from '@/components/Footer';
 import { ThemeProviders } from '@/components/Providers/ThemeProviders';
-import { ogFallbackArticleImageSrc } from '@/lib/og/siteOpenGraphImage';
+// import { ogFallbackArticleImageSrc } from '@/lib/og/siteOpenGraphImage';
 import { ScrollRestoration } from '@/components/ScrollRestoration';
 import { Suspense } from 'react';
 
 function metadataBaseUrl(): URL {
-  const site = process.env.NEXT_PUBLIC_SITE_URL;
-  if (site) {
-    return new URL(site);
-  }
-  return new URL('http://localhost:3000');
+  return new URL(
+    process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : 'http://localhost:3000'
+  );
 }
 
 export const metadata: Metadata = {
   metadataBase: metadataBaseUrl(),
-  title: "The Vercel Daily",
-  description: "News and insights for modern web developers.",
+  title: {
+    template: '%s | The Vercel Daily',
+    default: 'The Vercel Daily - Website',
+  },
+  description: 'News and insights for modern web developers.',
   openGraph: {
     siteName: 'The Vercel Daily',
-    locale: 'en',
+    locale: 'en_GB',
     type: 'website',
-    url: 'https://vercel-daily-agnes.vercel.app',
-    images: [
-      {
-        url: ogFallbackArticleImageSrc,
-        width: 1200,
-        height: 630,
-        alt: 'The Vercel Daily',
-      },
-    ],
   },
 };
 
