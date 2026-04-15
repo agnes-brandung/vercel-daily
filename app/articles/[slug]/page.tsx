@@ -7,6 +7,7 @@ import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
 import { ogFallbackArticleImageSrc, ogImageSize } from '@/lib/og/siteOpenGraphImage';
 import { notFound } from 'next/navigation';
 import { Breadcrumb } from '@/ui/Breadcrumb';
+import { TrendingArticles } from '@/components/TrendingArticles/TrendingArticles';
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
@@ -23,7 +24,7 @@ export async function generateMetadata(
 
   if (!articlesResult.ok) {
     return {
-      title: 'Error article Page - The Vercel Daily',
+      title: 'Error article Page',
       description: 'An error occurred while fetching the articles - Please try again later.',
     }  
   }
@@ -31,19 +32,16 @@ export async function generateMetadata(
 
   const article = allArticles.find((a) => a.slug === slug);
 
-  // TODO remove - DEBUGGING
-  console.log('article in generateMetadata for slug:', slug, article);
-
   if (!article) {
     return {
-      title: 'Article not found - The Vercel Daily',
+      title: 'Article not found',
       description: 'Article not found.',
       openGraph: {
         images: [
           {
             url: ogFallbackArticleImageSrc,
             ...ogImageSize,
-            alt: 'Article not found — The Vercel Daily',
+            alt: 'Article not found',
             type: 'article',
           },
         ],
@@ -52,7 +50,7 @@ export async function generateMetadata(
   }
 
   return {
-    title: `${article.title} - The Vercel Daily`,
+    title: article.title,
     description: article.excerpt,
     keywords: article.tags.join(', '),
     authors: [{ name: article.author.name }],
@@ -89,6 +87,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
 
 async function ArticlePageInner({ params }: ArticlePageProps) {
   const { slug } = await params;
+  console.log('slug in ArticlePageInner:', slug);
 
   // Simulate an error in DEV
   // throw new Error('Simulated error');
@@ -105,10 +104,16 @@ async function ArticlePageInner({ params }: ArticlePageProps) {
     );
   }
 
+  console.log('allArticles in ArticlePageInner:', allArticles);
+
   const article = allArticles.find((a) => a.slug === slug);
 
+  console.log('article in ArticlePageInner:', article);
+
   if (!article) {
-    notFound();
+    console.log('article not found in ArticlePageInner:');
+    // notFound();
+    return <InfoMessage type="info" message="Article not found." />;
   }
 
   const breadcrumbItems = [
@@ -120,6 +125,7 @@ async function ArticlePageInner({ params }: ArticlePageProps) {
     <> 
       <Breadcrumb items={breadcrumbItems} current={article.title} /> 
       <ArticleBody article={article} />
+      <TrendingArticles excludeArticleId={article.id} />
     </>
   );
 }

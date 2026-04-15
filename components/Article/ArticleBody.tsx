@@ -1,5 +1,4 @@
 import { PublishedDay } from '@/components/PublishedDate';
-import { InfoMessage } from '@/components/ui/InfoMessage';
 import {
   categoryFlashBackground,
   categoryImageRingClassName,
@@ -13,16 +12,10 @@ import type { CSSProperties } from 'react';
 import { Suspense } from 'react';
 import { ArticleContentRte } from './ArticleContentRte';
 import { ArticleSubscriptionGate } from './ArticleSubscriptionGate';
-import { TrendingArticles } from '@/components/TrendingArticles/TrendingArticles';
 import LoadingSkeleton from '@/ui/LoadingSkeleton';
 import { ParsedArticle } from '@/utils/parseApiData';
 
-// TODO: handle promises together?
-/**
- * Route params and data loading run inside this async child so they stay within `<Suspense>`
- * and do not block the shell from streaming (see Next.js “blocking route” guidance).
- */
-export async function ArticleBody({ article }: { article: ParsedArticle }) {
+export function ArticleBody({ article }: { article: ParsedArticle }) {
   const { id, category, title, content, publishedAt, excerpt, image, author, categoryLabel, tags } = article;
   const accentStyle = {
     '--article-accent': categoryFlashBackground(category),
@@ -98,15 +91,6 @@ export async function ArticleBody({ article }: { article: ParsedArticle }) {
           </ArticleSubscriptionGate>
         </Suspense>
         
-      </section>
-      <section role="region" aria-label="Trending articles" className="section-base-space">
-        <Suspense fallback={
-          <InfoMessage type="loading" message="Loading trending articles…">
-            <LoadingSkeleton type="card" />
-          </InfoMessage>
-        }>
-          <TrendingArticles excludeArticleId={id} />
-        </Suspense>
       </section>
     </>
   );
