@@ -54,11 +54,3 @@ export function ImageWithFallback({
     />
   );
 }
-
-export interface PlaceholderImgProps {
-  className?: string;
-  /** When true, parent must be `position: relative` with a defined box (e.g. aspect ratio). */
-  fill?: boolean;
-  sizes?: string;
-  priority?: boolean;
-}

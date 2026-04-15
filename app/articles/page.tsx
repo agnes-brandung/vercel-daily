@@ -13,18 +13,21 @@ import { Suspense } from 'react';
 export async function generateMetadata(
 ): Promise<Metadata> {
   const allArticles = await getArticleMethods();
+
+  const metadataTitle = "All developer news under one roof";
+  const vercelImage = {
+    url: ogFallbackArticleImageSrc,
+    ...ogImageSize,
+    alt: 'Articles Catalog - The Vercel Daily',
+  }
   
   if (!allArticles.ok) {
     return {
-      title: "Articles Catalog - The Vercel Daily",
+      title: metadataTitle,
       description: "An error occurred while fetching the articles - Please try again later.",
       openGraph: {
         images: [
-          {
-            url: ogFallbackArticleImageSrc,
-            ...ogImageSize,
-            alt: 'Article not found — The Vercel Daily',
-          },
+          vercelImage,
         ],
       },
     }
@@ -34,15 +37,11 @@ export async function generateMetadata(
 
   if (articlesByCategory.length === 0 && mostRecentArticles.length === 0) {
     return {
-      title: "All developer news under one roof - The Vercel Daily",
+      title: metadataTitle,
       description: "No articles available yet.",
       openGraph: {
         images: [
-          {
-            url: ogFallbackArticleImageSrc,
-            ...ogImageSize,
-            alt: 'No articles available yet.',
-          },
+          vercelImage,
         ],
       },
     }
@@ -51,14 +50,14 @@ export async function generateMetadata(
   const firstArticle = articlesByCategory.length > 0 ? articlesByCategory[0].articles[0] : mostRecentArticles[0];
 
   return {
-    title: `${firstArticle.title} - The Vercel Daily`,
-    description: firstArticle.excerpt,
+    title: metadataTitle,
+    description: "Articles Catalog - The Vercel Daily",
     openGraph: {
       images: [
         {
           url: firstArticle.image,
           ...ogImageSize,
-          alt: firstArticle.title,
+          alt: "Articles Catalog - The Vercel Daily",
           type: 'article',
         },
       ],

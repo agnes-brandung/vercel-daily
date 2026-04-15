@@ -100,7 +100,7 @@ export async function BreakingNews() {
     >
       {breakingNewsImage ? (
         <div className="flex min-h-0 flex-1 flex-col lg:flex-row lg:items-stretch">
-          <div className="relative order-1 aspect-16/10 w-full shrink-0 overflow-hidden bg-muted lg:order-2 lg:aspect-auto lg:w-[30%] lg:min-w-0 lg:max-w-[30%] lg:self-stretch lg:min-h-0">
+          <div className="relative order-1 aspect-3/1 w-full shrink-0 overflow-hidden bg-muted lg:order-2 lg:aspect-auto lg:w-[30%] lg:min-w-0 lg:max-w-[30%] lg:self-stretch lg:min-h-0">
             <ImageWithFallback
               src={breakingNewsImage}
               alt={headline}
