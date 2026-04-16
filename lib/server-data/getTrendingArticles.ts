@@ -1,6 +1,6 @@
 import { fetchNewsApi } from '@/lib/api/fetchNewsApi';
 import { parseArticle } from '@/utils/parseApiData';
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 
 export type ArticlesResult =
   | { ok: true; data: ApiArticle[] }
@@ -11,7 +11,8 @@ export type ArticlesResult =
  */
 export async function getTrendingArticles({ excludeArticleId }: { excludeArticleId?: ApiArticle['id'] }): Promise<ArticlesResult> {
   "use cache";
-  cacheLife("articles");
+  cacheLife("trending");
+  cacheTag('trending-articles')
 
   const result = await fetchNewsApi<ApiArticle[]>({ endpoint: 'articles/trending', queryParams: { exclude: excludeArticleId ? [excludeArticleId] : [] } });
 

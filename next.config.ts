@@ -5,13 +5,6 @@ const nextConfig: NextConfig = {
     // Avoid picking a parent lockfile as workspace root.
     root: new URL(".", import.meta.url).pathname,
   },
-  experimental: {
-    /**
-     * Cold starts that previously took 10–15 minutes now complete in seconds. All Vercel internal apps already use this feature with notable productivity improvements.
-       Just to try it out here, rather for large projects and monorepos 
-     */
-    turbopackFileSystemCacheForDev: true,
-  },
   output: 'standalone', // for vercel deployment
   reactStrictMode: true,
   /**
@@ -70,15 +63,20 @@ const nextConfig: NextConfig = {
    */
   cacheComponents: true,
   cacheLife: {
-    // All articles catalog - moderate cache
+    // Featured, Trending, Most recent articles - moderate cache
     articles: {
       stale: 300, // 5 minutes fresh 
       revalidate: 900, // 15 minutes before revalidation
       expire: 3600, // 1 hour max
     },
+    trending: {
+      stale: 600, // 10 minutes fresh
+      revalidate: 1800, // 30 minutes before revalidation
+      expire: 3 * 3600, // 3 hours max
+    },
     // Real-time data (breaking news) - minimal cache
     breakingNews: {
-      stale: 15, // 15 seconds fresh
+      stale: 30, // 30 seconds fresh
       revalidate: 60, // 1 minute before revalidation
       expire: 120, // 2 minutes max
     },

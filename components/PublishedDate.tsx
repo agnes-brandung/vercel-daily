@@ -1,5 +1,5 @@
 import { Copy } from '@/ui/Typography';
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { Suspense } from 'react';
 
 /**
@@ -8,6 +8,7 @@ import { Suspense } from 'react';
 export async function PublishedDay({ date }: { date: string }) {
   "use cache"
   cacheLife('hours')
+  cacheTag('published-day')
 
   return (
     <Suspense fallback={<Copy size="xs" color="lightGray">Loading published date…</Copy>}>
@@ -27,7 +28,8 @@ export async function PublishedDay({ date }: { date: string }) {
 export async function PublishedTime({ date }: { date: string }) {
   "use cache"
   cacheLife('minutes')
-
+  cacheTag('published-time')
+  
   return (
     <Suspense fallback={<Copy size="xs" color="lightGray">Loading published time…</Copy>}>
       <Copy size="sm" color="lightGray">

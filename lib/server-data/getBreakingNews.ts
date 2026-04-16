@@ -1,5 +1,5 @@
 import { fetchNewsApi } from '@/lib/api/fetchNewsApi';
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 
 export type BreakingNewsResult =
   | { ok: true; data: ApiBreakingNews }
@@ -11,6 +11,7 @@ export type BreakingNewsResult =
 export async function getBreakingNews(): Promise<BreakingNewsResult> {
   "use cache";
   cacheLife("breakingNews");
+  cacheTag('breaking-news')
 
   const result = await fetchNewsApi<ApiBreakingNews>({ endpoint: 'breaking-news' });
 

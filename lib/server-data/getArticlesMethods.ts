@@ -1,6 +1,6 @@
 import { fetchNewsApi } from '@/lib/api/fetchNewsApi';
 import { parseArticle, type ParsedArticle } from '@/utils/parseApiData';
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 
 export type ArticlesResult =
   | { ok: true; data: { allArticles: ParsedArticle[], articlesByCategory: ArticlesByCategory[], mostRecentArticles: ParsedArticle[], featuredArticles: ParsedArticle[] } }
@@ -64,6 +64,7 @@ function getMostRecentArticles(articles: ParsedArticle[]): ParsedArticle[] {
 export async function getArticleMethods(): Promise<ArticlesResult> {
   "use cache";
   cacheLife("articles");
+  cacheTag('articles', 'all-articles')
 
   const allArticles = await fetchNewsApi<ApiArticle[]>({ endpoint: 'articles' });
 

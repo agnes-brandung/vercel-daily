@@ -1,5 +1,5 @@
 import { fetchNewsApi } from '@/lib/api/fetchNewsApi';
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 
 export type ArticleResult =
   | { ok: true; data: ApiArticle }
@@ -11,6 +11,7 @@ export type ArticleResult =
 export async function getArticleById({ articleId }: { articleId: ApiArticle['id'] }): Promise<ArticleResult> {
   "use cache";
   cacheLife("articles");
+  cacheTag('articles', `article-${articleId}`)
 
   const article = await fetchNewsApi<ApiArticle>({ endpoint: `articles/${articleId}` });
 
