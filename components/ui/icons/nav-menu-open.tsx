@@ -6,7 +6,7 @@ export function NavMenuOpenIcon() {
       height="24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
+      aria-hidden="true"
     >
       <path
         d="M2 5h28M2 16h28M2 27h28"

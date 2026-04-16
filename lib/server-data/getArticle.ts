@@ -7,23 +7,25 @@ function getArticleCacheTagSegment(slugOrId: string): string {
   return encodeURIComponent(slugOrId.trim());
 }
 
-export type ArticleFetchResult =
-  | { ok: true; data: ParsedArticle }
-  | { ok: false; kind: 'not_found' }
-  | { ok: false; kind: 'error'; error: string };
+type ArticleResult = {
+  /** Resolved article, or `null` when missing (404) or empty key. */
+  article: ParsedArticle | null;
+  /** Present when the request failed for a reason other than “not found”. */
+  error?: string;
+}
 
 /**
  * Loads a single article by **slug** or **id** from `GET /articles/{slugOrId}`.
  * Cached per path segment (same lifetime as the article list).
  */
-export async function getArticle(slugOrId: string): Promise<ArticleFetchResult> {
+export async function getArticle(slugOrId: string): Promise<ArticleResult> {
   'use cache';
   cacheLife('articles');
   cacheTag('articles', `article:${getArticleCacheTagSegment(slugOrId)}`);
 
   const key = slugOrId.trim();
   if (key.length === 0) {
-    return { ok: false, kind: 'not_found' };
+    return { article: null };
   }
 
   const article = await fetchNewsApi<ApiArticle>({
@@ -32,10 +34,10 @@ export async function getArticle(slugOrId: string): Promise<ArticleFetchResult> 
 
   if (!article.ok) {
     if (article.status === 404) {
-      return { ok: false, kind: 'not_found' };
+      return { article: null };
     }
-    return { ok: false, kind: 'error', error: article.error };
+    return { article: null, error: article.error };
   }
 
-  return { ok: true, data: parseArticle(article.data) };
+  return { article: parseArticle(article.data) };
 }

@@ -54,7 +54,7 @@ export function GlobeIcon({ className }: { className?: string }) {
         viewBox="0 0 64 64"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        aria-hidden
+        aria-hidden="true"
         className={cn(sizeClass, 'dark:hidden')}
       >
         <path fill="#394240" d={dColoredBase} />
@@ -66,7 +66,7 @@ export function GlobeIcon({ className }: { className?: string }) {
         viewBox="0 0 64 64"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        aria-hidden
+        aria-hidden="true"
         className={cn(sizeClass, 'hidden dark:block')}
       >
         <path fill="currentColor" d={dMono} />

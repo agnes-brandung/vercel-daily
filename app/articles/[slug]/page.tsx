@@ -18,32 +18,31 @@ type ArticlePageProps = {
  */
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const articleResult = await getArticle(slug);
+  const { article, error } = await getArticle(slug);
 
-  if (!articleResult.ok) {
-    if (articleResult.kind === 'not_found') {
-      return {
-        title: 'Article not found',
-        description: 'Article not found.',
-        openGraph: {
-          images: [
-            {
-              url: ogFallbackArticleImageSrc,
-              ...ogImageSize,
-              alt: 'Article not found',
-              type: 'article',
-            },
-          ],
-        },
-      };
-    }
+  if (error) {
     return {
       title: 'Error article page',
       description: 'An error occurred while fetching the article — Please try again later.',
     };
   }
 
-  const article = articleResult.data;
+  if (!article) {
+    return {
+      title: 'Article not found',
+      description: 'Article not found.',
+      openGraph: {
+        images: [
+          {
+            url: ogFallbackArticleImageSrc,
+            ...ogImageSize,
+            alt: 'Article not found',
+            type: 'article',
+          },
+        ],
+      },
+    };
+  }
 
   return {
     title: article.title,
@@ -83,12 +82,9 @@ export default function ArticlePage({ params }: ArticlePageProps) {
 async function ArticlePageInner({ params }: ArticlePageProps) {
   const { slug } = await params;
 
-  const articleResult = await getArticle(slug);
+  const { article, error } = await getArticle(slug);
 
-  if (!articleResult.ok) {
-    if (articleResult.kind === 'not_found') {
-      notFound();
-    }
+  if (error) {
     return (
       <InfoMessage
         type="error"
@@ -97,7 +93,9 @@ async function ArticlePageInner({ params }: ArticlePageProps) {
     );
   }
 
-  const article = articleResult.data;
+  if (!article) {
+    notFound();
+  }
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },

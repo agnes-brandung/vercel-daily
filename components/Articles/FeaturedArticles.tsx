@@ -8,12 +8,12 @@ import LoadingSkeleton from '@/ui/LoadingSkeleton';
 
 export function FeaturedArticles() {
   return (
-    <section className="section-base-space">
+    <section id="featured-articles" className="section-base-space">
       <header className="space-y-1">
         <Headline styleAs="h2" uppercase>
           Featured Articles
         </Headline>
-        <Headline styleAs="h5">Handpicked stories from the team</Headline>
+        <Headline type="h3" styleAs="h5">Handpicked stories from the team</Headline>
       </header>
       <Suspense fallback={
         <InfoMessage type="loading" message="Loading articles…">

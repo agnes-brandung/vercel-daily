@@ -32,6 +32,7 @@ export function ArticlesGridItems({
       return (
         <li key={id} className={itemClassName}>
           <Link
+            prefetch={false}
             href={`/articles/${slug}`}
             className={cn(
               'group block overflow-hidden rounded-lg border border-border bg-card text-typography shadow-elevated transition-[border-color,box-shadow] focus-visible:outline-none',

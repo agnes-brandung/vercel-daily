@@ -28,12 +28,9 @@ export async function BreakingNews() {
   const parsedBreakingNews: ParsedBreakingNews = parseBreakingNews(breakingNewsData.data);
   const { articleId, headline, summary, category, publishedAt, urgent, categoryLabel } = parsedBreakingNews;
 
-  const articleResult = await getArticle(articleId);
+  const { article: linkedArticle, error: articleError } = await getArticle(articleId);
 
-  if (!articleResult.ok) {
-    if (articleResult.kind === 'not_found') {
-      return <InfoMessage type="info" message="No breaking news right now." />;
-    }
+  if (articleError) {
     return (
       <InfoMessage
         type="error"
@@ -42,8 +39,12 @@ export async function BreakingNews() {
     );
   }
 
-  const breakingNewsSlug = articleResult.data.slug;
-  const breakingNewsImage = articleResult.data.image;
+  if (!linkedArticle) {
+    return <InfoMessage type="info" message="No breaking news right now." />;
+  }
+
+  const breakingNewsSlug = linkedArticle.slug;
+  const breakingNewsImage = linkedArticle.image;
 
   if (!breakingNewsSlug || !headline) {
     return <InfoMessage type="info" message="No breaking news right now." />;
@@ -100,6 +101,7 @@ export async function BreakingNews() {
 
   return (
     <Link
+      prefetch={false}
       href={`/articles/${breakingNewsSlug}`}
       className={breakingNewsCardContainerStyles}
       style={breakingNewsCardAnimationStyle}

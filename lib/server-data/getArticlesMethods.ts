@@ -32,7 +32,7 @@ export type SearchArticlesResult =
 export async function getArticleMethods(): Promise<ArticlesResult> {
   'use cache';
   cacheLife('articles');
-  cacheTag('articles', 'all-articles');
+  cacheTag('articles');
 
   const allArticles = await fetchNewsApi<ApiArticle[]>({ endpoint: 'articles' });
 
