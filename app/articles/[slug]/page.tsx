@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import LoadingSkeleton from '@/ui/LoadingSkeleton';
 import { ArticleBody } from '@/components/Article/ArticleBody';
 import { Metadata } from 'next';
-import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
+import { getArticle } from '@/lib/server-data/getArticle';
 import { ogFallbackArticleImageSrc, ogImageSize } from '@/lib/og/siteOpenGraphImage';
 import { notFound } from 'next/navigation';
 import { Breadcrumb } from '@/ui/Breadcrumb';
@@ -11,72 +11,70 @@ import { TrendingArticles } from '@/components/TrendingArticles/TrendingArticles
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
+};
+
+/**
+ * For accessibility and SEO, metadata reflects fetch outcome (error / not found / article).
+ */
+export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const articleResult = await getArticle(slug);
+
+  if (!articleResult.ok) {
+    if (articleResult.kind === 'not_found') {
+      return {
+        title: 'Article not found',
+        description: 'Article not found.',
+        openGraph: {
+          images: [
+            {
+              url: ogFallbackArticleImageSrc,
+              ...ogImageSize,
+              alt: 'Article not found',
+              type: 'article',
+            },
+          ],
+        },
+      };
+    }
+    return {
+      title: 'Error article page',
+      description: 'An error occurred while fetching the article — Please try again later.',
+    };
+  }
+
+  const article = articleResult.data;
+
+  return {
+    title: article.title,
+    description: article.excerpt,
+    keywords: article.tags.join(', '),
+    authors: [{ name: article.author.name }],
+    openGraph: {
+      title: article.title,
+      description: article.excerpt,
+      images: [
+        {
+          url: article.image,
+          ...ogImageSize,
+          alt: article.title,
+        },
+      ],
+      type: 'article',
+      authors: [article.author.name],
+    },
+  };
 }
 
-// /**
-//  * For Accessibility, we update the metadata for the Article page if an error occurs while fetching the articles.
-//  */
-// export async function generateMetadata(
-//   { params }: ArticlePageProps,
-// ): Promise<Metadata> {
-//   const { slug } = await params
-//   const articlesResult = await getArticleMethods();
-
-//   if (!articlesResult.ok) {
-//     return {
-//       title: 'Error article Page',
-//       description: 'An error occurred while fetching the articles - Please try again later.',
-//     }  
-//   }
-//   const { allArticles } = articlesResult.data;
-
-//   const article = allArticles.find((a) => a.slug === slug);
-
-//   if (!article) {
-//     return {
-//       title: 'Article not found',
-//       description: 'Article not found.',
-//       openGraph: {
-//         images: [
-//           {
-//             url: ogFallbackArticleImageSrc,
-//             ...ogImageSize,
-//             alt: 'Article not found',
-//             type: 'article',
-//           },
-//         ],
-//       },
-//     }
-//   }
-
-//   return {
-//     title: article.title,
-//     description: article.excerpt,
-//     keywords: article.tags.join(', '),
-//     authors: [{ name: article.author.name }],
-//     openGraph: {
-//       title: article.title,
-//       description: article.excerpt,
-//       images: [
-//         {
-//           url: article.image,
-//           ...ogImageSize,
-//           alt: article.title,
-//         },
-//       ],
-//       type: 'article',
-//       authors: [article.author.name],
-//     },
-//   }
-// }
- 
 export default function ArticlePage({ params }: ArticlePageProps) {
   return (
-    <Suspense fallback={
-      <InfoMessage type="loading" message="Loading article…">
-        <LoadingSkeleton type="article" />
-      </InfoMessage>
-    }>
+    <Suspense
+      fallback={
+        <InfoMessage type="loading" message="Loading article…">
+          <LoadingSkeleton type="article" />
+        </InfoMessage>
+      }
+    >
       <ArticlePageInner params={params} />
     </Suspense>
   );
@@ -85,26 +83,21 @@ export default function ArticlePage({ params }: ArticlePageProps) {
 async function ArticlePageInner({ params }: ArticlePageProps) {
   const { slug } = await params;
 
-  // Simulate an error in DEV
-  // throw new Error('Simulated error');
+  const articleResult = await getArticle(slug);
 
-  const articlesResult = await getArticleMethods();
-  if (!articlesResult.ok) {
-    return <InfoMessage type="error" message="An error occurred while fetching the articles - Please try again later." />;
-  }
-  const { allArticles } = articlesResult.data;
-
-  if (allArticles.length === 0) {
+  if (!articleResult.ok) {
+    if (articleResult.kind === 'not_found') {
+      notFound();
+    }
     return (
-      <InfoMessage type="info" message="No articles available yet." />
+      <InfoMessage
+        type="error"
+        message="An error occurred while fetching the article — Please try again later."
+      />
     );
   }
 
-  const article = allArticles.find((a) => a.slug === slug);
-
-  if (!article) {
-    notFound();
-  }
+  const article = articleResult.data;
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
@@ -112,8 +105,8 @@ async function ArticlePageInner({ params }: ArticlePageProps) {
   ];
 
   return (
-    <> 
-      <Breadcrumb items={breadcrumbItems} current={article.title} /> 
+    <>
+      <Breadcrumb items={breadcrumbItems} current={article.title} />
       <ArticleBody article={article} />
       <TrendingArticles excludeArticleId={article.id} />
     </>

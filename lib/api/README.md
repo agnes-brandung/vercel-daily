@@ -31,7 +31,7 @@ Imports typically use the `@/lib/api/...` alias.
 | ------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Job**       | Talk HTTP to **remote** APIs; parse their JSON contract.           | **App reads**: compose `lib/api`, **parse/map** domain objects (e.g. `parseArticle`), **group/sort** for UI, apply `**"use cache"` / `cacheLife` / `cacheTag`**. |
 | **Caching**   | None (each call is a fresh `fetch` unless the runtime dedupes).    | Declares Next cache semantics per use case.                                                                                                                      |
-| **Consumers** | `lib/server-data`, `app/actions`, tests, or future Route Handlers. | Server Components, layouts, `opengraph-image`, etc.                                                                                                              |
+| **Consumers** | `lib/server-data`, `app/actions`, tests, or future Route Handlers. | Server Components, layouts, **`generateMetadata`**, etc.                                                                                                         |
 
 
 Keeping them **separate** avoids:
