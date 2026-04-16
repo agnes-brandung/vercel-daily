@@ -2,7 +2,7 @@ import { cn } from '@/utils/cn';
 import { Copy, TextLink } from '@/ui/Typography';
 import { SubscriptionButton } from '../Subscription/SubscriptionButton';
 import { getSubscriptionStatus } from '@/lib/server-data/getSubscriptionStatus';
-import { InfoMessage } from '../ui/InfoMessage';
+import { InfoMessage } from '@/ui/InfoMessage';
 
 interface ArticleSubscriptionGateProps {
   children: React.ReactNode;
