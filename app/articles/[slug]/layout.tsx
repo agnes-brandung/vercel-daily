@@ -1,3 +1,10 @@
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Article',
+  description: 'Article',
+};
+
 export default function ArticleLayout({
   children,
 }: Readonly<{

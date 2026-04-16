@@ -5,16 +5,21 @@ import { cn } from '@/utils/cn';
 import Navigation from '@/components/Navigation/Navigation';
 import Footer from '@/components/Footer';
 import { ThemeProviders } from '@/components/Providers/ThemeProviders';
-// import { ogFallbackArticleImageSrc } from '@/lib/og/siteOpenGraphImage';
 import { ScrollRestoration } from '@/components/ScrollRestoration';
 import { Suspense } from 'react';
 
 function metadataBaseUrl(): URL {
-  return new URL(
-    process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : 'http://localhost:3000'
-  );
+  const publicUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  if (publicUrl) {
+    return new URL(publicUrl);
+  }
+
+  const vercelUrl = process.env.VERCEL_URL;
+  if (vercelUrl) {
+    return new URL(`https://${vercelUrl}`);
+  }
+
+  return new URL('http://localhost:3000');
 }
 
 export const metadata: Metadata = {
