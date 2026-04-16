@@ -44,8 +44,7 @@ async function SearchBar() {
 }
 
 async function SearchResults({ searchParams }: SearchPageProps) {
-  const params = await searchParams;
-  const allArticlesResult = await getArticleMethods();
+  const [params, allArticlesResult] = await Promise.all([searchParams, getArticleMethods()]);
   if (!allArticlesResult.ok) {
     return <InfoMessage type="error" message="An error occurred while fetching the articles - Please try again later." />;
   }

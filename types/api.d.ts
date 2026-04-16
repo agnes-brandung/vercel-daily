@@ -15,6 +15,8 @@ type ApiBackendResult<T> = {
 } | {
   ok: false;
   error: string;
+  /** Present when the failure came from a non-2xx HTTP response. */
+  status?: number;
 };
 
 /** Single plain-text body (not block-based); normalized to paragraph blocks in the RTE. */

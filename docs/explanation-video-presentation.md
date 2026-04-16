@@ -68,7 +68,7 @@ Walk `app/` as user journeys:
 ### Slide: Data flow (three layers)
 
 1. `**lib/api`** — Plain `fetch`, result types (`ok` / `error`), no React, no `"use cache"`. Example: `fetchNewsApi`, subscription client in `lib/api/subscription/fetchSubscriptionApi.ts`.
-2. `**lib/server-data**` — Domain reads: parse/map, `**"use cache"**`, `**cacheLife**`, `**cacheTag**` where needed.
+2. `**lib/server-data`** — Domain reads: parse/map, `**"use cache"**`, `**cacheLife**`, `**cacheTag**` where needed.
 3. `**app/actions**` — `**'use server'**`: cookies, upstream mutations, `**revalidateTag**`.
 
 ```text
@@ -101,7 +101,7 @@ Client islands → forms → Server Actions → lib/api + cookies + revalidateTa
 | ------------------------ | ----------------------------------------------- | -------------------------------------------------------------------------- |
 | All articles + groupings | `getArticleMethods`                             | `articles`                                                                 |
 | Breaking payload         | `getBreakingNews`                               | `breakingNews`                                                             |
-| Article by id            | `getArticleById`                                | `articles`                                                                 |
+| Article by slug or id    | `getArticle`                                    | `articles` (per-key tag)                                                   |
 | Trending                 | `getTrendingArticles`                           | `articles` (arguments include `excludeArticleId` → separate cache entries) |
 | Categories               | `getCategories`                                 | `weeks`                                                                    |
 | Subscription by token    | `getSubscriptionStatusByToken`                  | `days` + `**cacheTag(subscriptionTag(token))**`                            |
@@ -131,7 +131,7 @@ Client islands → forms → Server Actions → lib/api + cookies + revalidateTa
 
 1. **Home:** `BreakingNewsBanner` → Suspense → `BreakingNews`.
 2. **Home:** `FeaturedArticles` → Suspense → `FeaturedArticlesGrid`.
-3. **Article page:** Suspense wraps `ArticlePageInner` so slug resolution + `getArticleMethods` do not block the whole shell (`app/articles/[slug]/page.tsx`).
+3. **Article page:** Suspense wraps `ArticlePageInner` so slug resolution + `getArticle(slug)` do not block the whole shell (`app/articles/[slug]/page.tsx`).
 4. **Article body:** Suspense around `ArticleSubscriptionGate`; separate Suspense for `TrendingArticles` (`components/Article/ArticleBody.tsx`).
 5. **Search:** Suspense for `SearchBar` (categories) vs `SearchResults` (`app/search/page.tsx`).
 6. **Subscription page:** Suspense around async `Subscription`.
@@ -151,7 +151,7 @@ Throttle network in DevTools; show sections appearing independently.
 ### Slide: `app/actions/subscription.ts`
 
 - `**'use server'`** only here for mutations.
-- `subscribeAction` / `unsubscribeAction`: token from or to HttpOnly cookie, upstream POST/DELETE, then `**revalidateTag(subscriptionTag(token), 'max')**` for SWR-style freshness.
+- `subscribeAction` / `unsubscribeAction`: token from or to HttpOnly cookie, upstream POST/DELETE, then `**revalidateTag(subscriptionTag(token), 'max')`** for SWR-style freshness.
 
 ### Slide: Progressive enhancement + a11y
 
@@ -170,7 +170,7 @@ Throttle network in DevTools; show sections appearing independently.
 ### Slide: Search split
 
 - `**SearchClient**`: local state, debounced `router.replace`, category popover — needs hooks and `useSearchParams`.
-- `**SearchResults**`: async server component; awaits `searchParams`, calls `**getArticleMethods()**`, filters in memory — shareable URLs, SEO-friendly, single source of truth for article list.
+- `**SearchResults**`: async server component; `**Promise.all([searchParams, getArticleMethods()])**`, then filters in memory — shareable URLs, SEO-friendly, single source of truth for article list.
 
 ### Slide: Other clients
 
@@ -182,13 +182,13 @@ Navigation drawer (`MobileNavigation`), theme (`ThemeProviders`) — state and a
 
 ### Slide: Two different problems
 
-1. **Incoming requests to your Next app** — `proxy.ts`: log line, **fail fast** if `VERCEL_PROTECTION_BYPASS` missing, set `**X-Frame-Options: DENY`**, `**X-Content-Type-Options: nosniff**`.
+1. **Incoming requests to your Next app** — `proxy.ts`: log line, **fail fast** if `VERCEL_PROTECTION_BYPASS` missing, set `**X-Frame-Options: DENY`**, `**X-Content-Type-Options: nosniff`**.
 2. **Outgoing server `fetch` to protected API** — `vercelProtectionBypassHeaders()` adds `**x-vercel-protection-bypass`** (`lib/api/fetchNewsApi.ts`, subscription API).
 
 ### Slide: Subscription token
 
 - HttpOnly cookie `subscription_token`, secure in production, `sameSite: 'lax'` (`lib/api/subscription/utils.ts`).
-- Token not exposed to client JS for status reads; `**getSubscriptionStatus**` runs on server.
+- Token not exposed to client JS for status reads; `**getSubscriptionStatus`** runs on server.
 
 ### Slide: Content gate
 
@@ -204,7 +204,7 @@ If rubric says “middleware,” narrate `proxy.ts` as request interception befo
 
 ### Open Graph
 
-- Branch moved from dynamic `opengraph-image.tsx` routes to **Metadata API** images (article hero URL or static fallback in `lib/og/siteOpenGraphImage.tsx`).
+- OG tags are set with `**generateMetadata**` (Metadata API): `openGraph.images` use the article hero URL when data is available, otherwise static fallbacks from `lib/og/siteOpenGraphImage.tsx` (no `opengraph-image.tsx` route files).
 - **Tradeoff:** less bespoke generated OG art; simpler ops; previews use real imagery when available.
 
 ### Errors
@@ -287,7 +287,7 @@ Use one slide per block below (duplicate slides where you need more room).
 
 **11. Tradeoffs**  
 
-- OG: metadata vs dynamic images  
+- OG: `generateMetadata` + remote/static image URLs (not `opengraph-image` routes)  
 - Errors: result types vs throws
 
 **12. Demo**  
