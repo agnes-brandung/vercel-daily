@@ -22,7 +22,7 @@ export function ArticleBody({ article }: { article: ParsedArticle }) {
   } as CSSProperties;
 
   return (
-    <section className="article-page-frame relative overflow-hidden p-6 sm:p-8 md:p-10" style={accentStyle}>
+    <section id={`article-${id}`} className="article-page-frame relative overflow-hidden p-6 sm:p-8 md:p-10" style={accentStyle}>
       <header className="space-y-4">
         <Headline styleAs="category" className={categoryLabelClassName(category)}>
           {categoryLabel}
@@ -37,7 +37,7 @@ export function ArticleBody({ article }: { article: ParsedArticle }) {
           </span>
         )}
 
-        <Headline styleAs="h1" className="article-title-accent text-balance leading-tight">
+        <Headline type="h2" styleAs="h1" className="article-title-accent text-balance leading-tight">
           {title}
         </Headline>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">

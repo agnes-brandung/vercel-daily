@@ -7,7 +7,6 @@ export function CloseIcon({ className }: { className?: string }) {
       viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
     >
       <path
         d="M9 9l14 14M23 9L9 23"

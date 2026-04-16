@@ -11,7 +11,7 @@ export function BreakingNewsBanner() {
         <Headline styleAs="h2" uppercase>
           Breaking news
         </Headline>
-        <Headline styleAs="h5">Latest update from the newsroom</Headline>
+        <Headline type="h3" styleAs="h5">Latest update from the newsroom</Headline>
       </header>
 
       <Suspense

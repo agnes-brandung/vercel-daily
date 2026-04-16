@@ -81,8 +81,6 @@ const nextConfig: NextConfig = {
       expire: 120, // 2 minutes max
     },
   },
-  // TODO remove Debugging
-  productionBrowserSourceMaps: true,
 }
 
 export default nextConfig

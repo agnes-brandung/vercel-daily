@@ -18,6 +18,7 @@ import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
 function ArticleLink({ article, imagePrefetch = false }: { article: ParsedArticle, imagePrefetch?: boolean }) {
   return (
     <Link
+      prefetch={false}
       href={`/articles/${article.slug}`}
       className={cn(
         'group flex flex-col gap-3 px-4 py-5 sm:px-5 sm:py-6 no-underline lg:flex-row lg:items-start lg:gap-4 focus-ring',
