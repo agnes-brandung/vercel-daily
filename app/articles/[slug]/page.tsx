@@ -111,7 +111,11 @@ async function ArticlePageInner({ params }: ArticlePageProps) {
   if (!article) {
     console.log('article not found in ArticlePageInner:');
     // notFound();
-    return <InfoMessage type="info" message="Article not found." />;
+
+    return <>
+      <InfoMessage type="info" message="Article not found." />;
+      {/** TODO remove DEBUGGING */}
+    </>;
   }
 
   const breadcrumbItems = [
@@ -122,6 +126,21 @@ async function ArticlePageInner({ params }: ArticlePageProps) {
   return (
     <> 
       <Breadcrumb items={breadcrumbItems} current={article.title} /> 
+      {/** TODO remove DEBUGGING */}
+      <pre style={{ fontSize: 12, overflow: 'auto' }}>
+        {JSON.stringify(
+          { article },
+          null,
+          2,
+        )}
+      </pre>
+      <pre style={{ fontSize: 12, overflow: 'auto' }}>
+        {JSON.stringify(
+          { allArticles: allArticles.slice(0, 3) },
+          null,
+          2,
+        )}
+      </pre>
       <ArticleBody article={article} />
       <TrendingArticles excludeArticleId={article.id} />
     </>

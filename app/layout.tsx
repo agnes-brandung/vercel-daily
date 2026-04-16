@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   description: 'News and insights for modern web developers.',
   openGraph: {
     siteName: 'The Vercel Daily',
-    locale: 'en_GB',
+    locale: 'en',
     type: 'website',
   },
 };
@@ -41,7 +41,8 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn(fontPrimary.variable, fontSecondary.variable, 'h-full antialiased', "font-sans")}
-      // suppressHydrationWarning
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
     >
       <body className="flex min-h-dvh flex-col">
         <ThemeProviders>

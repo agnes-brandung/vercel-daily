@@ -19,6 +19,7 @@ type SearchPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined | null>>;
 };
 
+// TODO: Check what should be in suspense exactly (maybe separate SearchBar from SearchResults so no searchparams in SearchBar?)
 async function SearchBar() {
   const categoriesResult = await getCategories();
   if (!categoriesResult.ok) {
