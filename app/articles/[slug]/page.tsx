@@ -13,65 +13,62 @@ type ArticlePageProps = {
   params: Promise<{ slug: string }>;
 }
 
-/**
- * For Accessibility, we update the metadata for the Article page if an error occurs while fetching the articles.
- */
-export async function generateMetadata(
-  { params }: ArticlePageProps,
-): Promise<Metadata> {
-  const { slug } = await params
-  const articlesResult = await getArticleMethods();
+// /**
+//  * For Accessibility, we update the metadata for the Article page if an error occurs while fetching the articles.
+//  */
+// export async function generateMetadata(
+//   { params }: ArticlePageProps,
+// ): Promise<Metadata> {
+//   const { slug } = await params
+//   const articlesResult = await getArticleMethods();
 
-  if (!articlesResult.ok) {
-    return {
-      title: 'Error article Page',
-      description: 'An error occurred while fetching the articles - Please try again later.',
-    }  
-  }
-  const { allArticles } = articlesResult.data;
+//   if (!articlesResult.ok) {
+//     return {
+//       title: 'Error article Page',
+//       description: 'An error occurred while fetching the articles - Please try again later.',
+//     }  
+//   }
+//   const { allArticles } = articlesResult.data;
 
-  const article = allArticles.find((a) => a.slug === slug);
+//   const article = allArticles.find((a) => a.slug === slug);
 
-  if (!article) {
-    return {
-      title: 'Article not found',
-      description: 'Article not found.',
-      openGraph: {
-        images: [
-          {
-            url: ogFallbackArticleImageSrc,
-            ...ogImageSize,
-            alt: 'Article not found',
-            type: 'article',
-          },
-        ],
-      },
-    }
-  }
+//   if (!article) {
+//     return {
+//       title: 'Article not found',
+//       description: 'Article not found.',
+//       openGraph: {
+//         images: [
+//           {
+//             url: ogFallbackArticleImageSrc,
+//             ...ogImageSize,
+//             alt: 'Article not found',
+//             type: 'article',
+//           },
+//         ],
+//       },
+//     }
+//   }
 
-  return {
-    title: article.title,
-    description: article.excerpt,
-    keywords: article.tags.join(', '),
-    authors: [{ name: article.author.name }],
-    alternates: {
-      canonical: `/${slug}`, // metadataBase resolves to absolute URL
-    },
-    openGraph: {
-      title: article.title,
-      description: article.excerpt,
-      images: [
-        {
-          url: article.image,
-          ...ogImageSize,
-          alt: article.title,
-        },
-      ],
-      type: 'article',
-      authors: [article.author.name],
-    },
-  }
-}
+//   return {
+//     title: article.title,
+//     description: article.excerpt,
+//     keywords: article.tags.join(', '),
+//     authors: [{ name: article.author.name }],
+//     openGraph: {
+//       title: article.title,
+//       description: article.excerpt,
+//       images: [
+//         {
+//           url: article.image,
+//           ...ogImageSize,
+//           alt: article.title,
+//         },
+//       ],
+//       type: 'article',
+//       authors: [article.author.name],
+//     },
+//   }
+// }
  
 export default function ArticlePage({ params }: ArticlePageProps) {
   return (
@@ -87,7 +84,6 @@ export default function ArticlePage({ params }: ArticlePageProps) {
 
 async function ArticlePageInner({ params }: ArticlePageProps) {
   const { slug } = await params;
-  console.log('slug in ArticlePageInner:', slug);
 
   // Simulate an error in DEV
   // throw new Error('Simulated error');
@@ -106,16 +102,8 @@ async function ArticlePageInner({ params }: ArticlePageProps) {
 
   const article = allArticles.find((a) => a.slug === slug);
 
-  console.log('article in ArticlePageInner:', article);
-
   if (!article) {
-    console.log('article not found in ArticlePageInner:');
-    // notFound();
-
-    return <>
-      <InfoMessage type="info" message="Article not found." />;
-      {/** TODO remove DEBUGGING */}
-    </>;
+    notFound();
   }
 
   const breadcrumbItems = [
@@ -126,21 +114,6 @@ async function ArticlePageInner({ params }: ArticlePageProps) {
   return (
     <> 
       <Breadcrumb items={breadcrumbItems} current={article.title} /> 
-      {/** TODO remove DEBUGGING */}
-      <pre style={{ fontSize: 12, overflow: 'auto' }}>
-        {JSON.stringify(
-          { article },
-          null,
-          2,
-        )}
-      </pre>
-      <pre style={{ fontSize: 12, overflow: 'auto' }}>
-        {JSON.stringify(
-          { allArticles: allArticles.slice(0, 3) },
-          null,
-          2,
-        )}
-      </pre>
       <ArticleBody article={article} />
       <TrendingArticles excludeArticleId={article.id} />
     </>
