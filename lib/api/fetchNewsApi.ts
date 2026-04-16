@@ -33,6 +33,7 @@ export async function fetchNewsApi<T>({
       return {
         ok: false,
         error: `Failed to fetch ${endpoint} (${res.status})`,
+        status: res.status,
       };
     }
 

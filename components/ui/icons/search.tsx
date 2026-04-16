@@ -8,7 +8,7 @@ export function SearchIcon({ className }: { className?: string }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-label="Search"
-      aria-hidden
+      aria-hidden="true"
     >
       <circle
         cx="11"

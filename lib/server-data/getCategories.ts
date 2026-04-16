@@ -1,5 +1,5 @@
 import { fetchNewsApi } from '@/lib/api/fetchNewsApi';
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 
 export type CategoriesResult =
   | { ok: true; data: ApiCategory[] }
@@ -11,6 +11,7 @@ export type CategoriesResult =
 export async function getCategories(): Promise<CategoriesResult> {
   "use cache";
   cacheLife("weeks");
+  cacheTag('categories')
 
   const result = await fetchNewsApi<ApiCategory[]>({ endpoint: 'categories' });
 

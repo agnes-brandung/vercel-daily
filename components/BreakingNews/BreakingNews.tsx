@@ -11,7 +11,7 @@ import { cn } from '@/utils/cn';
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import { Suspense } from 'react';
-import { getArticleById } from '@/lib/server-data/getArticleById';
+import { getArticle } from '@/lib/server-data/getArticle';
 import { BreakingNewsResult, getBreakingNews } from '@/lib/server-data/getBreakingNews';
 import { ReadArticleButton } from '@/components/ReadArticleButton';
 import { BreakingNewsTicker } from './BreakingNewsTicker';
@@ -28,16 +28,23 @@ export async function BreakingNews() {
   const parsedBreakingNews: ParsedBreakingNews = parseBreakingNews(breakingNewsData.data);
   const { articleId, headline, summary, category, publishedAt, urgent, categoryLabel } = parsedBreakingNews;
 
-  const [articleById] = await Promise.all([
-    getArticleById({ articleId }),
-  ]);
+  const { article: linkedArticle, error: articleError } = await getArticle(articleId);
 
-  if (!articleById.ok) {
-    return <InfoMessage type="error" message={"An error occurred while fetching the breaking news - Please try again later."} />;
+  if (articleError) {
+    return (
+      <InfoMessage
+        type="error"
+        message="An error occurred while fetching the breaking news - Please try again later."
+      />
+    );
   }
 
-  const breakingNewsSlug = articleById.data?.slug;
-  const breakingNewsImage = articleById.data?.image;
+  if (!linkedArticle) {
+    return <InfoMessage type="info" message="No breaking news right now." />;
+  }
+
+  const breakingNewsSlug = linkedArticle.slug;
+  const breakingNewsImage = linkedArticle.image;
 
   if (!breakingNewsSlug || !headline) {
     return <InfoMessage type="info" message="No breaking news right now." />;
@@ -94,6 +101,7 @@ export async function BreakingNews() {
 
   return (
     <Link
+      prefetch={false}
       href={`/articles/${breakingNewsSlug}`}
       className={breakingNewsCardContainerStyles}
       style={breakingNewsCardAnimationStyle}

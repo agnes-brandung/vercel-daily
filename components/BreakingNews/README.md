@@ -18,5 +18,5 @@ We keep **fetching in the server component** that owns the UI so errors map clea
 
 ## Related code
 
-- `lib/server-data/getBreakingNews.ts`, `getArticleById.ts`
+- `lib/server-data/getBreakingNews.ts`, `getArticle.ts`
 
