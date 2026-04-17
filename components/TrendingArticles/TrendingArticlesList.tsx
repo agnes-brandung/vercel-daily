@@ -29,7 +29,6 @@ export async function TrendingArticlesList({ excludeArticleId }: { excludeArticl
         return (
           <li key={article.id} className="min-w-0">
             <Link
-              prefetch={false}
               href={`/articles/${article.slug}`}
               className={cn(
                 'group surface-elevated flex h-full min-h-48 flex-col overflow-hidden text-typography transition-[border-color,box-shadow,transform] focus-visible:outline-none md:hover:-translate-y-0.5',

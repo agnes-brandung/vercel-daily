@@ -34,6 +34,7 @@ export const fontPrimary = localFont({
     },
   ],
   display: 'swap',
+  preload: true,
   variable: '--font-primary',
 })
 
@@ -46,5 +47,6 @@ export const fontSecondary = localFont({
     },
   ],
   display: 'swap',
+  preload: true,
   variable: '--font-secondary',
 })
