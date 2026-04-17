@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { fontPrimary, fontSecondary } from '../lib/fonts';
+import { fontPrimary, fontSecondary } from '@/lib/fonts';
 import { cn } from '@/utils/cn';
 import Navigation from '@/components/Navigation/Navigation';
 import Footer from '@/components/Footer';

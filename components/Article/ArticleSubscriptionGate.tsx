@@ -4,7 +4,7 @@ import { SubscriptionButton } from '../Subscription/SubscriptionButton';
 import { getSubscriptionStatus } from '@/lib/server-data/getSubscriptionStatus';
 import { InfoMessage } from '@/ui/InfoMessage';
 
-interface ArticleSubscriptionGateProps {
+type ArticleSubscriptionGateProps = {
   children: React.ReactNode;
   hideUnsubscribe?: boolean;
 }

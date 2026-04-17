@@ -27,6 +27,11 @@ export type BreadcrumbProps = {
 
 const breadcrumbContainerStyles = 'flex flex-wrap items-center gap-x-2 gap-y-1';
 const itemStyles = 'flex items-center gap-1';
+/** Below `md`: current page + leading chevron on their own row so long titles wrap cleanly. */
+const currentItemStyles = cn(
+  itemStyles,
+  'basis-full min-w-0 items-start md:basis-auto md:items-center',
+);
 const labelStyles = 'inline-block py-1 text-sm';
 
 /**
@@ -51,11 +56,15 @@ export function Breadcrumb({ items, current, className }: BreadcrumbProps) {
           </li>
         ))}
         {current ? (
-          <li className={itemStyles} aria-current="page">
+          <li className={currentItemStyles} aria-current="page">
             {items.length > 0 ? (
-              <ChevronRightIcon aria-hidden />
+              <ChevronRightIcon aria-hidden className="mt-0.5 md:mt-0" />
             ) : null}
-            <Copy size="sm" color="lightGray">
+            <Copy
+              size="sm"
+              color="lightGray"
+              className="min-w-0 flex-1 px-1 wrap-break-word md:flex-none"
+            >
               {current}
             </Copy>
           </li>
