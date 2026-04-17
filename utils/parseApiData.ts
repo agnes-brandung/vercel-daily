@@ -20,6 +20,7 @@ export function formatArticleCategoryLabel(category: ApiArticle['category']): st
 export function parseArticle(article: ApiArticle): ParsedArticle {
   return {
     ...article,
+    title: article.title.trim(),
     excerpt: article.excerpt.trim(),
     categoryLabel: formatArticleCategoryLabel(article.category),
   };

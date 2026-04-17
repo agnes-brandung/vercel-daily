@@ -4,6 +4,7 @@ import LoadingSkeleton from '@/ui/LoadingSkeleton';
 import { ArticleBody } from '@/components/Article/ArticleBody';
 import { Metadata } from 'next';
 import { getArticle } from '@/lib/server-data/getArticle';
+import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
 import { ogFallbackArticleImageSrc, ogImageSize } from '@/lib/og/siteOpenGraphImage';
 import { notFound } from 'next/navigation';
 import { Breadcrumb } from '@/ui/Breadcrumb';
@@ -12,6 +13,15 @@ import { TrendingArticles } from '@/components/TrendingArticles/TrendingArticles
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
 };
+
+export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
+  const result = await getArticleMethods();
+  if (!result.ok) {
+    return [];
+  }
+  const slugs = Array.from(new Set(result.data.allArticles.map((article) => article.slug)));
+  return slugs.map((slug) => ({ slug }));
+}
 
 /**
  * For accessibility and SEO, metadata reflects fetch outcome (error / not found / article).

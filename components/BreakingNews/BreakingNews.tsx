@@ -101,7 +101,6 @@ export async function BreakingNews() {
 
   return (
     <Link
-      prefetch={false}
       href={`/articles/${breakingNewsSlug}`}
       className={breakingNewsCardContainerStyles}
       style={breakingNewsCardAnimationStyle}

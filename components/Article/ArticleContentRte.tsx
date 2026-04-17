@@ -72,7 +72,7 @@ function ApiContentBlockView({ block, index }: { block: ApiContentBlock; index: 
           key={index}
           className={cn(
             'border-l-4 border-blue pl-4 text-typography',
-            'my-0 py-1 font-primary text-base leading-relaxed italic',
+            'py-1 font-primary text-base leading-relaxed italic',
           )}
         >
           {renderInlineMarkdown(text)}
