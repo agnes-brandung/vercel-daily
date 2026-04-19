@@ -1,6 +1,6 @@
 'use client'
 
-import { DrawerClose } from '@/components/ui/drawer'
+import { DrawerClose } from '@/ui/lib/drawer'
 import { TextLink } from '@/ui/Typography'
 import { useState, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'

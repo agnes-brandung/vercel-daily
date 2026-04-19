@@ -2,16 +2,12 @@ import { ChevronRightIcon } from '@/components/ui/icons/chevron-right';
 import { Copy, TextLink } from '@/components/ui/Typography';
 import { cn } from '@/utils/cn';
 
-export type BreadcrumbLinkItem = {
+type BreadcrumbLinkItem = {
   label: string;
   href: string;
 }
 
-export type BreadcrumbProps = {
-  /**
-   * Whether to show only a link back to Home.
-   */
-  oneLevelOnly?: boolean;
+type BreadcrumbProps = {
   /**
    * Ordered trail of sections (each segment is a `TextLink`), e.g.
    * `[{ label: 'Home', href: '/' }, { label: 'Articles', href: '/articles' }]` on an article detail page.
@@ -22,7 +18,6 @@ export type BreadcrumbProps = {
    * (e.g. `[{ label: 'Home', href: '/' }]` on a section index).
    */
   current?: string;
-  className?: string;
 }
 
 const breadcrumbContainerStyles = 'flex flex-wrap items-center gap-x-2 gap-y-1';
@@ -37,13 +32,13 @@ const labelStyles = 'inline-block py-1 text-sm';
 /**
  * Compact breadcrumb for reuse across routes. Server Component — pass static `items` / `current` from the page or layout.
  */
-export function Breadcrumb({ items, current, className }: BreadcrumbProps) {
+export function Breadcrumb({ items, current }: BreadcrumbProps) {
   if (items.length === 0 && !current) {
     return null;
   }
 
   return (
-    <nav aria-label="Breadcrumb" className={cn(className)}>
+    <nav aria-label="Breadcrumb">
       <ol className={breadcrumbContainerStyles}>
         {items.map((item, index) => (
           <li key={`${item.href}-${index}`} className={itemStyles}>
