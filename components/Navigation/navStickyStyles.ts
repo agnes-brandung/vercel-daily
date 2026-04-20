@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 
 /**
  * Nav bar layout tokens only. Client components (e.g. Mobile) must import this file—not

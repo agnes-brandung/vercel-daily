@@ -1,4 +1,4 @@
-import { DrawerTrigger } from '@/components/ui/drawer'
+import { DrawerTrigger } from '@/ui/lib/drawer'
 import { BrandLink, HomeIconLink } from '../NavigationLinks'
 import { IconButton } from '@/components/ui/IconButton'
 import { NavMenuOpenIcon } from '@/components/ui/icons/nav-menu-open'

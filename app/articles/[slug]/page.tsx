@@ -4,7 +4,7 @@ import LoadingSkeleton from '@/ui/LoadingSkeleton';
 import { ArticleBody } from '@/components/Article/ArticleBody';
 import { Metadata } from 'next';
 import { getArticle } from '@/lib/server-data/getArticle';
-import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
+import { getArticleMethods } from '@/lib/server-data/getArticles';
 import { ogFallbackArticleImageSrc, ogImageSize } from '@/lib/og/siteOpenGraphImage';
 import { notFound } from 'next/navigation';
 import { Breadcrumb } from '@/ui/Breadcrumb';

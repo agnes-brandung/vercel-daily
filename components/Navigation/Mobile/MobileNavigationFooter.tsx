@@ -1,4 +1,4 @@
-import { DrawerClose, DrawerFooter } from '@/components/ui/drawer'
+import { DrawerClose, DrawerFooter } from '@/ui/lib/drawer'
 import { IconButton } from '@/ui/IconButton'
 import { CloseIcon } from '@/components/ui/icons/close'
 import { type ReactNode } from 'react'

@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 
 export const searchInnerContainerStyles = 'flex flex-col gap-4 md:flex-row md:items-stretch w-full'
 

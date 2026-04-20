@@ -1,7 +1,7 @@
 import { TextLink } from "@/ui/Typography";
 import { BrandLink, HomeIconLink } from './NavigationLinks';
 import { navStickyContainerStyles } from './navStickyStyles';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import { ReactNode } from 'react';
 
 const navContainerStyles = "py-6 hidden xl:block";

@@ -4,7 +4,7 @@ import { SearchClient } from '@/components/Search/SearchClient';
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 import { InfoMessage } from '@/components/ui/InfoMessage';
 import { getCategories } from '@/lib/server-data/getCategories';
-import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
+import { getArticleMethods } from '@/lib/server-data/getArticles';
 import {
   filterArticlesBySearchTermAndCategories,
   isSpecialShortSearchTerm,

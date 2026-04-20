@@ -3,7 +3,7 @@ import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { InfoMessage } from '@/components/ui/InfoMessage';
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 import { ogFallbackArticleImageSrc, ogImageSize } from '@/lib/og/siteOpenGraphImage';
-import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
+import { getArticleMethods } from '@/lib/server-data/getArticles';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 
