@@ -18,11 +18,11 @@ This folder is for **listing** articles: home featured grid, shared card markup,
 - **Default to Server Components** — Data and HTML for lists stay on the server; we only add client components elsewhere when we need hooks or browser-only APIs ([Academy: boundaries](https://vercel.com/academy/nextjs-foundations/client-server-boundaries)).
 - **Fetch next to the list** — `FeaturedArticlesGrid` and `ArticlesCatalog` call the loader themselves instead of the parent page doing one giant fetch and passing props through five layers. Easier to read, easier to cache.
 - **Suspense where it hurts** — Slow work sits inside `Suspense` with **skeleton-shaped** fallbacks so we do not flash a dozen spinners ([Academy: streaming](https://vercel.com/academy/nextjs-foundations/suspense-and-streaming)).
-- **One cached loader** — `getArticleMethods` is cached (`"use cache"` + `cacheLife` in `lib/server-data/getArticlesMethods.ts`), so metadata + page can reuse work in the same request when the runtime allows it ([parallel + cache mindset](https://vercel.com/academy/nextjs-foundations/data-fetching-without-waterfalls)).
+- **One cached loader** — `getArticleMethods` is cached (`"use cache"` + `cacheLife` in `lib/server-data/getArticles.ts`), so metadata + page can reuse work in the same request when the runtime allows it ([parallel + cache mindset](https://vercel.com/academy/nextjs-foundations/data-fetching-without-waterfalls)).
 
 ## Related code
 
-- `lib/server-data/getArticlesMethods.ts`, `lib/api/fetchNewsApi.ts`
+- `lib/server-data/getArticles.ts`, `lib/api/fetchNewsApi.ts`
 - `utils/parseApiData.ts`, `types/api.d.ts`
 - `utils/mapCategoryColor.ts`
 

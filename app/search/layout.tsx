@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Copy, Headline } from '@/components/ui/Typography';
-import { getArticleMethods } from '@/lib/server-data/getArticlesMethods';
+import { getArticleMethods } from '@/lib/server-data/getArticles';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 
 /**

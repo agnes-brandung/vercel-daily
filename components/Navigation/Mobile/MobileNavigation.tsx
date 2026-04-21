@@ -1,13 +1,13 @@
 'use client'
 
 import { useState, type ReactNode } from 'react'
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@/ui/lib/drawer'
 import { MobileNavigationFooter } from './MobileNavigationFooter'
 import { VisuallyHidden } from 'radix-ui'
 import { MobileNavigationLinks } from './MobileNavigationLinks'
 import { MobileNavigationDrawerHeader } from './MobileNavigationDrawerHeader'
 import { navStickyContainerStyles } from '../navStickyStyles'
-import { cn } from '@/lib/utils'
+import { cn } from '@/utils/cn'
 
 type NavigationMobileProps = {
   children: ReactNode

@@ -5,8 +5,8 @@ import {
   PopoverContent,
   PopoverTitle,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+} from '@/ui/lib/popover';
+import { cn } from '@/utils/cn';
 import { Copy } from '@/ui/Typography';
 import { categoryFilterChevronIconStyles, categoryFilterNumberStyles, categoryFilterSelectLabelStyles, categoryFilterTriggerButtonDisabledStyles, categoryFilterTriggerButtonStyles } from './styles';
 

@@ -3,8 +3,8 @@
 import { useHasMounted } from '@/hooks/useHasMounted';
 import { useTheme } from "next-themes";
 import { IconButton } from '@/ui/IconButton';
-import { SunIcon } from './icons/sun';
-import { MoonIcon } from './icons/moon';
+import { SunIcon } from '@/ui/icons/sun';
+import { MoonIcon } from '@/ui/icons/moon';
 
 export default function ThemeToggle() {
   const { theme, resolvedTheme, setTheme } = useTheme();

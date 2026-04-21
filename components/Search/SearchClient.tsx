@@ -12,11 +12,11 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { SearchIcon } from '@/ui/icons/search';
 
 import Button from '@/components/ui/Button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/ui/lib/checkbox';
+import { Input } from '@/ui/lib/input';
 import {
   Popover,
-} from '@/components/ui/popover';
+} from '@/ui/lib/popover';
 import { searchInnerContainerStyles } from './styles';
 import { useCloseCategoryPopover } from './hooks/useCloseCategoryPopover';
 import { CategoryDropdown, CategoryDropdownTrigger } from './CategoryDropdown';

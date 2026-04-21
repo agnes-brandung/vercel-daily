@@ -42,7 +42,7 @@ export function SubscriptionButton({ isActive, hasToken, hideUnsubscribe }: Subs
     !subscribeState.ok ? subscribeState.error : !unsubscribeState.ok ? unsubscribeState.error : null;
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col items-center gap-3">
       {error ? <InfoMessage type="error" message={error} /> : null}
       {hideUnsubscribe ? null : isActive ? (
         <GuardedServerActionForm action={unsubscribeFormAction}> 

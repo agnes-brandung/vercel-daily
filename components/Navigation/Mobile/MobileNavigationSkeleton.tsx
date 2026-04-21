@@ -1,6 +1,6 @@
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 import { navStickyContainerStyles } from '../navStickyStyles';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import { BrandLink, HomeIconLink } from '../NavigationLinks';
 
 export function MobileNavigationSkeleton() {
